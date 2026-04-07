@@ -128,3 +128,70 @@
     @apply font-sans;
   }
 }
+
+/* Print Styles - Hide navigation and show invoice details */
+@media print {
+  /* Hide sidebar, header, buttons, and non-essential elements */
+  .no-print {
+    display: none !important;
+  }
+
+  /* Hide layout elements */
+  aside,
+  header,
+  nav,
+  .print-hide {
+    display: none !important;
+  }
+
+  /* Ensure invoice content is visible */
+  .print-show {
+    display: block !important;
+  }
+
+  /* Remove backgrounds and shadows for printing */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Ensure proper spacing */
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Page break handling */
+  .page-break {
+    page-break-after: always;
+  }
+
+  .no-break {
+    page-break-inside: avoid;
+  }
+
+  /* Links - show URLs */
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+  }
+
+  /* Ensure tables look good */
+  table {
+    page-break-inside: avoid;
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  /* Ensure colors print correctly */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
