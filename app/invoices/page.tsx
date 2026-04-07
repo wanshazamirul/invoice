@@ -30,9 +30,10 @@ import {
 import { Plus, MoreVertical, FileText, Download, Eye, Trash2 } from 'lucide-react';
 import { formatDate, formatCurrency, getInvoiceStatusColor } from '@/lib/helpers';
 import { useRouter } from 'next/navigation';
+import { generateInvoicePDF } from '@/lib/pdf-generator';
 
 export default function InvoicesPage() {
-  const { invoices, loadData, deleteInvoice } = useStore();
+  const { invoices, loadData, deleteInvoice, settings } = useStore();
   const router = useRouter();
   const [statusFilter, setStatusFilter] = useState<'all' | InvoiceStatus>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | 'invoice' | 'quotation'>('all');
@@ -59,6 +60,15 @@ export default function InvoicesPage() {
 
   const handleEdit = (id: string) => {
     router.push(`/invoices/${id}/edit`);
+  };
+
+  const handleDownload = (invoice: Invoice) => {
+    try {
+      generateInvoicePDF(invoice, settings);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    }
   };
 
   const stats = {
@@ -220,7 +230,7 @@ export default function InvoicesPage() {
                             <FileText className="w-4 h-4 mr-2" />
                             Edit
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleDownload(invoice)}>
                             <Download className="w-4 h-4 mr-2" />
                             Download PDF
                           </DropdownMenuItem>
