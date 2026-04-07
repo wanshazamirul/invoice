@@ -1,0 +1,23 @@
+{
+  "name": "Invoice App - Professional Invoicing System",
+  "short_name": "Invoice App",
+  "description": "Full-featured invoicing application with client management, PDF generation, and payment tracking",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#10b981",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    }
+  ]
+}

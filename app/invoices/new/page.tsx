@@ -208,9 +208,7 @@ export default function NewInvoicePage() {
                   <Label>Document Type</Label>
                   <Select
                     value={formData.type}
-                    onValueChange={(v: 'invoice' | 'quotation') =>
-                      setFormData({ ...formData, type: v })
-                    }
+                    onValueChange={(v) => v && setFormData({ ...formData, type: v })}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -225,7 +223,7 @@ export default function NewInvoicePage() {
                   <Label>Currency</Label>
                   <Select
                     value={formData.currency}
-                    onValueChange={(v) => setFormData({ ...formData, currency: v })}
+                    onValueChange={(v) => v && setFormData({ ...formData, currency: v })}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -244,7 +242,7 @@ export default function NewInvoicePage() {
                 <Label>Client *</Label>
                 <Select
                   value={formData.clientId}
-                  onValueChange={(v) => setFormData({ ...formData, clientId: v })}
+                  onValueChange={(v) => v && setFormData({ ...formData, clientId: v })}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select a client" />
@@ -317,7 +315,7 @@ export default function NewInvoicePage() {
                         {products.length > 0 && (
                           <Select
                             value=""
-                            onValueChange={(v) => handleSelectProduct(item.id, v)}
+                            onValueChange={(v) => v && handleSelectProduct(item.id, v)}
                           >
                             <SelectTrigger className="mb-2">
                               <SelectValue placeholder="Select product" />
@@ -507,7 +505,7 @@ export default function NewInvoicePage() {
                 <Label>Recurring</Label>
                 <Select
                   value={formData.recurring}
-                  onValueChange={(v: any) => setFormData({ ...formData, recurring: v })}
+                  onValueChange={(v: any) => v && setFormData({ ...formData, recurring: v })}
                 >
                   <SelectTrigger>
                     <SelectValue />

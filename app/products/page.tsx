@@ -197,10 +197,10 @@ export default function ProductsPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
+                        <DropdownMenuTrigger>
+                          
                             <MoreVertical className="w-4 h-4" />
-                          </Button>
+                          
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => handleEdit(product)}>

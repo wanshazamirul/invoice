@@ -230,7 +230,7 @@ export default function SettingsPage() {
                 <Label>Default Currency</Label>
                 <Select
                   value={formData.currency}
-                  onValueChange={(v) => handleChange('currency', v)}
+                  onValueChange={(v) => v && handleChange('currency', v)}
                 >
                   <SelectTrigger>
                     <SelectValue />
