@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useStore } from '@/lib/store/useStore';
 import {
   DollarSign,
@@ -14,14 +14,103 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatCurrency } from '@/lib/helpers';
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
 
 export default function DashboardPage() {
-  const { loadData, getDashboardStats } = useStore();
+  const { loadData, getDashboardStats, invoices, clients } = useStore();
   const stats = getDashboardStats();
 
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  // Revenue over time (last 6 months)
+  const revenueData = useMemo(() => {
+    const months = [];
+    const now = new Date();
+
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const monthName = date.toLocaleString('default', { month: 'short' });
+
+      const paidInvoices = invoices.filter(
+        (inv) =>
+          inv.status === 'paid' &&
+          new Date(inv.paidDate || '').getMonth() === date.getMonth() &&
+          new Date(inv.paidDate || '').getFullYear() === date.getFullYear()
+      );
+
+      const revenue = paidInvoices.reduce((sum, inv) => sum + inv.paidAmount, 0);
+      const count = paidInvoices.length;
+
+      months.push({
+        name: monthName,
+        revenue,
+        invoices: count,
+      });
+    }
+
+    return months;
+  }, [invoices]);
+
+  // Invoice status distribution
+  const statusData = useMemo(() => {
+    const statuses = invoices.reduce(
+      (acc, inv) => {
+        acc[inv.status] = (acc[inv.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
+
+    return Object.entries(statuses).map(([name, value]) => ({
+      name: name.charAt(0).toUpperCase() + name.slice(1),
+      value,
+    }));
+  }, [invoices]);
+
+  const STATUS_COLORS = {
+    Draft: '#94a3b8',
+    Pending: '#eab308',
+    Paid: '#10b981',
+    Overdue: '#ef4444',
+    Partial: '#3b82f6',
+  };
+
+  // Top clients by revenue
+  const topClientsData = useMemo(() => {
+    const clientRevenue = clients.map((client) => {
+      const clientInvoices = invoices.filter(
+        (inv) => inv.clientId === client.id && inv.status === 'paid'
+      );
+      const revenue = clientInvoices.reduce((sum, inv) => sum + inv.paidAmount, 0);
+
+      return {
+        name: client.name,
+        revenue,
+        invoices: clientInvoices.length,
+      };
+    });
+
+    return clientRevenue
+      .filter((c) => c.revenue > 0)
+      .sort((a, b) => b.revenue - a.revenue)
+      .slice(0, 5);
+  }, [invoices, clients]);
 
   const statCards = [
     {
@@ -126,6 +215,114 @@ export default function DashboardPage() {
           );
         })}
       </div>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Revenue Over Time */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Revenue Over Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={revenueData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip
+                  formatter={(value: any) => {
+                    if (typeof value === 'number') {
+                      return formatCurrency(value, 'RM');
+                    }
+                    return value;
+                  }}
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '8px',
+                  }}
+                />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#10b981"
+                  strokeWidth={2}
+                  name="Revenue"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        {/* Invoice Status Distribution */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Invoice Status</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={statusData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) =>
+                    `${name}: ${((percent || 0) * 100).toFixed(0)}%`
+                  }
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {statusData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={STATUS_COLORS[entry.name as keyof typeof STATUS_COLORS] || '#94a3b8'}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Top Clients */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Top Clients by Revenue</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {topClientsData.length === 0 ? (
+            <p className="text-slate-500 text-center py-8">No client data yet</p>
+          ) : (
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={topClientsData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip
+                  formatter={(value: any) => {
+                    if (typeof value === 'number') {
+                      return formatCurrency(value, 'RM');
+                    }
+                    return value;
+                  }}
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '8px',
+                  }}
+                />
+                <Legend />
+                <Bar dataKey="revenue" fill="#10b981" name="Revenue" />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Recent Activity & Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
