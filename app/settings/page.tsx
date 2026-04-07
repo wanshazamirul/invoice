@@ -1,0 +1,351 @@
+'use client';
+
+import { useState } from 'react';
+import { useStore } from '@/lib/store/useStore';
+import { InvoiceSettings } from '@/types';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Building2, FileText, Settings as SettingsIcon, Database } from 'lucide-react';
+
+export default function SettingsPage() {
+  const { settings, updateSettings, exportAllData, importAllData } = useStore();
+  const [formData, setFormData] = useState<InvoiceSettings>(settings);
+  const [hasChanges, setHasChanges] = useState(false);
+
+  const handleSave = () => {
+    updateSettings(formData);
+    setHasChanges(false);
+    alert('Settings saved successfully!');
+  };
+
+  const handleChange = (field: keyof InvoiceSettings, value: any) => {
+    setFormData({ ...formData, [field]: value });
+    setHasChanges(true);
+  };
+
+  const handleCompanyInfoChange = (field: string, value: string) => {
+    setFormData({
+      ...formData,
+      companyInfo: { ...formData.companyInfo, [field]: value },
+    });
+    setHasChanges(true);
+  };
+
+  const handleExport = () => {
+    const data = exportAllData();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `invoice-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const data = JSON.parse(event.target?.result as string);
+          if (confirm('This will replace all your data. Are you sure?')) {
+            importAllData(data);
+            alert('Data imported successfully!');
+          }
+        } catch (error) {
+          alert('Error importing data. Please check the file format.');
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-slate-900">Settings</h1>
+        <p className="text-slate-600 mt-2">Configure your invoice application</p>
+      </div>
+
+      {hasChanges && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-center justify-between">
+          <p className="text-yellow-800">You have unsaved changes</p>
+          <Button onClick={handleSave} size="sm">
+            Save Changes
+          </Button>
+        </div>
+      )}
+
+      <Tabs defaultValue="company" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="company">
+            <Building2 className="w-4 h-4 mr-2" />
+            Company
+          </TabsTrigger>
+          <TabsTrigger value="invoice">
+            <FileText className="w-4 h-4 mr-2" />
+            Invoice
+          </TabsTrigger>
+          <TabsTrigger value="general">
+            <SettingsIcon className="w-4 h-4 mr-2" />
+            General
+          </TabsTrigger>
+          <TabsTrigger value="data">
+            <Database className="w-4 h-4 mr-2" />
+            Data
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Company Settings */}
+        <TabsContent value="company">
+          <Card>
+            <CardHeader>
+              <CardTitle>Company Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label>Company Name</Label>
+                <Input
+                  value={formData.companyInfo.name}
+                  onChange={(e) => handleCompanyInfoChange('name', e.target.value)}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Email</Label>
+                  <Input
+                    type="email"
+                    value={formData.companyInfo.email}
+                    onChange={(e) => handleCompanyInfoChange('email', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>Phone</Label>
+                  <Input
+                    value={formData.companyInfo.phone}
+                    onChange={(e) => handleCompanyInfoChange('phone', e.target.value)}
+                  />
+                </div>
+              </div>
+              <div>
+                <Label>Address</Label>
+                <Textarea
+                  value={formData.companyInfo.address}
+                  onChange={(e) => handleCompanyInfoChange('address', e.target.value)}
+                  rows={3}
+                />
+              </div>
+              <div>
+                <Label>Payment Information</Label>
+                <Textarea
+                  value={formData.paymentInfo}
+                  onChange={(e) => handleChange('paymentInfo', e.target.value)}
+                  rows={4}
+                  placeholder="Bank: Maybank&#10;Account: 123456789012&#10;Account Name: Your Name"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Invoice Settings */}
+        <TabsContent value="invoice">
+          <Card>
+            <CardHeader>
+              <CardTitle>Invoice Settings</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Invoice Prefix</Label>
+                  <Input
+                    value={formData.invoicePrefix}
+                    onChange={(e) => handleChange('invoicePrefix', e.target.value)}
+                    placeholder="INV"
+                  />
+                </div>
+                <div>
+                  <Label>Starting Number</Label>
+                  <Input
+                    type="number"
+                    value={formData.startingNumber}
+                    onChange={(e) =>
+                      handleChange('startingNumber', parseInt(e.target.value))
+                    }
+                  />
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Quotation Prefix</Label>
+                  <Input
+                    value={formData.quotationPrefix}
+                    onChange={(e) => handleChange('quotationPrefix', e.target.value)}
+                    placeholder="QUOT"
+                  />
+                </div>
+                <div>
+                  <Label>Starting Number</Label>
+                  <Input
+                    type="number"
+                    value={formData.quotationStartingNumber}
+                    onChange={(e) =>
+                      handleChange('quotationStartingNumber', parseInt(e.target.value))
+                    }
+                  />
+                </div>
+              </div>
+
+              <Separator />
+
+              <div>
+                <Label>Default Tax Rate (SST %)</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={formData.taxRate}
+                  onChange={(e) => handleChange('taxRate', parseFloat(e.target.value))}
+                />
+              </div>
+
+              <div>
+                <Label>Default Currency</Label>
+                <Select
+                  value={formData.currency}
+                  onValueChange={(v) => handleChange('currency', v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="RM">RM - Malaysian Ringgit</SelectItem>
+                    <SelectItem value="USD">USD - US Dollar</SelectItem>
+                    <SelectItem value="SGD">SGD - Singapore Dollar</SelectItem>
+                    <SelectItem value="EUR">EUR - Euro</SelectItem>
+                    <SelectItem value="GBP">GBP - British Pound</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label>Default Notes</Label>
+                <Textarea
+                  value={formData.defaultNotes}
+                  onChange={(e) => handleChange('defaultNotes', e.target.value)}
+                  rows={2}
+                />
+              </div>
+
+              <div>
+                <Label>Default Terms</Label>
+                <Textarea
+                  value={formData.defaultTerms}
+                  onChange={(e) => handleChange('defaultTerms', e.target.value)}
+                  rows={3}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* General Settings */}
+        <TabsContent value="general">
+          <Card>
+            <CardHeader>
+              <CardTitle>General Settings</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-slate-600">
+                More general settings will be added here in future updates.
+              </p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Data Management */}
+        <TabsContent value="data">
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Export Data</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-slate-600 mb-4">
+                  Download all your invoices, clients, products, and settings as a JSON file.
+                </p>
+                <Button onClick={handleExport} variant="outline" className="gap-2">
+                  <Database className="w-4 h-4" />
+                  Export All Data
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Import Data</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-slate-600 mb-4">
+                  Restore your data from a previously exported JSON file. This will replace all
+                  existing data.
+                </p>
+                <Input type="file" accept=".json" onChange={handleImport} />
+              </CardContent>
+            </Card>
+
+            <Card className="border-red-200">
+              <CardHeader>
+                <CardTitle className="text-red-600">Danger Zone</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-slate-600 mb-4">
+                  Clear all data from the application. This action cannot be undone.
+                </p>
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    if (
+                      confirm(
+                        'Are you sure you want to delete ALL data? This cannot be undone!'
+                      )
+                    ) {
+                      localStorage.clear();
+                      window.location.reload();
+                    }
+                  }}
+                >
+                  Clear All Data
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      {/* Save Button */}
+      <div className="flex justify-end">
+        <Button onClick={handleSave} size="lg" disabled={!hasChanges}>
+          Save All Settings
+        </Button>
+      </div>
+    </div>
+  );
+}
