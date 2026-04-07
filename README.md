@@ -6,6 +6,25 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38bdf8)
 
+## 🛠️ Development Workflow
+
+### ⚠️ IMPORTANT: Always Build Before Pushing!
+
+```bash
+# Make changes
+# ... edit files ...
+
+# BUILD FIRST (Required!)
+npm run build
+
+# If build passes, then commit
+git add .
+git commit -m "your message"
+git push
+```
+
+**Why?** Building first catches TypeScript errors and prevents broken commits from reaching the repository.
+
 ## ✨ Features
 
 ### 📊 Dashboard
