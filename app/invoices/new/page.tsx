@@ -100,6 +100,10 @@ export default function NewInvoicePage() {
     }
   };
 
+  const handleReorderItems = (reorderedItems: InvoiceItem[]) => {
+    setItems(reorderedItems);
+  };
+
   const handleItemChange = (id: string, field: keyof InvoiceItem, value: any) => {
     const updatedItems = items.map((item) => {
       if (item.id === id) {
@@ -418,6 +422,7 @@ export default function NewInvoicePage() {
                 currency={formData.currency}
                 onEdit={handleEditItem}
                 onDelete={handleRemoveItem}
+                onReorder={handleReorderItems}
               />
 
               <Button
