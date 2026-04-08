@@ -103,13 +103,13 @@ export default function ProductsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-row items-center justify-between gap-2">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Products & Services</h1>
-          <p className="text-slate-600 mt-2">Manage your products and services for quick invoicing</p>
+          <h1 className="text-lg sm:text-2xl font-bold text-slate-900">Products & Services</h1>
+          <p className="text-slate-600 mt-1 text-[10px] sm:text-sm">Manage your products and services for quick invoicing</p>
         </div>
-        <Button onClick={handleAdd} className="gap-2">
-          <Plus className="w-4 h-4" />
+        <Button onClick={handleAdd} className="gap-1">
+          <Plus className="w-3 h-3" />
           Add Product
         </Button>
       </div>

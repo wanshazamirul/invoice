@@ -43,13 +43,13 @@ export default function NewClientPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
+      <div className="flex flex-row items-center gap-2">
         <Button variant="ghost" size="icon" onClick={() => router.push('/clients')}>
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-3 h-3" />
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">New Client</h1>
-          <p className="text-slate-600 mt-2">Add a new client to your database</p>
+          <h1 className="text-lg sm:text-2xl font-bold text-slate-900">New Client</h1>
+          <p className="text-slate-600 mt-1 text-[10px] sm:text-sm">Add a new client to your database</p>
         </div>
       </div>
 
