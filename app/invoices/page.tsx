@@ -41,6 +41,7 @@ export default function InvoicesPage() {
   const [statusFilter, setStatusFilter] = useState<'all' | InvoiceStatus>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | 'invoice' | 'quotation'>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
 
   useEffect(() => {
     loadData();
@@ -240,53 +241,58 @@ export default function InvoicesPage() {
           ) : (
             <>
               {/* Mobile Card Layout */}
-              <div className="md:hidden space-y-4">
+              <div className="md:hidden space-y-2">
                 {filteredInvoices.map((invoice) => (
                   <Card
                     key={invoice.id}
-                    className="hover:shadow-md transition-shadow cursor-pointer"
-                    onClick={() => handleView(invoice.id)}
+                    className={`cursor-pointer transition-all active:scale-[0.98] ${
+                      selectedInvoiceId === invoice.id
+                        ? 'ring-2 ring-emerald-500 bg-emerald-50 dark:bg-emerald-950/30'
+                        : 'hover:shadow-md hover:bg-slate-50 dark:hover:bg-slate-900'
+                    }`}
+                    onClick={() => {
+                      setSelectedInvoiceId(invoice.id);
+                      setTimeout(() => handleView(invoice.id), 150);
+                    }}
                   >
-                    <CardContent className="pt-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-slate-900 dark:text-slate-100">{invoice.invoiceNumber}</h3>
-                            <Badge variant={invoice.type === 'invoice' ? 'default' : 'secondary'}>
-                              {invoice.type}
+                    <CardContent className="p-3">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5 mb-0.5">
+                            <h3 className="font-semibold text-sm text-slate-900 dark:text-slate-100 truncate">{invoice.invoiceNumber}</h3>
+                            <Badge variant={invoice.type === 'invoice' ? 'default' : 'secondary'} className="text-[10px] px-1.5 py-0">
+                              {invoice.type === 'invoice' ? 'INV' : 'QT'}
                             </Badge>
                           </div>
-                          <p className="text-sm text-slate-600 dark:text-slate-400">{invoice.client.name}</p>
+                          <p className="text-xs text-slate-600 dark:text-slate-400 truncate">{invoice.client.name}</p>
                         </div>
-                        <Badge className={getInvoiceStatusColor(invoice.status)}>
-                          {invoice.status}
-                        </Badge>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-3 mb-3">
-                        <div>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">Issue Date</p>
-                          <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{formatDate(invoice.issueDate)}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">Due Date</p>
-                          <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{formatDate(invoice.dueDate)}</p>
+                        <div className="flex flex-col items-end gap-1 ml-2">
+                          <Badge className={`${getInvoiceStatusColor(invoice.status)} text-[10px] px-1.5 py-0`}>
+                            {invoice.status}
+                          </Badge>
+                          <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                            {formatCurrency(invoice.total, invoice.currency)}
+                          </p>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
-                        <p className="text-lg font-bold text-emerald-600 dark:text-emerald-500">
-                          {formatCurrency(invoice.total, invoice.currency)}
-                        </p>
+                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                        <div className="flex gap-3 text-[10px] text-slate-500 dark:text-slate-400">
+                          <span>Issue: {formatDate(invoice.issueDate)}</span>
+                          <span>Due: {formatDate(invoice.dueDate)}</span>
+                        </div>
                         <DropdownMenu>
                           <DropdownMenuTrigger
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedInvoiceId(invoice.id);
+                            }}
                           >
-                            <Button variant="ghost" size="icon" aria-label="More options">
-                              <MoreVertical className="w-4 h-4" />
+                            <Button variant="ghost" size="icon" className="h-7 w-7" aria-label="More options">
+                              <MoreVertical className="w-3.5 h-3.5" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
+                          <DropdownMenuContent align="end" className="w-[180px]">
                             <DropdownMenuItem onClick={() => handleEdit(invoice.id)} aria-label="Edit invoice">
                               <FileText className="w-4 h-4 mr-2" />
                               Edit
@@ -298,16 +304,16 @@ export default function InvoicesPage() {
                             {invoice.type === 'invoice' && (
                               <DropdownMenuItem onClick={() => handleConvertToQuotation(invoice)} aria-label="Convert to quotation">
                                 <FileOutput className="w-4 h-4 mr-2" />
-                                Convert to Quotation
+                                Convert
                               </DropdownMenuItem>
                             )}
                             <DropdownMenuItem onClick={() => handleDownload(invoice)} aria-label="Download PDF">
                               <Download className="w-4 h-4 mr-2" />
-                              Download PDF
+                              Download
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleDelete(invoice.id)}
-                              className="text-red-600"
+                              className="text-red-600 dark:text-red-400"
                               aria-label="Delete invoice"
                             >
                               <Trash2 className="w-4 h-4 mr-2" />
