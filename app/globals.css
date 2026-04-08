@@ -129,6 +129,63 @@
   }
 }
 
+/* Mobile Safe Area Support */
+@layer base {
+  /* Safe area insets for devices with notches */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pb-safe {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  /* Prevent bounce scrolling on iOS */
+  html {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body {
+    overscroll-behavior-y: none;
+  }
+
+  /* Mobile tap highlight */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Focus styles for touch */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid oklch(0.708 0 0);
+    outline-offset: 2px;
+  }
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 1024px) {
+  /* Better touch targets */
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Prevent text selection on UI elements */
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
 /* Print Styles - Hide navigation and show invoice details */
 @media print {
   /* Hide sidebar, header, buttons, and non-essential elements */
