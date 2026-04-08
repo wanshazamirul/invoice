@@ -91,17 +91,17 @@ export default function InvoiceDetailPage() {
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" onClick={handlePrint} className="gap-2 flex-1 sm:flex-none">
+          <Button variant="outline" onClick={handlePrint} className="gap-2">
             <Printer className="w-4 h-4" />
-            <span className="hidden sm:inline">Print</span>
+            Print
           </Button>
-          <Button variant="outline" onClick={handleDownload} className="gap-2 flex-1 sm:flex-none">
+          <Button variant="outline" onClick={handleDownload} className="gap-2">
             <Download className="w-4 h-4" />
-            <span className="hidden sm:inline">Download PDF</span>
+            Download
           </Button>
           <EmailDialog invoice={invoice} />
           <PaymentDialog invoice={invoice} onUpdate={refreshInvoice} />
-          <Button onClick={handleEdit} className="gap-2 flex-1 sm:flex-none">
+          <Button onClick={handleEdit} className="gap-2">
             <Edit className="w-4 h-4" />
             Edit
           </Button>
