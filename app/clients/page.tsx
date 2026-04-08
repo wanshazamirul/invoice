@@ -131,7 +131,7 @@ export default function ClientsPage() {
       <div className="flex flex-row items-center justify-between gap-2">
         <div>
           <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100">Clients</h1>
-          <p className="text-slate-600 mt-1 text-[10px] sm:text-sm">Manage your client database</p>
+          <p className="text-slate-600 dark:text-slate-400 mt-1 text-[10px] sm:text-sm">Manage your client database</p>
         </div>
         <div className="flex flex-row gap-2 items-center">
           <SearchBar
@@ -155,8 +155,8 @@ export default function ClientsPage() {
                 <p className="text-xs text-slate-600 dark:text-slate-400">Total Clients</p>
                 <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{clients.length}</p>
               </div>
-              <div className="p-2 sm:p-3 bg-blue-100 rounded-lg">
-                <Mail className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-blue-600" />
+              <div className="p-2 sm:p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                <Mail className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-500" />
               </div>
             </div>
           </CardContent>
@@ -171,8 +171,8 @@ export default function ClientsPage() {
                   {clients.filter(c => c.company).length}
                 </p>
               </div>
-              <div className="p-2 sm:p-3 bg-emerald-100 rounded-lg">
-                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-emerald-600" />
+              <div className="p-2 sm:p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-emerald-600 dark:text-emerald-500" />
               </div>
             </div>
           </CardContent>
@@ -187,8 +187,8 @@ export default function ClientsPage() {
                   {clients.filter(c => !c.company).length}
                 </p>
               </div>
-              <div className="p-2 sm:p-3 bg-purple-100 rounded-lg">
-                <Phone className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-purple-600" />
+              <div className="p-2 sm:p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                <Phone className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-purple-600 dark:text-purple-500" />
               </div>
             </div>
           </CardContent>

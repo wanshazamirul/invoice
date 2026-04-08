@@ -106,7 +106,7 @@ export default function ProductsPage() {
       <div className="flex flex-row items-center justify-between gap-2">
         <div>
           <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100">Products & Services</h1>
-          <p className="text-slate-600 mt-1 text-[10px] sm:text-sm">Manage your products and services for quick invoicing</p>
+          <p className="text-slate-600 dark:text-slate-400 mt-1 text-[10px] sm:text-sm">Manage your products and services for quick invoicing</p>
         </div>
         <Button onClick={handleAdd} className="gap-1">
           <Plus className="w-3 h-3" />
@@ -123,8 +123,8 @@ export default function ProductsPage() {
                 <p className="text-sm text-slate-600 dark:text-slate-400">Total Products</p>
                 <p className="text-3xl font-bold text-slate-900 mt-2">{products.length}</p>
               </div>
-              <div className="p-3 bg-emerald-100 rounded-lg">
-                <Package className="w-6 h-6 text-emerald-600" />
+              <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
+                <Package className="w-6 h-6 text-emerald-600 dark:text-emerald-500" />
               </div>
             </div>
           </CardContent>
@@ -143,8 +143,8 @@ export default function ProductsPage() {
                     : formatCurrency(0)}
                 </p>
               </div>
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <Package className="w-6 h-6 text-blue-600" />
+              <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                <Package className="w-6 h-6 text-blue-600 dark:text-blue-500" />
               </div>
             </div>
           </CardContent>

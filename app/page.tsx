@@ -139,32 +139,32 @@ export default function DashboardPage() {
       title: 'Total Revenue',
       value: formatCurrency(stats.totalRevenue),
       icon: DollarSign,
-      color: 'text-emerald-600',
-      bgColor: 'bg-emerald-100',
+      color: 'text-emerald-600 dark:text-emerald-500',
+      bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
       trend: trends.revenueTrend !== 0 ? `${trends.revenueTrend > 0 ? '+' : ''}${trends.revenueTrend}%` : 'No data',
     },
     {
       title: 'Pending Amount',
       value: formatCurrency(stats.pendingAmount),
       icon: Clock,
-      color: 'text-yellow-600',
-      bgColor: 'bg-yellow-100',
+      color: 'text-yellow-600 dark:text-yellow-500',
+      bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
       trend: `${stats.pendingInvoices} invoice${stats.pendingInvoices !== 1 ? 's' : ''}`,
     },
     {
       title: 'Overdue Amount',
       value: formatCurrency(stats.overdueAmount),
       icon: AlertCircle,
-      color: 'text-red-600',
-      bgColor: 'bg-red-100',
+      color: 'text-red-600 dark:text-red-500',
+      bgColor: 'bg-red-100 dark:bg-red-900/30',
       trend: `${stats.overdueInvoices} invoice${stats.overdueInvoices !== 1 ? 's' : ''}`,
     },
     {
       title: 'Paid This Month',
       value: formatCurrency(stats.paidThisMonth),
       icon: CheckCircle,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100',
+      color: 'text-blue-600 dark:text-blue-500',
+      bgColor: 'bg-blue-100 dark:bg-blue-900/30',
       trend: trends.paidTrend !== 0 ? `${trends.paidTrend > 0 ? '+' : ''}${trends.paidTrend}%` : 'No data',
     },
   ];
@@ -227,9 +227,9 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">{stat.title}</p>
-                    <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stat.value}</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 mt-1 sm:mt-2">{stat.value}</p>
                   </div>
-                  <div className="p-2 sm:p-3 bg-slate-100 rounded-lg">
+                  <div className="p-2 sm:p-3 bg-slate-100 dark:bg-slate-800 rounded-lg">
                     <Icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-slate-600 dark:text-slate-400" />
                   </div>
                 </div>
@@ -319,7 +319,7 @@ export default function DashboardPage() {
         </CardHeader>
         <CardContent>
           {topClientsData.length === 0 ? (
-            <p className="text-slate-500 text-center py-8">No client data yet</p>
+            <p className="text-slate-500 dark:text-slate-400 text-center py-8">No client data yet</p>
           ) : (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={topClientsData}>
@@ -357,23 +357,23 @@ export default function DashboardPage() {
           <CardContent className="space-y-3">
             <a
               href="/invoices/new"
-              className="flex items-center justify-between p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors group"
+              className="flex items-center justify-between p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
             >
               <div className="flex items-center gap-3">
-                <FileText className="w-5 h-5 text-emerald-600" />
-                <span className="font-medium">Create New Invoice</span>
+                <FileText className="w-5 h-5 text-emerald-600 dark:text-emerald-500" />
+                <span className="font-medium dark:text-slate-100">Create New Invoice</span>
               </div>
-              <ArrowUpRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600" />
+              <ArrowUpRight className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-emerald-600 dark:group-hover:text-emerald-500" />
             </a>
             <a
               href="/clients/new"
-              className="flex items-center justify-between p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors group"
+              className="flex items-center justify-between p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
             >
               <div className="flex items-center gap-3">
-                <Users className="w-5 h-5 text-blue-600" />
-                <span className="font-medium">Add New Client</span>
+                <Users className="w-5 h-5 text-blue-600 dark:text-blue-500" />
+                <span className="font-medium dark:text-slate-100">Add New Client</span>
               </div>
-              <ArrowUpRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600" />
+              <ArrowUpRight className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
             </a>
           </CardContent>
         </Card>

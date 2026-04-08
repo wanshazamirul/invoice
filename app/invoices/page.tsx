@@ -160,19 +160,19 @@ export default function InvoicesPage() {
         <Card>
           <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
             <p className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400">Pending</p>
-            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-yellow-600">{stats.pending}</p>
+            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-yellow-600 dark:text-yellow-500">{stats.pending}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
             <p className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400">Paid</p>
-            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600">{stats.paid}</p>
+            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 dark:text-green-500">{stats.paid}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
             <p className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400">Overdue</p>
-            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-red-600">{stats.overdue}</p>
+            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-red-600 dark:text-red-500">{stats.overdue}</p>
           </CardContent>
         </Card>
       </div>
@@ -220,8 +220,8 @@ export default function InvoicesPage() {
         <CardContent>
           {filteredInvoices.length === 0 ? (
             <div className="text-center py-12">
-              <FileText className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <p className="text-slate-500 mb-4">
+              <FileText className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
+              <p className="text-slate-500 dark:text-slate-400 mb-4">
                 {invoices.length === 0
                   ? 'No invoices yet. Create your first invoice!'
                   : 'No invoices match your filters.'}
@@ -265,17 +265,17 @@ export default function InvoicesPage() {
 
                       <div className="grid grid-cols-2 gap-3 mb-3">
                         <div>
-                          <p className="text-xs text-slate-500 dark:text-slate-500">Issue Date</p>
-                          <p className="text-sm font-medium">{formatDate(invoice.issueDate)}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">Issue Date</p>
+                          <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{formatDate(invoice.issueDate)}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-slate-500 dark:text-slate-500">Due Date</p>
-                          <p className="text-sm font-medium">{formatDate(invoice.dueDate)}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">Due Date</p>
+                          <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{formatDate(invoice.dueDate)}</p>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
-                        <p className="text-lg font-bold text-emerald-600">
+                        <p className="text-lg font-bold text-emerald-600 dark:text-emerald-500">
                           {formatCurrency(invoice.total, invoice.currency)}
                         </p>
                         <DropdownMenu>
