@@ -48,15 +48,25 @@ git push
 ### 🧾 Invoice Management
 - Create professional invoices
 - Quotation support (convert to invoice)
+- **Hybrid Desktop/Mobile Interface**:
+  - Desktop: Table-based inline editing for efficiency
+  - Mobile: Modal-based editing for better space utilization
+  - Card-based list view on mobile with touch-friendly controls
+- **Drag-and-Drop Reordering** (Mobile):
+  - Long-press grip handle to reorder line items
+  - Visual feedback during drag
+  - Smooth animations and transitions
 - Multiple line items with:
   - Quantity, price, tax, discount per item
-  - Automatic calculations
-  - Product selection
+  - Automatic calculations with NaN prevention
+  - Product selection dropdown
+  - Modal editing on mobile
 - Tax calculation (SST support)
 - Discount support
 - Recurring invoices (weekly, monthly, quarterly, yearly)
 - Invoice status tracking (draft, pending, paid, overdue, partial)
 - Filter by type and status
+- Search functionality with keyboard shortcut (⌘K)
 
 ### ⚙️ Settings
 - Company information management
@@ -70,23 +80,34 @@ git push
 
 ### 🎨 UI/UX
 - Clean, modern interface
-- Responsive design (mobile, tablet, desktop)
+- **Mobile-First Responsive Design**:
+  - Optimized input sizing for touch (13px font, 34px height)
+  - Improved bottom navbar positioning (pt-4 for better spacing)
+  - Touch-friendly buttons with proper sizing (min 32px touch targets)
+  - Safe area insets for notched devices
+- **Accessibility Improvements**:
+  - ARIA labels on all interactive elements
+  - Proper text alignment (left-aligned inputs)
+  - Keyboard navigation support
+  - Screen reader friendly
+- Desktop/Mobile hybrid approach where appropriate
 - Dark mode ready
-- Professional color scheme
-- Smooth animations (Framer Motion)
-- shadcn/ui components
+- Professional color scheme (OKLCH color space)
+- Smooth animations and transitions
+- shadcn/ui components with Base UI React
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 16 (App Router)
+- **Framework**: Next.js 16 (App Router + Turbopack)
 - **Language**: TypeScript (Strict Mode)
-- **Styling**: Tailwind CSS v4
-- **UI Components**: shadcn/ui
+- **Styling**: Tailwind CSS v4 (OKLCH color space)
+- **UI Components**: shadcn/ui + Base UI React
 - **State Management**: Zustand
+- **Drag & Drop**: @dnd-kit (touch-friendly)
 - **Storage**: localStorage (no database needed!)
 - **Icons**: Lucide React
-- **PDF Generation**: jsPDF (ready to implement)
 - **Charts**: Recharts
+- **Context**: Alert Context for notifications
 
 ## 🚀 Getting Started
 
@@ -118,6 +139,25 @@ npm start
 ```
 
 ## 📖 Usage
+
+### 📝 Recent Updates (April 2026)
+
+**Mobile Experience Enhancements**:
+- ✅ Implemented drag-and-drop line item reordering for mobile
+- ✅ Hybrid desktop/mobile interface (table on desktop, modal on mobile)
+- ✅ Improved mobile input sizing (13px font, 34px height for readability)
+- ✅ Fixed bottom navbar positioning (better spacing)
+- ✅ Moved search icon to right side of search bar
+- ✅ Added NaN prevention in calculations (shows 0 instead of NaN)
+- ✅ Improved button alignment and touch targets
+- ✅ Added ARIA labels for better accessibility
+
+**Technical Improvements**:
+- ✅ Added @dnd-kit for touch-friendly drag and drop
+- ✅ Created reusable LineItemDialog component
+- ✅ Created LineItemList component for mobile card view
+- ✅ Improved form validation and error handling
+- ✅ Enhanced TypeScript strict mode compliance
 
 ### First Time Setup
 
@@ -151,14 +191,16 @@ npm start
 
 - [ ] PDF generation and download
 - [ ] Email invoices directly
-- [ ] Invoice templates (multiple designs)
+- [ ] Multiple invoice templates (modern, classic, minimal)
 - [ ] Payment tracking (partial payments)
-- [ ] Dashboard charts (revenue over time)
-- [ ] Multi-language support
-- [ ] Quick copy invoice
+- [ ] Advanced dashboard charts (revenue trends, client analytics)
+- [ ] Multi-language support (Bahasa Melayu, Chinese)
+- [ ] Quick copy invoice from existing
 - [ ] Invoice to quotation conversion
-- [ ] Search functionality
-- [ ] Print preview
+- [ ] Print preview mode
+- [ ] Bulk invoice actions
+- [ ] Client portal for invoice viewing
+- [ ] Payment gateway integration (Stripe, billplz)
 
 ## 📁 Project Structure
 
