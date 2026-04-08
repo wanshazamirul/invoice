@@ -78,30 +78,30 @@ export default function InvoiceDetailPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between no-print">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => router.push('/invoices')}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold">{invoice.invoiceNumber}</h1>
-            <p className="text-slate-600 text-sm">
+            <h1 className="text-xl sm:text-2xl font-bold">{invoice.invoiceNumber}</h1>
+            <p className="text-slate-600 text-xs sm:text-sm">
               {invoice.type === 'invoice' ? 'Invoice' : 'Quotation'} • {formatDate(invoice.issueDate)}
             </p>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handlePrint} className="gap-2">
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={handlePrint} className="gap-2 flex-1 sm:flex-none">
             <Printer className="w-4 h-4" />
-            Print
+            <span className="hidden sm:inline">Print</span>
           </Button>
-          <Button variant="outline" onClick={handleDownload} className="gap-2">
+          <Button variant="outline" onClick={handleDownload} className="gap-2 flex-1 sm:flex-none">
             <Download className="w-4 h-4" />
-            Download PDF
+            <span className="hidden sm:inline">Download PDF</span>
           </Button>
           <EmailDialog invoice={invoice} />
           <PaymentDialog invoice={invoice} onUpdate={refreshInvoice} />
-          <Button onClick={handleEdit} className="gap-2">
+          <Button onClick={handleEdit} className="gap-2 flex-1 sm:flex-none">
             <Edit className="w-4 h-4" />
             Edit
           </Button>
@@ -112,18 +112,18 @@ export default function InvoiceDetailPage() {
       <Card className="print-show">
         <CardContent className="p-8">
           {/* Header */}
-          <div className="flex justify-between items-start mb-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-start gap-6 mb-8">
             <div>
-              <h2 className="text-2xl font-bold text-emerald-600">{settings.companyInfo.name}</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-emerald-600">{settings.companyInfo.name}</h2>
               <p className="text-slate-600 text-sm mt-1">{settings.companyInfo.email}</p>
               <p className="text-slate-600 text-sm">{settings.companyInfo.phone}</p>
               <p className="text-slate-600 text-sm max-w-md mt-1">{settings.companyInfo.address}</p>
             </div>
-            <div className="text-right">
-              <h3 className="text-3xl font-bold text-slate-900">
+            <div className="text-left sm:text-right w-full sm:w-auto">
+              <h3 className="text-2xl sm:text-3xl font-bold text-slate-900">
                 {invoice.type === 'invoice' ? 'INVOICE' : 'QUOTATION'}
               </h3>
-              <p className="text-slate-600 text-lg mt-2">{invoice.invoiceNumber}</p>
+              <p className="text-slate-600 text-base sm:text-lg mt-2">{invoice.invoiceNumber}</p>
               <div className="text-slate-600 text-sm mt-2">
                 <p>Issue Date: {formatDate(invoice.issueDate)}</p>
                 <p>Due Date: {formatDate(invoice.dueDate)}</p>
@@ -146,16 +146,16 @@ export default function InvoiceDetailPage() {
           </div>
 
           {/* Line Items */}
-          <div className="mb-8 no-break">
-            <table className="w-full">
+          <div className="mb-8 no-break overflow-x-auto">
+            <table className="w-full min-w-[600px]">
               <thead>
                 <tr className="bg-emerald-600 text-white">
-                  <th className="text-left p-3 rounded-tl-lg">Description</th>
-                  <th className="text-center p-3">Qty</th>
-                  <th className="text-center p-3">Unit Price</th>
-                  <th className="text-center p-3">Tax %</th>
-                  <th className="text-center p-3">Disc %</th>
-                  <th className="text-right p-3 rounded-tr-lg">Total</th>
+                  <th className="text-left p-2 sm:p-3 rounded-tl-lg text-xs sm:text-sm">Description</th>
+                  <th className="text-center p-2 sm:p-3 text-xs sm:text-sm">Qty</th>
+                  <th className="text-center p-2 sm:p-3 text-xs sm:text-sm">Unit Price</th>
+                  <th className="text-center p-2 sm:p-3 text-xs sm:text-sm">Tax %</th>
+                  <th className="text-center p-2 sm:p-3 text-xs sm:text-sm">Disc %</th>
+                  <th className="text-right p-2 sm:p-3 rounded-tr-lg text-xs sm:text-sm">Total</th>
                 </tr>
               </thead>
               <tbody>
@@ -164,14 +164,14 @@ export default function InvoiceDetailPage() {
                     key={item.id}
                     className={index % 2 === 0 ? 'bg-slate-50' : 'bg-white'}
                   >
-                    <td className="p-3">{item.description}</td>
-                    <td className="text-center p-3">{item.quantity}</td>
-                    <td className="text-center p-3">
+                    <td className="p-2 sm:p-3 text-xs sm:text-sm">{item.description}</td>
+                    <td className="text-center p-2 sm:p-3 text-xs sm:text-sm">{item.quantity}</td>
+                    <td className="text-center p-2 sm:p-3 text-xs sm:text-sm">
                       {formatCurrency(item.unitPrice, invoice.currency)}
                     </td>
-                    <td className="text-center p-3">{item.tax}%</td>
-                    <td className="text-center p-3">{item.discount}%</td>
-                    <td className="text-right p-3 font-semibold">
+                    <td className="text-center p-2 sm:p-3 text-xs sm:text-sm">{item.tax}%</td>
+                    <td className="text-center p-2 sm:p-3 text-xs sm:text-sm">{item.discount}%</td>
+                    <td className="text-right p-2 sm:p-3 font-semibold text-xs sm:text-sm">
                       {formatCurrency(item.total, invoice.currency)}
                     </td>
                   </tr>
@@ -182,17 +182,17 @@ export default function InvoiceDetailPage() {
 
           {/* Totals */}
           <div className="flex justify-end mb-8">
-            <div className="w-80">
-              <div className="flex justify-between py-2">
+            <div className="w-full sm:w-80">
+              <div className="flex justify-between py-2 text-sm">
                 <span className="text-slate-600">Subtotal:</span>
                 <span className="font-semibold">{formatCurrency(invoice.subtotal, invoice.currency)}</span>
               </div>
-              <div className="flex justify-between py-2">
+              <div className="flex justify-between py-2 text-sm">
                 <span className="text-slate-600">Tax ({invoice.taxRate}%):</span>
                 <span className="font-semibold">{formatCurrency(invoice.taxAmount, invoice.currency)}</span>
               </div>
               {invoice.discountRate > 0 && (
-                <div className="flex justify-between py-2">
+                <div className="flex justify-between py-2 text-sm">
                   <span className="text-slate-600">Discount ({invoice.discountRate}%):</span>
                   <span className="font-semibold text-red-600">
                     -{formatCurrency(invoice.discountAmount, invoice.currency)}
@@ -200,8 +200,8 @@ export default function InvoiceDetailPage() {
                 </div>
               )}
               <div className="flex justify-between py-3 bg-emerald-600 text-white px-4 rounded-lg mt-2">
-                <span className="font-bold text-lg">TOTAL:</span>
-                <span className="font-bold text-lg">
+                <span className="font-bold text-base sm:text-lg">TOTAL:</span>
+                <span className="font-bold text-base sm:text-lg">
                   {formatCurrency(invoice.total, invoice.currency)}
                 </span>
               </div>

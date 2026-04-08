@@ -128,47 +128,47 @@ export default function InvoicesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Invoices</h1>
-          <p className="text-slate-600 mt-2">Manage your invoices and quotations</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Invoices</h1>
+          <p className="text-slate-600 mt-2 text-sm sm:text-base">Manage your invoices and quotations</p>
         </div>
-        <Button onClick={() => router.push('/invoices/new')} className="gap-2">
+        <Button onClick={() => router.push('/invoices/new')} className="gap-2 w-full sm:w-auto">
           <Plus className="w-4 h-4" />
           Create Invoice
         </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
         <Card>
           <CardContent className="pt-4">
             <p className="text-xs text-slate-600">Total</p>
-            <p className="text-2xl font-bold text-slate-900">{stats.total}</p>
+            <p className="text-xl sm:text-2xl font-bold text-slate-900">{stats.total}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
             <p className="text-xs text-slate-600">Draft</p>
-            <p className="text-2xl font-bold text-slate-500">{stats.draft}</p>
+            <p className="text-xl sm:text-2xl font-bold text-slate-500">{stats.draft}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
             <p className="text-xs text-slate-600">Pending</p>
-            <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
+            <p className="text-xl sm:text-2xl font-bold text-yellow-600">{stats.pending}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
             <p className="text-xs text-slate-600">Paid</p>
-            <p className="text-2xl font-bold text-green-600">{stats.paid}</p>
+            <p className="text-xl sm:text-2xl font-bold text-green-600">{stats.paid}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
             <p className="text-xs text-slate-600">Overdue</p>
-            <p className="text-2xl font-bold text-red-600">{stats.overdue}</p>
+            <p className="text-xl sm:text-2xl font-bold text-red-600">{stats.overdue}</p>
           </CardContent>
         </Card>
       </div>
@@ -176,38 +176,40 @@ export default function InvoicesPage() {
       {/* Filters */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>All Invoices</CardTitle>
-            <div className="flex gap-3 items-center">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <CardTitle className="text-lg sm:text-xl">All Invoices</CardTitle>
+            <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
               <SearchBar
                 value={searchQuery}
                 onChange={setSearchQuery}
                 placeholder="Search invoices..."
               />
-              <Select value={typeFilter} onValueChange={(v: any) => setTypeFilter(v)}>
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="invoice">Invoices</SelectItem>
-                  <SelectItem value="quotation">Quotations</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex gap-3">
+                <Select value={typeFilter} onValueChange={(v: any) => setTypeFilter(v)}>
+                  <SelectTrigger className="w-full sm:w-[140px]">
+                    <SelectValue placeholder="Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Types</SelectItem>
+                    <SelectItem value="invoice">Invoices</SelectItem>
+                    <SelectItem value="quotation">Quotations</SelectItem>
+                  </SelectContent>
+                </Select>
 
-              <Select value={statusFilter} onValueChange={(v: any) => setStatusFilter(v)}>
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="paid">Paid</SelectItem>
-                  <SelectItem value="overdue">Overdue</SelectItem>
-                  <SelectItem value="partial">Partial</SelectItem>
-                </SelectContent>
-              </Select>
+                <Select value={statusFilter} onValueChange={(v: any) => setStatusFilter(v)}>
+                  <SelectTrigger className="w-full sm:w-[140px]">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="draft">Draft</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="paid">Paid</SelectItem>
+                    <SelectItem value="overdue">Overdue</SelectItem>
+                    <SelectItem value="partial">Partial</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -232,83 +234,165 @@ export default function InvoicesPage() {
               )}
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Invoice #</TableHead>
-                  <TableHead>Client</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Due Date</TableHead>
-                  <TableHead>Total</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <>
+              {/* Mobile Card Layout */}
+              <div className="md:hidden space-y-4">
                 {filteredInvoices.map((invoice) => (
-                  <TableRow key={invoice.id}>
-                    <TableCell className="font-medium">{invoice.invoiceNumber}</TableCell>
-                    <TableCell>{invoice.client.name}</TableCell>
-                    <TableCell>
-                      <Badge variant={invoice.type === 'invoice' ? 'default' : 'secondary'}>
-                        {invoice.type}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{formatDate(invoice.issueDate)}</TableCell>
-                    <TableCell>{formatDate(invoice.dueDate)}</TableCell>
-                    <TableCell className="font-semibold">
-                      {formatCurrency(invoice.total, invoice.currency)}
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getInvoiceStatusColor(invoice.status)}>
-                        {invoice.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger>
-                          
-                            <MoreVertical className="w-4 h-4" />
-                          
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleView(invoice.id)}>
-                            <Eye className="w-4 h-4 mr-2" />
-                            View
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleEdit(invoice.id)}>
-                            <FileText className="w-4 h-4 mr-2" />
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleCopy(invoice)}>
-                            <Copy className="w-4 h-4 mr-2" />
-                            Copy
-                          </DropdownMenuItem>
-                          {invoice.type === 'invoice' && (
-                            <DropdownMenuItem onClick={() => handleConvertToQuotation(invoice)}>
-                              <FileOutput className="w-4 h-4 mr-2" />
-                              Convert to Quotation
+                  <Card key={invoice.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="pt-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-semibold text-slate-900">{invoice.invoiceNumber}</h3>
+                            <Badge variant={invoice.type === 'invoice' ? 'default' : 'secondary'}>
+                              {invoice.type}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-slate-600">{invoice.client.name}</p>
+                        </div>
+                        <Badge className={getInvoiceStatusColor(invoice.status)}>
+                          {invoice.status}
+                        </Badge>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                          <p className="text-xs text-slate-500">Issue Date</p>
+                          <p className="text-sm font-medium">{formatDate(invoice.issueDate)}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-slate-500">Due Date</p>
+                          <p className="text-sm font-medium">{formatDate(invoice.dueDate)}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+                        <p className="text-lg font-bold text-emerald-600">
+                          {formatCurrency(invoice.total, invoice.currency)}
+                        </p>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger>
+                            <Button variant="ghost" size="icon">
+                              <MoreVertical className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleView(invoice.id)}>
+                              <Eye className="w-4 h-4 mr-2" />
+                              View
                             </DropdownMenuItem>
-                          )}
-                          <DropdownMenuItem onClick={() => handleDownload(invoice)}>
-                            <Download className="w-4 h-4 mr-2" />
-                            Download PDF
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDelete(invoice.id)}
-                            className="text-red-600"
-                          >
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
+                            <DropdownMenuItem onClick={() => handleEdit(invoice.id)}>
+                              <FileText className="w-4 h-4 mr-2" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleCopy(invoice)}>
+                              <Copy className="w-4 h-4 mr-2" />
+                              Copy
+                            </DropdownMenuItem>
+                            {invoice.type === 'invoice' && (
+                              <DropdownMenuItem onClick={() => handleConvertToQuotation(invoice)}>
+                                <FileOutput className="w-4 h-4 mr-2" />
+                                Convert to Quotation
+                              </DropdownMenuItem>
+                            )}
+                            <DropdownMenuItem onClick={() => handleDownload(invoice)}>
+                              <Download className="w-4 h-4 mr-2" />
+                              Download PDF
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => handleDelete(invoice.id)}
+                              className="text-red-600"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))}
-              </TableBody>
-            </Table>
+              </div>
+
+              {/* Desktop Table Layout */}
+              <Table className="hidden md:table">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Invoice #</TableHead>
+                    <TableHead>Client</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Due Date</TableHead>
+                    <TableHead>Total</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredInvoices.map((invoice) => (
+                    <TableRow key={invoice.id}>
+                      <TableCell className="font-medium">{invoice.invoiceNumber}</TableCell>
+                      <TableCell>{invoice.client.name}</TableCell>
+                      <TableCell>
+                        <Badge variant={invoice.type === 'invoice' ? 'default' : 'secondary'}>
+                          {invoice.type}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{formatDate(invoice.issueDate)}</TableCell>
+                      <TableCell>{formatDate(invoice.dueDate)}</TableCell>
+                      <TableCell className="font-semibold">
+                        {formatCurrency(invoice.total, invoice.currency)}
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={getInvoiceStatusColor(invoice.status)}>
+                          {invoice.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger>
+                            <Button variant="ghost" size="icon">
+                              <MoreVertical className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleView(invoice.id)}>
+                              <Eye className="w-4 h-4 mr-2" />
+                              View
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleEdit(invoice.id)}>
+                              <FileText className="w-4 h-4 mr-2" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleCopy(invoice)}>
+                              <Copy className="w-4 h-4 mr-2" />
+                              Copy
+                            </DropdownMenuItem>
+                            {invoice.type === 'invoice' && (
+                              <DropdownMenuItem onClick={() => handleConvertToQuotation(invoice)}>
+                                <FileOutput className="w-4 h-4 mr-2" />
+                                Convert to Quotation
+                              </DropdownMenuItem>
+                            )}
+                            <DropdownMenuItem onClick={() => handleDownload(invoice)}>
+                              <Download className="w-4 h-4 mr-2" />
+                              Download PDF
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => handleDelete(invoice.id)}
+                              className="text-red-600"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </>
           )}
         </CardContent>
       </Card>

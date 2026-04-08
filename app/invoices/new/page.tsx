@@ -172,7 +172,7 @@ export default function NewInvoicePage() {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <Link href="/invoices">
             <Button variant="ghost" size="icon">
@@ -180,22 +180,22 @@ export default function NewInvoicePage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">New Invoice</h1>
-            <p className="text-slate-600 mt-2">Create and send professional invoices</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">New Invoice</h1>
+            <p className="text-slate-600 mt-2 text-sm sm:text-base">Create and send professional invoices</p>
           </div>
         </div>
-        <div className="flex gap-3">
-          <Button variant="outline" onClick={() => handleSave('draft')}>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button variant="outline" onClick={() => handleSave('draft')} className="w-full sm:w-auto">
             Save as Draft
           </Button>
-          <Button onClick={() => handleSave('pending')} className="gap-2">
+          <Button onClick={() => handleSave('pending')} className="gap-2 w-full sm:w-auto">
             <Save className="w-4 h-4" />
             Save & Send
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
         {/* Main Form */}
         <div className="lg:col-span-2 space-y-6">
           {/* Client & Type */}

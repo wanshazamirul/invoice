@@ -161,15 +161,15 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
-        <p className="text-slate-600 mt-2">Welcome back! Here's your business overview.</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Dashboard</h1>
+        <p className="text-slate-600 mt-2 text-sm sm:text-base">Welcome back! Here's your business overview.</p>
       </div>
 
       {/* Main Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
@@ -179,11 +179,11 @@ export default function DashboardPage() {
                   {stat.title}
                 </CardTitle>
                 <div className={`p-2 rounded-lg ${stat.bgColor}`}>
-                  <Icon className={`w-5 h-5 ${stat.color}`} />
+                  <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${stat.color}`} />
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900">{stat.value}</div>
+                <div className="text-xl sm:text-2xl font-bold text-slate-900">{stat.value}</div>
                 <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
                   <TrendingUp className="w-3 h-3" />
                   {stat.trend}
