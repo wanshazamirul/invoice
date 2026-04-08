@@ -16,19 +16,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Plus, Trash2, Save, ArrowLeft } from 'lucide-react';
+import { Plus, Save, ArrowLeft } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import { calculateInvoiceTotals, calculateItemTotal } from '@/lib/helpers';
 import Link from 'next/link';
 import { useAlert } from '@/contexts/alert-context';
+import { LineItemDialog } from '@/components/invoices/line-item-dialog';
+import { LineItemList } from '@/components/invoices/line-item-list';
 
 export default function EditInvoicePage() {
   const { clients, products, settings, invoices, updateInvoice, loadData } =
@@ -82,56 +76,32 @@ export default function EditInvoicePage() {
 
   const selectedClient = clients.find((c) => c.id === formData.clientId);
 
+  const [itemModalOpen, setItemModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<InvoiceItem | null>(null);
+
   const handleAddItem = () => {
-    setItems([
-      ...items,
-      {
-        id: crypto.randomUUID(),
-        description: '',
-        quantity: 1,
-        unitPrice: 0,
-        tax: 0,
-        discount: 0,
-        total: 0,
-      },
-    ]);
+    setEditingItem(null);
+    setItemModalOpen(true);
+  };
+
+  const handleEditItem = (item: InvoiceItem) => {
+    setEditingItem(item);
+    setItemModalOpen(true);
+  };
+
+  const handleSaveItem = (item: InvoiceItem) => {
+    if (editingItem) {
+      // Update existing item
+      setItems(items.map((i) => (i.id === item.id ? item : i)));
+    } else {
+      // Add new item
+      setItems([...items, item]);
+    }
   };
 
   const handleRemoveItem = (id: string) => {
     if (items.length > 1) {
       setItems(items.filter((item) => item.id !== id));
-    }
-  };
-
-  const handleItemChange = (id: string, field: keyof InvoiceItem, value: any) => {
-    const updatedItems = items.map((item) => {
-      if (item.id === id) {
-        const updated = { ...item, [field]: value };
-        if (
-          field === 'quantity' ||
-          field === 'unitPrice' ||
-          field === 'tax' ||
-          field === 'discount'
-        ) {
-          updated.total = calculateItemTotal(
-            updated.quantity,
-            updated.unitPrice,
-            updated.tax,
-            updated.discount
-          );
-        }
-        return updated;
-      }
-      return item;
-    });
-    setItems(updatedItems);
-  };
-
-  const handleSelectProduct = (itemId: string, productId: string) => {
-    const product = products.find((p) => p.id === productId);
-    if (product) {
-      handleItemChange(itemId, 'description', product.name);
-      handleItemChange(itemId, 'unitPrice', product.price);
     }
   };
 
@@ -312,98 +282,12 @@ export default function EditInvoicePage() {
               <CardTitle>Line Items</CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[40%]">Description</TableHead>
-                    <TableHead className="w-[12%]">Qty</TableHead>
-                    <TableHead className="w-[16%]">Price</TableHead>
-                    <TableHead className="w-[12%]">Tax %</TableHead>
-                    <TableHead className="w-[12%]">Total</TableHead>
-                    <TableHead className="w-[8%]"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {items.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell>
-                        {products.length > 0 && (
-                          <Select
-                            value=""
-                            onValueChange={(v) => v && handleSelectProduct(item.id, v)}
-                          >
-                            <SelectTrigger className="mb-2">
-                              <SelectValue placeholder="Select product" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {products.map((product) => (
-                                <SelectItem key={product.id} value={product.id}>
-                                  {product.name} ({settings.currency}
-                                  {product.price})
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        )}
-                        <Input
-                          value={item.description}
-                          onChange={(e) =>
-                            handleItemChange(item.id, 'description', e.target.value)
-                          }
-                          placeholder="Item description"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Input
-                          type="number"
-                          min="1"
-                          value={item.quantity}
-                          onChange={(e) =>
-                            handleItemChange(item.id, 'quantity', parseFloat(e.target.value))
-                          }
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Input
-                          type="number"
-                          min="0"
-                          step="0.01"
-                          value={item.unitPrice}
-                          onChange={(e) =>
-                            handleItemChange(item.id, 'unitPrice', parseFloat(e.target.value))
-                          }
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Input
-                          type="number"
-                          min="0"
-                          max="100"
-                          value={item.tax}
-                          onChange={(e) =>
-                            handleItemChange(item.id, 'tax', parseFloat(e.target.value))
-                          }
-                        />
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {settings.currency}
-                        {item.total.toFixed(2)}
-                      </TableCell>
-                      <TableCell>
-                        {items.length > 1 && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleRemoveItem(item.id)}
-                          >
-                            <Trash2 className="w-4 h-4 text-red-600" />
-                          </Button>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <LineItemList
+                items={items}
+                currency={formData.currency}
+                onEdit={handleEditItem}
+                onDelete={handleRemoveItem}
+              />
               <Button
                 variant="outline"
                 onClick={handleAddItem}
@@ -414,6 +298,15 @@ export default function EditInvoicePage() {
               </Button>
             </CardContent>
           </Card>
+
+          {/* Line Item Modal */}
+          <LineItemDialog
+            open={itemModalOpen}
+            onOpenChange={setItemModalOpen}
+            item={editingItem}
+            products={products}
+            onSave={handleSaveItem}
+          />
 
           {/* Notes & Terms */}
           <Card>
