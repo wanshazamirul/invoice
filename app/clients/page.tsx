@@ -128,19 +128,19 @@ export default function ClientsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-row items-center justify-between gap-2">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Clients</h1>
-          <p className="text-slate-600 mt-2 text-sm sm:text-base">Manage your client database</p>
+          <h1 className="text-lg sm:text-2xl font-bold text-slate-900">Clients</h1>
+          <p className="text-slate-600 mt-1 text-[10px] sm:text-sm">Manage your client database</p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+        <div className="flex flex-row gap-2 items-center">
           <SearchBar
             value={searchQuery}
             onChange={setSearchQuery}
             placeholder="Search clients..."
           />
-          <Button onClick={handleAdd} className="gap-2 w-full sm:w-auto">
-            <Plus className="w-4 h-4" />
+          <Button onClick={handleAdd} className="gap-1">
+            <Plus className="w-3 h-3" />
             Add Client
           </Button>
         </div>

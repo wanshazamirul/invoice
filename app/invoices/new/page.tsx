@@ -180,24 +180,24 @@ export default function NewInvoicePage() {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-row items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
           <Link href="/invoices">
             <Button variant="ghost" size="icon">
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-3 h-3" />
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">New Invoice</h1>
-            <p className="text-slate-600 mt-2 text-sm sm:text-base">Create and send professional invoices</p>
+            <h1 className="text-lg sm:text-2xl font-bold text-slate-900">New Invoice</h1>
+            <p className="text-slate-600 mt-1 text-[10px] sm:text-sm">Create and send professional invoices</p>
           </div>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Button variant="outline" onClick={() => handleSave('draft')} className="w-full sm:w-auto">
+        <div className="flex flex-row gap-2">
+          <Button variant="outline" onClick={() => handleSave('draft')}>
             Save as Draft
           </Button>
-          <Button onClick={() => handleSave('pending')} className="gap-2 w-full sm:w-auto">
-            <Save className="w-4 h-4" />
+          <Button onClick={() => handleSave('pending')} className="gap-1">
+            <Save className="w-3 h-3" />
             Save & Send
           </Button>
         </div>

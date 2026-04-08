@@ -181,8 +181,8 @@
   /* Better touch targets */
   button,
   a {
-    min-height: 44px;
-    min-width: 44px;
+    min-height: 36px;
+    min-width: 36px;
   }
 
   /* Smooth scrolling */
@@ -196,7 +196,7 @@
     user-select: none;
   }
 
-  /* Mobile input improvements - compact sizing */
+  /* Mobile input improvements - ultra compact */
   input[type="text"],
   input[type="email"],
   input[type="tel"],
@@ -205,39 +205,46 @@
   input[type="search"],
   textarea,
   select {
-    font-size: 13px !important; /* Even smaller text */
-    min-height: 36px !important; /* Compact height */
-    padding: 8px 10px !important; /* Minimal padding */
+    font-size: 11px !important; /* Ultra small text */
+    min-height: 32px !important; /* Ultra compact height */
+    padding: 6px 8px !important; /* Minimal padding */
   }
 
   /* Better input focus on mobile */
   input:focus,
   textarea:focus,
   select:focus {
-    outline-offset: 2px;
-    outline-width: 2px;
+    outline-offset: 1px;
+    outline-width: 1px;
   }
 
   /* Input placeholder text */
   input::placeholder,
   textarea::placeholder {
-    font-size: 12px !important;
+    font-size: 10px !important;
     opacity: 0.6;
   }
 
   /* Better spacing for form groups */
   .space-y-2 > * + * {
-    margin-top: 0.75rem !important;
+    margin-top: 0.5rem !important;
   }
 
   .space-y-4 > * + * {
-    margin-top: 1.25rem !important;
+    margin-top: 0.75rem !important;
+  }
+
+  /* Compact buttons */
+  button {
+    min-height: 36px !important;
+    font-size: 11px !important;
+    padding: 6px 10px !important;
   }
 }
 
 /* Extra small devices */
 @media (max-width: 640px) {
-  /* Ultra-compact inputs for very small screens */
+  /* Maximum compact inputs */
   input[type="text"],
   input[type="email"],
   input[type="tel"],
@@ -246,35 +253,35 @@
   input[type="search"],
   textarea,
   select {
-    font-size: 12px !important;
-    min-height: 34px !important; /* Ultra compact */
-    padding: 6px 10px !important; /* Super minimal padding */
+    font-size: 10px !important;
+    min-height: 30px !important;
+    padding: 4px 8px !important;
   }
 
-  /* Better label sizing */
+  /* Ultra compact labels */
   label {
-    font-size: 12px !important;
+    font-size: 10px !important;
     font-weight: 500 !important;
   }
 
-  /* Larger buttons for easier tapping */
+  /* Minimal buttons */
   button {
-    min-height: 44px !important;
-    font-size: 13px !important;
-    padding: 8px 14px !important;
+    min-height: 32px !important;
+    font-size: 10px !important;
+    padding: 4px 8px !important;
   }
 
-  /* Better card spacing */
+  /* Tighter gaps */
   .gap-3 {
-    gap: 0.75rem !important;
+    gap: 0.5rem !important;
   }
 
   .gap-4 {
-    gap: 1rem !important;
+    gap: 0.75rem !important;
   }
 
   .gap-6 {
-    gap: 1.5rem !important;
+    gap: 1rem !important;
   }
 }
 

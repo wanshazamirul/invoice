@@ -132,13 +132,13 @@ export default function InvoicesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-row items-center justify-between gap-2">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Invoices</h1>
-          <p className="text-slate-600 mt-2 text-sm sm:text-base">Manage your invoices and quotations</p>
+          <h1 className="text-lg sm:text-2xl font-bold text-slate-900">Invoices</h1>
+          <p className="text-slate-600 mt-1 text-[10px] sm:text-sm">Manage your invoices and quotations</p>
         </div>
-        <Button onClick={() => router.push('/invoices/new')} className="gap-2 w-full sm:w-auto">
-          <Plus className="w-4 h-4" />
+        <Button onClick={() => router.push('/invoices/new')} className="gap-1">
+          <Plus className="w-3 h-3" />
           Create Invoice
         </Button>
       </div>
@@ -180,17 +180,17 @@ export default function InvoicesPage() {
       {/* Filters */}
       <Card>
         <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <CardTitle className="text-lg sm:text-xl">All Invoices</CardTitle>
-            <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+          <div className="flex flex-row items-center justify-between gap-2">
+            <CardTitle className="text-base sm:text-lg">All Invoices</CardTitle>
+            <div className="flex flex-row gap-2 items-center">
               <SearchBar
                 value={searchQuery}
                 onChange={setSearchQuery}
                 placeholder="Search invoices..."
               />
-              <div className="flex gap-3">
+              <div className="flex gap-2">
                 <Select value={typeFilter} onValueChange={(v: any) => setTypeFilter(v)}>
-                  <SelectTrigger className="w-full sm:w-[140px]">
+                  <SelectTrigger className="w-[100px] sm:w-[140px]">
                     <SelectValue placeholder="Type" />
                   </SelectTrigger>
                   <SelectContent>
