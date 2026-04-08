@@ -28,11 +28,13 @@ import { Plus, Trash2, Save, ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { generateId, calculateInvoiceTotals, calculateItemTotal } from '@/lib/helpers';
 import Link from 'next/link';
+import { useAlert } from '@/contexts/alert-context';
 
 export default function NewInvoicePage() {
   const { clients, products, settings, generateInvoiceNumber, addInvoice, loadData } =
     useStore();
   const router = useRouter();
+  const { error, success } = useAlert();
 
   const [formData, setFormData] = useState({
     clientId: '',
@@ -126,13 +128,13 @@ export default function NewInvoicePage() {
 
   const handleSave = (status: 'draft' | 'pending') => {
     if (!formData.clientId || !selectedClient) {
-      alert('Please select a client');
+      error('Missing information', 'Please select a client for this invoice.');
       return;
     }
 
     const validItems = items.filter((item) => item.description.trim() !== '');
     if (validItems.length === 0) {
-      alert('Please add at least one item');
+      error('No items', 'Please add at least one item to the invoice.');
       return;
     }
 
@@ -166,6 +168,12 @@ export default function NewInvoicePage() {
     };
 
     addInvoice(invoice);
+    success(
+      status === 'draft' ? 'Draft saved' : 'Invoice created',
+      status === 'draft'
+        ? 'Invoice draft has been saved.'
+        : `${invoice.invoiceNumber} has been created successfully.`
+    );
     router.push('/invoices');
   };
 

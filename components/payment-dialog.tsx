@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/select';
 import { DollarSign } from 'lucide-react';
 import { generateId } from '@/lib/helpers';
+import { useAlert } from '@/contexts/alert-context';
 
 interface PaymentDialogProps {
   invoice: Invoice;
@@ -25,6 +26,7 @@ interface PaymentDialogProps {
 
 export function PaymentDialog({ invoice, onUpdate }: PaymentDialogProps) {
   const { updateInvoice } = useStore();
+  const { error, success } = useAlert();
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState('');
   const [method, setMethod] = useState<'cash' | 'bank_transfer' | 'card' | 'online' | 'other'>('bank_transfer');
@@ -35,12 +37,12 @@ export function PaymentDialog({ invoice, onUpdate }: PaymentDialogProps) {
   const handleSubmit = () => {
     const paymentAmount = parseFloat(amount);
     if (isNaN(paymentAmount) || paymentAmount <= 0) {
-      alert('Please enter a valid amount');
+      error('Invalid amount', 'Please enter a valid payment amount.');
       return;
     }
 
     if (paymentAmount > remainingBalance) {
-      alert(`Payment amount cannot exceed remaining balance of ${remainingBalance.toFixed(2)}`);
+      error('Amount exceeds balance', `Payment cannot exceed remaining balance of ${remainingBalance.toFixed(2)}`);
       return;
     }
 
@@ -67,6 +69,7 @@ export function PaymentDialog({ invoice, onUpdate }: PaymentDialogProps) {
 
     updateInvoice(updatedInvoice);
     onUpdate();
+    success('Payment recorded', `Payment of ${invoice.currency} ${paymentAmount.toFixed(2)} has been recorded successfully.`);
     setOpen(false);
     setAmount('');
     setNotes('');

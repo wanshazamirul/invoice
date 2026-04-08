@@ -18,16 +18,18 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Building2, FileText, Settings as SettingsIcon, Database } from 'lucide-react';
+import { useAlert } from '@/contexts/alert-context';
 
 export default function SettingsPage() {
   const { settings, updateSettings, exportAllData, importAllData } = useStore();
+  const { success, error } = useAlert();
   const [formData, setFormData] = useState<InvoiceSettings>(settings);
   const [hasChanges, setHasChanges] = useState(false);
 
   const handleSave = () => {
     updateSettings(formData);
     setHasChanges(false);
-    alert('Settings saved successfully!');
+    success('Settings saved', 'Your settings have been updated successfully.');
   };
 
   const handleChange = (field: keyof InvoiceSettings, value: any) => {
@@ -63,10 +65,10 @@ export default function SettingsPage() {
           const data = JSON.parse(event.target?.result as string);
           if (confirm('This will replace all your data. Are you sure?')) {
             importAllData(data);
-            alert('Data imported successfully!');
+            success('Data imported', 'All data has been imported successfully.');
           }
-        } catch (error) {
-          alert('Error importing data. Please check the file format.');
+        } catch (err) {
+          error('Import failed', 'Error importing data. Please check the file format.');
         }
       };
       reader.readAsText(file);

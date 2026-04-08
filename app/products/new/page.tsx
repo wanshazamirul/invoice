@@ -10,10 +10,12 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, Save } from 'lucide-react';
 import { generateId } from '@/lib/helpers';
+import { useAlert } from '@/contexts/alert-context';
 
 export default function NewProductPage() {
   const router = useRouter();
   const { addProduct } = useStore();
+  const { error, success } = useAlert();
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -23,7 +25,7 @@ export default function NewProductPage() {
 
   const handleSubmit = () => {
     if (!formData.name || !formData.price) {
-      alert('Please fill in all required fields');
+      error('Missing information', 'Please fill in all required fields.');
       return;
     }
 
@@ -37,6 +39,7 @@ export default function NewProductPage() {
     };
 
     addProduct(newProduct);
+    success('Product created', `${formData.name} has been added successfully.`);
     router.push('/products');
   };
 

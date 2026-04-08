@@ -32,10 +32,12 @@ import { formatDate, formatCurrency, getInvoiceStatusColor } from '@/lib/helpers
 import { useRouter } from 'next/navigation';
 import { generateInvoicePDF } from '@/lib/pdf-generator';
 import { SearchBar } from '@/components/ui/search-bar';
+import { useAlert } from '@/contexts/alert-context';
 
 export default function InvoicesPage() {
   const { invoices, loadData, deleteInvoice, settings, addInvoice, generateInvoiceNumber } = useStore();
   const router = useRouter();
+  const { success, error: showError } = useAlert();
   const [statusFilter, setStatusFilter] = useState<'all' | InvoiceStatus>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | 'invoice' | 'quotation'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -60,6 +62,7 @@ export default function InvoicesPage() {
   const handleDelete = (id: string) => {
     if (confirm('Are you sure you want to delete this invoice?')) {
       deleteInvoice(id);
+      success('Invoice deleted', 'The invoice has been removed successfully.');
     }
   };
 
@@ -74,9 +77,10 @@ export default function InvoicesPage() {
   const handleDownload = (invoice: Invoice) => {
     try {
       generateInvoicePDF(invoice, settings);
+      success('PDF downloaded', 'Invoice PDF has been generated successfully.');
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF. Please try again.');
+      showError('Download failed', 'Failed to generate PDF. Please try again.');
     }
   };
 

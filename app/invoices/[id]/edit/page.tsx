@@ -28,6 +28,7 @@ import { Plus, Trash2, Save, ArrowLeft } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import { calculateInvoiceTotals, calculateItemTotal } from '@/lib/helpers';
 import Link from 'next/link';
+import { useAlert } from '@/contexts/alert-context';
 
 export default function EditInvoicePage() {
   const { clients, products, settings, invoices, updateInvoice, loadData } =
@@ -35,6 +36,7 @@ export default function EditInvoicePage() {
   const router = useRouter();
   const params = useParams();
   const invoiceId = params.id as string;
+  const { error, success } = useAlert();
 
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [formData, setFormData] = useState({
@@ -139,13 +141,13 @@ export default function EditInvoicePage() {
 
   const handleSave = (status: 'draft' | 'pending') => {
     if (!formData.clientId || !selectedClient || !invoice) {
-      alert('Please select a client');
+      error('Missing information', 'Please select a client for this invoice.');
       return;
     }
 
     const validItems = items.filter((item) => item.description.trim() !== '');
     if (validItems.length === 0) {
-      alert('Please add at least one item');
+      error('No items', 'Please add at least one item to the invoice.');
       return;
     }
 
@@ -174,6 +176,10 @@ export default function EditInvoicePage() {
     };
 
     updateInvoice(updatedInvoice);
+    success(
+      status === 'draft' ? 'Draft saved' : 'Invoice updated',
+      `${invoice.invoiceNumber} has been ${status === 'draft' ? 'saved' : 'updated'} successfully.`
+    );
     router.push(`/invoices/${invoiceId}`);
   };
 

@@ -10,10 +10,12 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, Save } from 'lucide-react';
 import { generateId } from '@/lib/helpers';
+import { useAlert } from '@/contexts/alert-context';
 
 export default function NewClientPage() {
   const router = useRouter();
   const { addClient } = useStore();
+  const { error, success } = useAlert();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -24,7 +26,7 @@ export default function NewClientPage() {
 
   const handleSubmit = () => {
     if (!formData.name || !formData.email || !formData.phone) {
-      alert('Please fill in all required fields');
+      error('Missing information', 'Please fill in all required fields.');
       return;
     }
 
@@ -35,6 +37,7 @@ export default function NewClientPage() {
     };
 
     addClient(newClient);
+    success('Client created', `${formData.name} has been added successfully.`);
     router.push('/clients');
   };
 

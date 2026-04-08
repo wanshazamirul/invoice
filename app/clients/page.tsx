@@ -33,9 +33,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Plus, MoreVertical, Pencil, Trash2, Mail, Phone, MapPin } from 'lucide-react';
 import { generateId } from '@/lib/helpers';
 import { SearchBar } from '@/components/ui/search-bar';
+import { useAlert } from '@/contexts/alert-context';
 
 export default function ClientsPage() {
   const { clients, loadData, addClient, updateClient, deleteClient } = useStore();
+  const { success, error } = useAlert();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
@@ -83,6 +85,7 @@ export default function ClientsPage() {
   const handleDelete = (id: string) => {
     if (confirm('Are you sure you want to delete this client?')) {
       deleteClient(id);
+      success('Client deleted', 'The client has been removed successfully.');
     }
   };
 
