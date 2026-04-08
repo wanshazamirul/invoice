@@ -85,7 +85,7 @@ export function PaymentDialog({ invoice, onUpdate, size = 'default', isDetailPag
             size === 'sm'
               ? 'gap-1 h-9 w-9 p-0'
               : isDetailPage
-              ? 'gap-2 text-xs sm:text-sm h-9 px-3'
+              ? 'gap-1.5 text-xs h-9 px-2 w-full sm:w-auto'
               : 'gap-2 flex-1 min-w-0 sm:min-w-fit'
           }
           onClick={(e) => {
