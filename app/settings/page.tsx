@@ -94,58 +94,54 @@ export default function SettingsPage() {
         </div>
       )}
 
-      {/* Custom Navigation - Button Style */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
+      {/* Custom Navigation - Horizontal Layout */}
+      <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
         <button
           onClick={() => setCurrentTab('company')}
-          className={`flex flex-col sm:flex-row items-center justify-center gap-2 p-3 sm:px-4 rounded-lg border-2 transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
             currentTab === 'company'
               ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
               : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
           }`}
         >
           <Building2 className={`w-4 h-4 ${currentTab === 'company' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
-          <span className="text-xs sm:text-sm font-medium">{currentTab === 'company' ? 'Company' : ''}</span>
-          <span className="hidden sm:inline text-sm font-medium">{currentTab !== 'company' ? 'Company' : ''}</span>
+          <span className="text-sm font-medium">Company</span>
         </button>
 
         <button
           onClick={() => setCurrentTab('invoice')}
-          className={`flex flex-col sm:flex-row items-center justify-center gap-2 p-3 sm:px-4 rounded-lg border-2 transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
             currentTab === 'invoice'
               ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
               : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
           }`}
         >
           <FileText className={`w-4 h-4 ${currentTab === 'invoice' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
-          <span className="text-xs sm:text-sm font-medium">{currentTab === 'invoice' ? 'Invoice' : ''}</span>
-          <span className="hidden sm:inline text-sm font-medium">{currentTab !== 'invoice' ? 'Invoice' : ''}</span>
+          <span className="text-sm font-medium">Invoice</span>
         </button>
 
         <button
           onClick={() => setCurrentTab('general')}
-          className={`flex flex-col sm:flex-row items-center justify-center gap-2 p-3 sm:px-4 rounded-lg border-2 transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
             currentTab === 'general'
               ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
               : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
           }`}
         >
           <SettingsIcon className={`w-4 h-4 ${currentTab === 'general' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
-          <span className="text-xs sm:text-sm font-medium">{currentTab === 'general' ? 'General' : ''}</span>
-          <span className="hidden sm:inline text-sm font-medium">{currentTab !== 'general' ? 'General' : ''}</span>
+          <span className="text-sm font-medium">General</span>
         </button>
 
         <button
           onClick={() => setCurrentTab('data')}
-          className={`flex flex-col sm:flex-row items-center justify-center gap-2 p-3 sm:px-4 rounded-lg border-2 transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
             currentTab === 'data'
               ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
               : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
           }`}
         >
           <Database className={`w-4 h-4 ${currentTab === 'data' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
-          <span className="text-xs sm:text-sm font-medium">{currentTab === 'data' ? 'Data' : ''}</span>
-          <span className="hidden sm:inline text-sm font-medium">{currentTab !== 'data' ? 'Data' : ''}</span>
+          <span className="text-sm font-medium">Data</span>
         </button>
       </div>
 
