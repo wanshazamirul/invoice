@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Select,
   SelectContent,
@@ -95,84 +94,119 @@ export default function SettingsPage() {
         </div>
       )}
 
-      <Tabs defaultValue="company" value={currentTab} onValueChange={setCurrentTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 h-auto p-1">
-          <TabsTrigger value="company" className="gap-2">
-            <Building2 className="w-4 h-4" />
-            <span className="hidden sm:inline">Company</span>
-          </TabsTrigger>
-          <TabsTrigger value="invoice" className="gap-2">
-            <FileText className="w-4 h-4" />
-            <span className="hidden sm:inline">Invoice</span>
-          </TabsTrigger>
-          <TabsTrigger value="general" className="gap-2">
-            <SettingsIcon className="w-4 h-4" />
-            <span className="hidden sm:inline">General</span>
-          </TabsTrigger>
-          <TabsTrigger value="data" className="gap-2">
-            <Database className="w-4 h-4" />
-            <span className="hidden sm:inline">Data</span>
-          </TabsTrigger>
-        </TabsList>
+      {/* Custom Navigation - Button Style */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
+        <button
+          onClick={() => setCurrentTab('company')}
+          className={`flex flex-col sm:flex-row items-center justify-center gap-2 p-3 sm:px-4 rounded-lg border-2 transition-all ${
+            currentTab === 'company'
+              ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
+              : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+          }`}
+        >
+          <Building2 className={`w-4 h-4 ${currentTab === 'company' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
+          <span className="text-xs sm:text-sm font-medium">{currentTab === 'company' ? 'Company' : ''}</span>
+          <span className="hidden sm:inline text-sm font-medium">{currentTab !== 'company' ? 'Company' : ''}</span>
+        </button>
 
-        {/* Company Settings */}
-        <TabsContent value="company">
-          <Card>
-            <CardHeader>
-              <CardTitle>Company Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+        <button
+          onClick={() => setCurrentTab('invoice')}
+          className={`flex flex-col sm:flex-row items-center justify-center gap-2 p-3 sm:px-4 rounded-lg border-2 transition-all ${
+            currentTab === 'invoice'
+              ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
+              : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+          }`}
+        >
+          <FileText className={`w-4 h-4 ${currentTab === 'invoice' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
+          <span className="text-xs sm:text-sm font-medium">{currentTab === 'invoice' ? 'Invoice' : ''}</span>
+          <span className="hidden sm:inline text-sm font-medium">{currentTab !== 'invoice' ? 'Invoice' : ''}</span>
+        </button>
+
+        <button
+          onClick={() => setCurrentTab('general')}
+          className={`flex flex-col sm:flex-row items-center justify-center gap-2 p-3 sm:px-4 rounded-lg border-2 transition-all ${
+            currentTab === 'general'
+              ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
+              : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+          }`}
+        >
+          <SettingsIcon className={`w-4 h-4 ${currentTab === 'general' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
+          <span className="text-xs sm:text-sm font-medium">{currentTab === 'general' ? 'General' : ''}</span>
+          <span className="hidden sm:inline text-sm font-medium">{currentTab !== 'general' ? 'General' : ''}</span>
+        </button>
+
+        <button
+          onClick={() => setCurrentTab('data')}
+          className={`flex flex-col sm:flex-row items-center justify-center gap-2 p-3 sm:px-4 rounded-lg border-2 transition-all ${
+            currentTab === 'data'
+              ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
+              : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+          }`}
+        >
+          <Database className={`w-4 h-4 ${currentTab === 'data' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
+          <span className="text-xs sm:text-sm font-medium">{currentTab === 'data' ? 'Data' : ''}</span>
+          <span className="hidden sm:inline text-sm font-medium">{currentTab !== 'data' ? 'Data' : ''}</span>
+        </button>
+      </div>
+
+      {/* Company Settings */}
+      {currentTab === 'company' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Company Information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label>Company Name</Label>
+              <Input
+                value={formData.companyInfo.name}
+                onChange={(e) => handleCompanyInfoChange('name', e.target.value)}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>Company Name</Label>
+                <Label>Email</Label>
                 <Input
-                  value={formData.companyInfo.name}
-                  onChange={(e) => handleCompanyInfoChange('name', e.target.value)}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Email</Label>
-                  <Input
-                    type="email"
-                    value={formData.companyInfo.email}
-                    onChange={(e) => handleCompanyInfoChange('email', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label>Phone</Label>
-                  <Input
-                    value={formData.companyInfo.phone}
-                    onChange={(e) => handleCompanyInfoChange('phone', e.target.value)}
-                  />
-                </div>
-              </div>
-              <div>
-                <Label>Address</Label>
-                <Textarea
-                  value={formData.companyInfo.address}
-                  onChange={(e) => handleCompanyInfoChange('address', e.target.value)}
-                  rows={3}
+                  type="email"
+                  value={formData.companyInfo.email}
+                  onChange={(e) => handleCompanyInfoChange('email', e.target.value)}
                 />
               </div>
               <div>
-                <Label>Payment Information</Label>
-                <Textarea
-                  value={formData.paymentInfo}
-                  onChange={(e) => handleChange('paymentInfo', e.target.value)}
-                  rows={4}
-                  placeholder="Bank: Maybank&#10;Account: 123456789012&#10;Account Name: Your Name"
+                <Label>Phone</Label>
+                <Input
+                  value={formData.companyInfo.phone}
+                  onChange={(e) => handleCompanyInfoChange('phone', e.target.value)}
                 />
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+            <div>
+              <Label>Address</Label>
+              <Textarea
+                value={formData.companyInfo.address}
+                onChange={(e) => handleCompanyInfoChange('address', e.target.value)}
+                rows={3}
+              />
+            </div>
+            <div>
+              <Label>Payment Information</Label>
+              <Textarea
+                value={formData.paymentInfo}
+                onChange={(e) => handleChange('paymentInfo', e.target.value)}
+                rows={4}
+                placeholder="Bank: Maybank&#10;Account: 123456789012&#10;Account Name: Your Name"
+              />
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
-        {/* Invoice Settings */}
-        <TabsContent value="invoice">
-          <Card>
-            <CardHeader>
-              <CardTitle>Invoice Settings</CardTitle>
-            </CardHeader>
+      {/* Invoice Settings */}
+      {currentTab === 'invoice' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Invoice Settings</CardTitle>
+          </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -269,125 +303,124 @@ export default function SettingsPage() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+      )}
 
-        {/* General Settings */}
-        <TabsContent value="general">
-          <Card>
-            <CardHeader>
-              <CardTitle>Appearance</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label>Theme</Label>
-                <div className="grid grid-cols-3 gap-3 mt-2">
-                  <button
-                    onClick={() => setTheme('light')}
-                    className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
-                      theme === 'light'
-                        ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950'
-                        : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
-                    }`}
-                  >
-                    <Sun className={`w-6 h-6 ${theme === 'light' ? 'text-emerald-600' : 'text-slate-600 dark:text-slate-400'}`} />
-                    <span className="text-sm font-medium">Light</span>
-                  </button>
+      {/* General Settings */}
+      {currentTab === 'general' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Appearance</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label>Theme</Label>
+              <div className="grid grid-cols-3 gap-3 mt-2">
+                <button
+                  onClick={() => setTheme('light')}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                    theme === 'light'
+                      ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950'
+                      : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                  }`}
+                >
+                  <Sun className={`w-6 h-6 ${theme === 'light' ? 'text-emerald-600' : 'text-slate-600 dark:text-slate-400'}`} />
+                  <span className="text-sm font-medium">Light</span>
+                </button>
 
-                  <button
-                    onClick={() => setTheme('dark')}
-                    className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
-                      theme === 'dark'
-                        ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950'
-                        : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
-                    }`}
-                  >
-                    <Moon className={`w-6 h-6 ${theme === 'dark' ? 'text-emerald-600' : 'text-slate-600 dark:text-slate-400'}`} />
-                    <span className="text-sm font-medium">Dark</span>
-                  </button>
+                <button
+                  onClick={() => setTheme('dark')}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                    theme === 'dark'
+                      ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950'
+                      : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                  }`}
+                >
+                  <Moon className={`w-6 h-6 ${theme === 'dark' ? 'text-emerald-600' : 'text-slate-600 dark:text-slate-400'}`} />
+                  <span className="text-sm font-medium">Dark</span>
+                </button>
 
-                  <button
-                    onClick={() => setTheme('system')}
-                    className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
-                      theme === 'system'
-                        ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950'
-                        : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
-                    }`}
-                  >
-                    <Monitor className={`w-6 h-6 ${theme === 'system' ? 'text-emerald-600' : 'text-slate-600 dark:text-slate-400'}`} />
-                    <span className="text-sm font-medium">System</span>
-                  </button>
-                </div>
-                <p className="text-xs text-slate-600 dark:text-slate-400 mt-2">
-                  {theme === 'system'
-                    ? `Using system theme (${actualTheme === 'dark' ? 'Dark' : 'Light'})`
-                    : theme === 'dark'
-                    ? 'Dark mode enabled'
-                    : 'Light mode enabled'}
+                <button
+                  onClick={() => setTheme('system')}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                    theme === 'system'
+                      ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950'
+                      : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                  }`}
+                >
+                  <Monitor className={`w-6 h-6 ${theme === 'system' ? 'text-emerald-600' : 'text-slate-600 dark:text-slate-400'}`} />
+                  <span className="text-sm font-medium">System</span>
+                </button>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-2">
+                {theme === 'system'
+                  ? `Using system theme (${actualTheme === 'dark' ? 'Dark' : 'Light'})`
+                  : theme === 'dark'
+                  ? 'Dark mode enabled'
+                  : 'Light mode enabled'}
                 </p>
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+      )}
 
-        {/* Data Management */}
-        <TabsContent value="data">
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-slate-900 dark:text-slate-100">Export Data</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                  Download all your invoices, clients, products, and settings as a JSON file.
-                </p>
-                <Button onClick={handleExport} variant="outline" className="gap-2">
-                  <Database className="w-4 h-4" />
-                  Export All Data
-                </Button>
-              </CardContent>
-            </Card>
+      {/* Data Management */}
+      {currentTab === 'data' && (
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-slate-900 dark:text-slate-100">Export Data</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                Download all your invoices, clients, products, and settings as a JSON file.
+              </p>
+              <Button onClick={handleExport} variant="outline" className="gap-2">
+                <Database className="w-4 h-4" />
+                Export All Data
+              </Button>
+            </CardContent>
+          </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-slate-900 dark:text-slate-100">Import Data</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                  Restore your data from a previously exported JSON file. This will replace all
-                  existing data.
-                </p>
-                <Input type="file" accept=".json" onChange={handleImport} />
-              </CardContent>
-            </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-slate-900 dark:text-slate-100">Import Data</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                Restore your data from a previously exported JSON file. This will replace all
+                existing data.
+              </p>
+              <Input type="file" accept=".json" onChange={handleImport} />
+            </CardContent>
+          </Card>
 
-            <Card className="border-red-200 dark:border-red-900">
-              <CardHeader>
-                <CardTitle className="text-red-600 dark:text-red-400">Danger Zone</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                  Clear all data from the application. This action cannot be undone.
-                </p>
-                <Button
-                  variant="destructive"
-                  onClick={() => {
-                    if (
-                      confirm(
-                        'Are you sure you want to delete ALL data? This cannot be undone!'
-                      )
-                    ) {
-                      localStorage.clear();
-                      window.location.reload();
-                    }
-                  }}
-                >
-                  Clear All Data
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
+          <Card className="border-red-200 dark:border-red-900">
+            <CardHeader>
+              <CardTitle className="text-red-600 dark:text-red-400">Danger Zone</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                Clear all data from the application. This action cannot be undone.
+              </p>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  if (
+                    confirm(
+                      'Are you sure you want to delete ALL data? This cannot be undone!'
+                    )
+                  ) {
+                    localStorage.clear();
+                    window.location.reload();
+                  }
+                }}
+              >
+                Clear All Data
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Save Button - Only show for Company and Invoice tabs */}
       {(currentTab === 'company' || currentTab === 'invoice') && (

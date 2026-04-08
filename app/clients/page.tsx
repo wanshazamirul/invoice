@@ -227,23 +227,23 @@ export default function ClientsPage() {
             </div>
           ) : (
             <>
-              {/* Mobile Card Layout - Simplified */}
-              <div className="md:hidden space-y-2">
+              {/* Mobile Card Layout - Ultra Compact */}
+              <div className="md:hidden space-y-1.5">
                 {filteredClients.map((client) => (
                   <Card
                     key={client.id}
                     className="hover:shadow-md transition-shadow cursor-pointer active:scale-[0.98]"
                   >
-                    <CardContent className="p-3">
-                      <div className="flex items-start justify-between">
+                    <CardContent className="p-2">
+                      <div className="flex items-center justify-between">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-sm text-slate-900 dark:text-slate-100 truncate">{client.name}</h3>
-                          <p className="text-xs text-slate-600 dark:text-slate-400 truncate">{client.email}</p>
+                          <h3 className="font-semibold text-xs text-slate-900 dark:text-slate-100 truncate">{client.name}</h3>
+                          <p className="text-[10px] text-slate-600 dark:text-slate-400 truncate">{client.email}</p>
                         </div>
                         <DropdownMenu>
                           <DropdownMenuTrigger>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0 ml-2 text-slate-600 dark:text-slate-400" aria-label="More options">
-                              <MoreVertical className="w-4 h-4" />
+                            <Button variant="ghost" size="icon" className="h-7 w-7 flex-shrink-0 ml-2 text-slate-600 dark:text-slate-400" aria-label="More options">
+                              <MoreVertical className="w-3.5 h-3.5" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="w-[150px]">
