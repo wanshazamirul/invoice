@@ -144,48 +144,48 @@ export default function ClientsPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-2 gap-3 sm:gap-6">
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600">Total Clients</p>
-                <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-2">{clients.length}</p>
+                <p className="text-xs text-slate-600">Total Clients</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{clients.length}</p>
               </div>
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+              <div className="p-2 sm:p-3 bg-blue-100 rounded-lg">
+                <Mail className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-blue-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600">Companies</p>
-                <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-2">
+                <p className="text-xs text-slate-600">Companies</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">
                   {clients.filter(c => c.company).length}
                 </p>
               </div>
-              <div className="p-3 bg-emerald-100 rounded-lg">
-                <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600" />
+              <div className="p-2 sm:p-3 bg-emerald-100 rounded-lg">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-emerald-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600">Individuals</p>
-                <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-2">
+                <p className="text-xs text-slate-600">Individuals</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">
                   {clients.filter(c => !c.company).length}
                 </p>
               </div>
-              <div className="p-3 bg-purple-100 rounded-lg">
-                <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
+              <div className="p-2 sm:p-3 bg-purple-100 rounded-lg">
+                <Phone className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-purple-600" />
               </div>
             </div>
           </CardContent>

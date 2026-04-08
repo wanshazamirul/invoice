@@ -169,24 +169,25 @@ export default function DashboardPage() {
       </div>
 
       {/* Main Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
             <Card key={stat.title} className="hover:shadow-lg transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-slate-600">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 px-3 sm:px-6">
+                <CardTitle className="text-xs sm:text-sm font-medium text-slate-600">
                   {stat.title}
                 </CardTitle>
-                <div className={`p-2 rounded-lg ${stat.bgColor}`}>
-                  <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${stat.color}`} />
+                <div className={`p-1.5 sm:p-2 rounded-lg ${stat.bgColor}`}>
+                  <Icon className={`w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 ${stat.color}`} />
                 </div>
               </CardHeader>
-              <CardContent>
-                <div className="text-xl sm:text-2xl font-bold text-slate-900">{stat.value}</div>
+              <CardContent className="px-3 sm:px-6">
+                <div className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-900">{stat.value}</div>
                 <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
                   <TrendingUp className="w-3 h-3" />
-                  {stat.trend}
+                  <span className="hidden sm:inline">{stat.trend}</span>
+                  <span className="sm:hidden">{stat.trend}</span>
                 </p>
               </CardContent>
             </Card>
@@ -195,19 +196,19 @@ export default function DashboardPage() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 gap-3 sm:gap-6">
         {quickStats.map((stat) => {
           const Icon = stat.icon;
           return (
             <Card key={stat.title}>
-              <CardContent className="pt-6">
+              <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-slate-600">{stat.title}</p>
-                    <p className="text-3xl font-bold text-slate-900 mt-2">{stat.value}</p>
+                    <p className="text-xs sm:text-sm text-slate-600">{stat.title}</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stat.value}</p>
                   </div>
-                  <div className="p-3 bg-slate-100 rounded-lg">
-                    <Icon className="w-6 h-6 text-slate-600" />
+                  <div className="p-2 sm:p-3 bg-slate-100 rounded-lg">
+                    <Icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-slate-600" />
                   </div>
                 </div>
               </CardContent>

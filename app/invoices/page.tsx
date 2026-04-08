@@ -140,35 +140,35 @@ export default function InvoicesPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         <Card>
-          <CardContent className="pt-4">
-            <p className="text-xs text-slate-600">Total</p>
-            <p className="text-xl sm:text-2xl font-bold text-slate-900">{stats.total}</p>
+          <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
+            <p className="text-[10px] sm:text-xs text-slate-600">Total</p>
+            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-900">{stats.total}</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-4">
-            <p className="text-xs text-slate-600">Draft</p>
-            <p className="text-xl sm:text-2xl font-bold text-slate-500">{stats.draft}</p>
+          <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
+            <p className="text-[10px] sm:text-xs text-slate-600">Draft</p>
+            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-500">{stats.draft}</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-4">
-            <p className="text-xs text-slate-600">Pending</p>
-            <p className="text-xl sm:text-2xl font-bold text-yellow-600">{stats.pending}</p>
+          <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
+            <p className="text-[10px] sm:text-xs text-slate-600">Pending</p>
+            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-yellow-600">{stats.pending}</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-4">
-            <p className="text-xs text-slate-600">Paid</p>
-            <p className="text-xl sm:text-2xl font-bold text-green-600">{stats.paid}</p>
+          <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
+            <p className="text-[10px] sm:text-xs text-slate-600">Paid</p>
+            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600">{stats.paid}</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-4">
-            <p className="text-xs text-slate-600">Overdue</p>
-            <p className="text-xl sm:text-2xl font-bold text-red-600">{stats.overdue}</p>
+          <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
+            <p className="text-[10px] sm:text-xs text-slate-600">Overdue</p>
+            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-red-600">{stats.overdue}</p>
           </CardContent>
         </Card>
       </div>
