@@ -22,7 +22,7 @@ export function BottomNav() {
 
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-40 safe-area-bottom">
-      <div className="flex items-center justify-center gap-1 h-13 pb-safe">
+      <div className="flex items-center justify-center gap-1 h-13 pb-safe pt-2">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -32,7 +32,7 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                'flex flex-col items-center justify-center flex-1 h-full transition-colors duration-150',
+                'flex flex-col items-center justify-start flex-1 h-full transition-colors duration-150',
                 isActive
                   ? 'text-emerald-600'
                   : 'text-slate-400 hover:text-slate-600'
