@@ -98,50 +98,50 @@ export default function SettingsPage() {
       <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
         <button
           onClick={() => setCurrentTab('company')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
             currentTab === 'company'
               ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
               : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
           }`}
         >
-          <Building2 className={`w-4 h-4 ${currentTab === 'company' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
-          <span className="text-sm font-medium">Company</span>
+          <Building2 className={`w-4 h-4 flex-shrink-0 ${currentTab === 'company' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
+          <span className="text-xs sm:text-sm font-medium">Company</span>
         </button>
 
         <button
           onClick={() => setCurrentTab('invoice')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
             currentTab === 'invoice'
               ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
               : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
           }`}
         >
-          <FileText className={`w-4 h-4 ${currentTab === 'invoice' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
-          <span className="text-sm font-medium">Invoice</span>
+          <FileText className={`w-4 h-4 flex-shrink-0 ${currentTab === 'invoice' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
+          <span className="text-xs sm:text-sm font-medium">Invoice</span>
         </button>
 
         <button
           onClick={() => setCurrentTab('general')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
             currentTab === 'general'
               ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
               : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
           }`}
         >
-          <SettingsIcon className={`w-4 h-4 ${currentTab === 'general' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
-          <span className="text-sm font-medium">General</span>
+          <SettingsIcon className={`w-4 h-4 flex-shrink-0 ${currentTab === 'general' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
+          <span className="text-xs sm:text-sm font-medium">General</span>
         </button>
 
         <button
           onClick={() => setCurrentTab('data')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
             currentTab === 'data'
               ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
               : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
           }`}
         >
-          <Database className={`w-4 h-4 ${currentTab === 'data' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
-          <span className="text-sm font-medium">Data</span>
+          <Database className={`w-4 h-4 flex-shrink-0 ${currentTab === 'data' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
+          <span className="text-xs sm:text-sm font-medium">Data</span>
         </button>
       </div>
 
@@ -268,7 +268,13 @@ export default function SettingsPage() {
                   onValueChange={(v) => v && handleChange('currency', v)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select currency" />
+                    <SelectValue placeholder="Select currency">
+                      {formData.currency === 'RM' && 'RM - Malaysian Ringgit'}
+                      {formData.currency === 'USD' && 'USD - US Dollar'}
+                      {formData.currency === 'SGD' && 'SGD - Singapore Dollar'}
+                      {formData.currency === 'EUR' && 'EUR - Euro'}
+                      {formData.currency === 'GBP' && 'GBP - British Pound'}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="RM">RM - Malaysian Ringgit</SelectItem>
