@@ -27,16 +27,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Plus, MoreVertical, FileText, Download, Eye, Trash2 } from 'lucide-react';
+import { Plus, MoreVertical, FileText, Download, Eye, Trash2, Copy, FileOutput } from 'lucide-react';
 import { formatDate, formatCurrency, getInvoiceStatusColor } from '@/lib/helpers';
 import { useRouter } from 'next/navigation';
 import { generateInvoicePDF } from '@/lib/pdf-generator';
+import { SearchBar } from '@/components/ui/search-bar';
 
 export default function InvoicesPage() {
-  const { invoices, loadData, deleteInvoice, settings } = useStore();
+  const { invoices, loadData, deleteInvoice, settings, addInvoice, generateInvoiceNumber } = useStore();
   const router = useRouter();
   const [statusFilter, setStatusFilter] = useState<'all' | InvoiceStatus>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | 'invoice' | 'quotation'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     loadData();
@@ -45,7 +47,14 @@ export default function InvoicesPage() {
   const filteredInvoices = invoices.filter((invoice) => {
     const statusMatch = statusFilter === 'all' || invoice.status === statusFilter;
     const typeMatch = typeFilter === 'all' || invoice.type === typeFilter;
-    return statusMatch && typeMatch;
+    const searchMatch =
+      !searchQuery ||
+      invoice.invoiceNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      invoice.client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      invoice.client.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      invoice.client.company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      invoice.client.phone.includes(searchQuery);
+    return statusMatch && typeMatch && searchMatch;
   });
 
   const handleDelete = (id: string) => {
@@ -69,6 +78,43 @@ export default function InvoicesPage() {
       console.error('Error generating PDF:', error);
       alert('Failed to generate PDF. Please try again.');
     }
+  };
+
+  const handleCopy = (invoice: Invoice) => {
+    const newInvoice = {
+      ...invoice,
+      id: crypto.randomUUID(),
+      invoiceNumber: generateInvoiceNumber(invoice.type),
+      issueDate: new Date().toISOString(),
+      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days from now
+      status: 'draft' as const,
+      paidAmount: 0,
+      paidDate: undefined,
+      payments: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    addInvoice(newInvoice);
+    router.push(`/invoices/${newInvoice.id}/edit`);
+  };
+
+  const handleConvertToQuotation = (invoice: Invoice) => {
+    const quotation = {
+      ...invoice,
+      id: crypto.randomUUID(),
+      invoiceNumber: generateInvoiceNumber('quotation'),
+      type: 'quotation' as const,
+      status: 'draft' as const,
+      paidAmount: 0,
+      paidDate: undefined,
+      payments: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    addInvoice(quotation);
+    router.push(`/invoices/${quotation.id}/edit`);
   };
 
   const stats = {
@@ -132,7 +178,12 @@ export default function InvoicesPage() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>All Invoices</CardTitle>
-            <div className="flex gap-3">
+            <div className="flex gap-3 items-center">
+              <SearchBar
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Search invoices..."
+              />
               <Select value={typeFilter} onValueChange={(v: any) => setTypeFilter(v)}>
                 <SelectTrigger className="w-[140px]">
                   <SelectValue placeholder="Type" />
@@ -230,6 +281,16 @@ export default function InvoicesPage() {
                             <FileText className="w-4 h-4 mr-2" />
                             Edit
                           </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleCopy(invoice)}>
+                            <Copy className="w-4 h-4 mr-2" />
+                            Copy
+                          </DropdownMenuItem>
+                          {invoice.type === 'invoice' && (
+                            <DropdownMenuItem onClick={() => handleConvertToQuotation(invoice)}>
+                              <FileOutput className="w-4 h-4 mr-2" />
+                              Convert to Quotation
+                            </DropdownMenuItem>
+                          )}
                           <DropdownMenuItem onClick={() => handleDownload(invoice)}>
                             <Download className="w-4 h-4 mr-2" />
                             Download PDF

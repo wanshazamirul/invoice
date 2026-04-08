@@ -32,12 +32,14 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Plus, MoreVertical, Pencil, Trash2, Mail, Phone, MapPin } from 'lucide-react';
 import { generateId } from '@/lib/helpers';
+import { SearchBar } from '@/components/ui/search-bar';
 
 export default function ClientsPage() {
   const { clients, loadData, addClient, updateClient, deleteClient } = useStore();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -108,6 +110,18 @@ export default function ClientsPage() {
     resetForm();
   };
 
+  const filteredClients = clients.filter((client) => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      client.name.toLowerCase().includes(query) ||
+      client.email.toLowerCase().includes(query) ||
+      client.phone.includes(query) ||
+      client.company?.toLowerCase().includes(query) ||
+      client.address.toLowerCase().includes(query)
+    );
+  });
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -116,10 +130,17 @@ export default function ClientsPage() {
           <h1 className="text-3xl font-bold text-slate-900">Clients</h1>
           <p className="text-slate-600 mt-2">Manage your client database</p>
         </div>
-        <Button onClick={handleAdd} className="gap-2">
-          <Plus className="w-4 h-4" />
-          Add Client
-        </Button>
+        <div className="flex gap-3 items-center">
+          <SearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Search clients..."
+          />
+          <Button onClick={handleAdd} className="gap-2">
+            <Plus className="w-4 h-4" />
+            Add Client
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -197,7 +218,7 @@ export default function ClientsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {clients.map((client) => (
+                {filteredClients.map((client) => (
                   <TableRow key={client.id}>
                     <TableCell className="font-medium">{client.name}</TableCell>
                     <TableCell>{client.email}</TableCell>

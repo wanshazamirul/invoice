@@ -7,9 +7,11 @@ import { Invoice } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Printer, Download, Edit, FileText } from 'lucide-react';
+import { ArrowLeft, Printer, Download, Edit, FileText, History } from 'lucide-react';
 import { formatDate, formatCurrency, getInvoiceStatusColor } from '@/lib/helpers';
 import { generateInvoicePDF } from '@/lib/pdf-generator';
+import { PaymentDialog } from '@/components/payment-dialog';
+import { EmailDialog } from '@/components/email-dialog';
 
 export default function InvoiceDetailPage() {
   const params = useParams();
@@ -38,6 +40,13 @@ export default function InvoiceDetailPage() {
 
   const handleEdit = () => {
     router.push(`/invoices/${params.id}/edit`);
+  };
+
+  const refreshInvoice = () => {
+    const foundInvoice = invoices.find((inv) => inv.id === params.id);
+    if (foundInvoice) {
+      setInvoice(foundInvoice);
+    }
   };
 
   if (loading) {
@@ -90,6 +99,8 @@ export default function InvoiceDetailPage() {
             <Download className="w-4 h-4" />
             Download PDF
           </Button>
+          <EmailDialog invoice={invoice} />
+          <PaymentDialog invoice={invoice} onUpdate={refreshInvoice} />
           <Button onClick={handleEdit} className="gap-2">
             <Edit className="w-4 h-4" />
             Edit
@@ -220,6 +231,40 @@ export default function InvoiceDetailPage() {
                   <p className="text-slate-600 text-sm bg-slate-50 p-3 rounded">{invoice.terms}</p>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Payment History */}
+          {invoice.payments && invoice.payments.length > 0 && (
+            <div className="mb-8 no-break">
+              <h4 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                <History className="w-4 h-4" />
+                Payment History
+              </h4>
+              <div className="bg-slate-50 rounded-lg overflow-hidden">
+                <table className="w-full">
+                  <thead className="bg-slate-100">
+                    <tr>
+                      <th className="text-left p-3 text-xs font-semibold text-slate-600">Date</th>
+                      <th className="text-left p-3 text-xs font-semibold text-slate-600">Method</th>
+                      <th className="text-right p-3 text-xs font-semibold text-slate-600">Amount</th>
+                      <th className="text-left p-3 text-xs font-semibold text-slate-600">Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {invoice.payments.map((payment) => (
+                      <tr key={payment.id} className="border-t border-slate-200">
+                        <td className="p-3 text-sm">{formatDate(payment.date)}</td>
+                        <td className="p-3 text-sm capitalize">{payment.method.replace('_', ' ')}</td>
+                        <td className="p-3 text-sm text-right font-semibold text-emerald-600">
+                          {formatCurrency(payment.amount, invoice.currency)}
+                        </td>
+                        <td className="p-3 text-sm text-slate-600">{payment.notes || '-'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
 

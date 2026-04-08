@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useStore } from '@/lib/store/useStore';
-import { Invoice, InvoiceItem, Client, Product, RecurringType } from '@/types';
+import { Invoice, InvoiceItem, RecurringType } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -25,45 +25,58 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Plus, Trash2, Save, ArrowLeft } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { generateId, calculateInvoiceTotals, calculateItemTotal } from '@/lib/helpers';
+import { useRouter, useParams } from 'next/navigation';
+import { calculateInvoiceTotals, calculateItemTotal } from '@/lib/helpers';
 import Link from 'next/link';
 
-export default function NewInvoicePage() {
-  const { clients, products, settings, generateInvoiceNumber, addInvoice, loadData } =
+export default function EditInvoicePage() {
+  const { clients, products, settings, invoices, updateInvoice, loadData } =
     useStore();
   const router = useRouter();
+  const params = useParams();
+  const invoiceId = params.id as string;
 
+  const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [formData, setFormData] = useState({
     clientId: '',
     type: 'invoice' as 'invoice' | 'quotation',
-    currency: settings.currency,
-    taxRate: settings.taxRate,
+    currency: 'RM',
+    taxRate: 0,
     discountRate: 0,
-    notes: settings.defaultNotes,
-    terms: settings.defaultTerms,
-    issueDate: new Date().toISOString().split('T')[0],
-    dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-      .toISOString()
-      .split('T')[0],
-    recurring: 'none' as const,
+    notes: '',
+    terms: '',
+    issueDate: '',
+    dueDate: '',
+    recurring: 'none' as RecurringType,
   });
 
-  const [items, setItems] = useState<InvoiceItem[]>([
-    {
-      id: generateId(),
-      description: '',
-      quantity: 1,
-      unitPrice: 0,
-      tax: 0,
-      discount: 0,
-      total: 0,
-    },
-  ]);
+  const [items, setItems] = useState<InvoiceItem[]>([]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  useEffect(() => {
+    const foundInvoice = invoices.find((inv) => inv.id === invoiceId);
+    if (foundInvoice) {
+      setInvoice(foundInvoice);
+      setFormData({
+        clientId: foundInvoice.clientId,
+        type: foundInvoice.type,
+        currency: foundInvoice.currency,
+        taxRate: foundInvoice.taxRate,
+        discountRate: foundInvoice.discountRate,
+        notes: foundInvoice.notes || '',
+        terms: foundInvoice.terms || '',
+        issueDate: foundInvoice.issueDate.split('T')[0],
+        dueDate: foundInvoice.dueDate.split('T')[0],
+        recurring: foundInvoice.recurring,
+      });
+      setItems(foundInvoice.items);
+    } else {
+      router.push('/invoices');
+    }
+  }, [invoiceId, invoices, loadData, router]);
 
   const selectedClient = clients.find((c) => c.id === formData.clientId);
 
@@ -71,7 +84,7 @@ export default function NewInvoicePage() {
     setItems([
       ...items,
       {
-        id: generateId(),
+        id: crypto.randomUUID(),
         description: '',
         quantity: 1,
         unitPrice: 0,
@@ -125,7 +138,7 @@ export default function NewInvoicePage() {
   };
 
   const handleSave = (status: 'draft' | 'pending') => {
-    if (!formData.clientId || !selectedClient) {
+    if (!formData.clientId || !selectedClient || !invoice) {
       alert('Please select a client');
       return;
     }
@@ -138,13 +151,11 @@ export default function NewInvoicePage() {
 
     const totals = calculateTotals();
 
-    const invoice: Invoice = {
-      id: generateId(),
-      invoiceNumber: generateInvoiceNumber(formData.type),
-      type: formData.type,
-      status,
+    const updatedInvoice: Invoice = {
+      ...invoice,
       clientId: formData.clientId,
       client: selectedClient,
+      type: formData.type,
       items: validItems,
       currency: formData.currency,
       taxRate: formData.taxRate,
@@ -157,31 +168,36 @@ export default function NewInvoicePage() {
       terms: formData.terms,
       issueDate: formData.issueDate,
       dueDate: formData.dueDate,
-      paidAmount: 0,
-      payments: [],
+      status,
       recurring: formData.recurring as RecurringType,
-      template: 'modern',
-      createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
-    addInvoice(invoice);
-    router.push('/invoices');
+    updateInvoice(updatedInvoice);
+    router.push(`/invoices/${invoiceId}`);
   };
+
+  if (!invoice) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-slate-600">Loading invoice...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/invoices">
+          <Link href={`/invoices/${invoiceId}`}>
             <Button variant="ghost" size="icon">
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">New Invoice</h1>
-            <p className="text-slate-600 mt-2">Create and send professional invoices</p>
+            <h1 className="text-3xl font-bold text-slate-900">Edit Invoice</h1>
+            <p className="text-slate-600 mt-2">{invoice.invoiceNumber}</p>
           </div>
         </div>
         <div className="flex gap-3">
@@ -190,7 +206,7 @@ export default function NewInvoicePage() {
           </Button>
           <Button onClick={() => handleSave('pending')} className="gap-2">
             <Save className="w-4 h-4" />
-            Save & Send
+            Save Changes
           </Button>
         </div>
       </div>
@@ -209,7 +225,7 @@ export default function NewInvoicePage() {
                   <Label>Document Type</Label>
                   <Select
                     value={formData.type}
-                    onValueChange={(v) => v && setFormData({ ...formData, type: v })}
+                    onValueChange={(v) => v && setFormData({ ...formData, type: v as 'invoice' | 'quotation' })}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -257,14 +273,6 @@ export default function NewInvoicePage() {
                     ))}
                   </SelectContent>
                 </Select>
-                {clients.length === 0 && (
-                  <p className="text-sm text-slate-500 mt-2">
-                    No clients yet.{' '}
-                    <Link href="/clients" className="text-emerald-600 hover:underline">
-                      Add your first client
-                    </Link>
-                  </p>
-                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -310,7 +318,7 @@ export default function NewInvoicePage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {items.map((item, index) => (
+                  {items.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell>
                         {products.length > 0 && (

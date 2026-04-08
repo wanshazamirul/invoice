@@ -32,6 +32,16 @@ export interface InvoiceItem {
   total: number;
 }
 
+export interface Payment {
+  id: string;
+  invoiceId: string;
+  amount: number;
+  date: string;
+  method: 'cash' | 'bank_transfer' | 'card' | 'online' | 'other';
+  notes?: string;
+  createdAt: string;
+}
+
 export interface Invoice {
   id: string;
   invoiceNumber: string;
@@ -56,6 +66,7 @@ export interface Invoice {
   recurring: RecurringType;
   recurringEndDate?: string;
   template: string;
+  payments: Payment[];
   createdAt: string;
   updatedAt: string;
 }
