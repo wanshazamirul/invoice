@@ -537,8 +537,8 @@ export default function NewInvoicePage() {
               <Separator />
 
               <div className="flex justify-between text-lg">
-                <span className="font-semibold">Total</span>
-                <span className="font-bold text-emerald-600">
+                <span className="font-semibold text-slate-900 dark:text-slate-100">Total</span>
+                <span className="font-bold text-emerald-600 dark:text-emerald-400">
                   {settings.currency}
                   {calculateTotals().total.toFixed(2)}
                 </span>
@@ -573,10 +573,10 @@ export default function NewInvoicePage() {
               <CardTitle>From</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
-              <p className="font-semibold">{settings.companyInfo.name}</p>
+              <p className="font-semibold text-slate-900 dark:text-slate-100">{settings.companyInfo.name}</p>
               <p className="text-slate-600 dark:text-slate-400">{settings.companyInfo.email}</p>
               <p className="text-slate-600 dark:text-slate-400">{settings.companyInfo.phone}</p>
-              <p className="text-slate-600 whitespace-pre-line">{settings.companyInfo.address}</p>
+              <p className="text-slate-600 dark:text-slate-400 whitespace-pre-line">{settings.companyInfo.address}</p>
             </CardContent>
           </Card>
 
@@ -586,13 +586,13 @@ export default function NewInvoicePage() {
                 <CardTitle>To</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm">
-                <p className="font-semibold">{selectedClient.name}</p>
+                <p className="font-semibold text-slate-900 dark:text-slate-100">{selectedClient.name}</p>
                 {selectedClient.company && (
                   <p className="text-slate-600 dark:text-slate-400">{selectedClient.company}</p>
                 )}
                 <p className="text-slate-600 dark:text-slate-400">{selectedClient.email}</p>
                 <p className="text-slate-600 dark:text-slate-400">{selectedClient.phone}</p>
-                <p className="text-slate-600 whitespace-pre-line">{selectedClient.address}</p>
+                <p className="text-slate-600 dark:text-slate-400 whitespace-pre-line">{selectedClient.address}</p>
               </CardContent>
             </Card>
           )}

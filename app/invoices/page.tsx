@@ -339,19 +339,19 @@ export default function InvoicesPage() {
                   {filteredInvoices.map((invoice) => (
                     <TableRow
                       key={invoice.id}
-                      className="cursor-pointer hover:bg-slate-50 dark:bg-slate-900"
+                      className="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900"
                       onClick={() => handleView(invoice.id)}
                     >
-                      <TableCell className="font-medium">{invoice.invoiceNumber}</TableCell>
-                      <TableCell>{invoice.client.name}</TableCell>
+                      <TableCell className="font-medium text-slate-900 dark:text-slate-100">{invoice.invoiceNumber}</TableCell>
+                      <TableCell className="text-slate-900 dark:text-slate-100">{invoice.client.name}</TableCell>
                       <TableCell>
                         <Badge variant={invoice.type === 'invoice' ? 'default' : 'secondary'}>
                           {invoice.type}
                         </Badge>
                       </TableCell>
-                      <TableCell>{formatDate(invoice.issueDate)}</TableCell>
-                      <TableCell>{formatDate(invoice.dueDate)}</TableCell>
-                      <TableCell className="font-semibold">
+                      <TableCell className="text-slate-900 dark:text-slate-100">{formatDate(invoice.issueDate)}</TableCell>
+                      <TableCell className="text-slate-900 dark:text-slate-100">{formatDate(invoice.dueDate)}</TableCell>
+                      <TableCell className="font-semibold text-slate-900 dark:text-slate-100">
                         {formatCurrency(invoice.total, invoice.currency)}
                       </TableCell>
                       <TableCell>
