@@ -116,7 +116,7 @@ export const settingsStorage = {
   getSettings: (): InvoiceSettings => {
     const defaultSettings: InvoiceSettings = {
       currency: 'RM',
-      taxRate: 8,
+      taxRate: 0,
       defaultTerms: 'Payment is due within 30 days.',
       defaultNotes: 'Thank you for your business!',
       paymentInfo: 'Bank: Maybank\nAccount: 123456789012\nAccount Name: Your Name',
