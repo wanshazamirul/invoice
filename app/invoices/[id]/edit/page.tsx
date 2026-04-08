@@ -248,7 +248,7 @@ export default function EditInvoicePage() {
                     onValueChange={(v) => v && setFormData({ ...formData, type: v as 'invoice' | 'quotation' })}
                   >
                     <SelectTrigger>
-                      <SelectValue />
+                      <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="invoice">Invoice</SelectItem>
@@ -263,7 +263,7 @@ export default function EditInvoicePage() {
                     onValueChange={(v) => v && setFormData({ ...formData, currency: v })}
                   >
                     <SelectTrigger>
-                      <SelectValue />
+                      <SelectValue placeholder="Select currency" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="RM">RM - Malaysian Ringgit</SelectItem>
@@ -558,7 +558,7 @@ export default function EditInvoicePage() {
                   onValueChange={(v: any) => v && setFormData({ ...formData, recurring: v })}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select recurring" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">No</SelectItem>

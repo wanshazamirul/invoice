@@ -268,7 +268,7 @@ export default function SettingsPage() {
                   onValueChange={(v) => v && handleChange('currency', v)}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select currency" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="RM">RM - Malaysian Ringgit</SelectItem>

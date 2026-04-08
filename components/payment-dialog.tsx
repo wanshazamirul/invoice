@@ -113,7 +113,7 @@ export function PaymentDialog({ invoice, onUpdate }: PaymentDialogProps) {
             <Label htmlFor="method">Payment Method</Label>
             <Select value={method} onValueChange={(v: any) => setMethod(v)}>
               <SelectTrigger id="method">
-                <SelectValue />
+                <SelectValue placeholder="Select payment method" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="cash">Cash</SelectItem>
