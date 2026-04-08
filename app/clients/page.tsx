@@ -232,7 +232,7 @@ export default function ClientsPage() {
                 {filteredClients.map((client) => (
                   <Card
                     key={client.id}
-                    className="hover:shadow-md transition-shadow cursor-pointer active:scale-[0.98]"
+                    className="hover:shadow-md transition-shadow cursor-pointer active:scale-[0.98] py-1"
                   >
                     <CardContent className="p-1.5">
                       <div className="flex items-center justify-between">

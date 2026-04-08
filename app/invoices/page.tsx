@@ -261,11 +261,11 @@ export default function InvoicesPage() {
           ) : (
             <>
               {/* Mobile Card Layout - Ultra Simplified */}
-              <div className="md:hidden space-y-2">
+              <div className="md:hidden space-y-1">
                 {filteredInvoices.map((invoice) => (
                   <Card
                     key={invoice.id}
-                    className={`cursor-pointer transition-all active:scale-[0.98] ${
+                    className={`cursor-pointer transition-all active:scale-[0.98] py-1 ${
                       selectedInvoiceId === invoice.id
                         ? 'ring-2 ring-emerald-500 bg-emerald-50 dark:bg-emerald-950/30'
                         : 'hover:shadow-md hover:bg-slate-50 dark:hover:bg-slate-900'
