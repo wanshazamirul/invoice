@@ -26,23 +26,39 @@ export const calculateItemTotal = (
   tax: number,
   discount: number
 ): number => {
-  const subtotal = quantity * unitPrice;
-  const taxAmount = subtotal * (tax / 100);
-  const discountAmount = subtotal * (discount / 100);
-  return subtotal + taxAmount - discountAmount;
+  // Ensure all values are valid numbers, default to 0 if NaN/null/undefined
+  const validQuantity = isNaN(quantity) || quantity == null ? 0 : quantity;
+  const validUnitPrice = isNaN(unitPrice) || unitPrice == null ? 0 : unitPrice;
+  const validTax = isNaN(tax) || tax == null ? 0 : tax;
+  const validDiscount = isNaN(discount) || discount == null ? 0 : discount;
+
+  const subtotal = validQuantity * validUnitPrice;
+  const taxAmount = subtotal * (validTax / 100);
+  const discountAmount = subtotal * (validDiscount / 100);
+  const total = subtotal + taxAmount - discountAmount;
+
+  // Return 0 instead of NaN
+  return isNaN(total) ? 0 : total;
 };
 
 export const calculateInvoiceTotals = (items: InvoiceItem[], taxRate: number, discountRate: number) => {
-  const subtotal = items.reduce((sum, item) => sum + item.total, 0);
-  const taxAmount = subtotal * (taxRate / 100);
-  const discountAmount = subtotal * (discountRate / 100);
+  const subtotal = items.reduce((sum, item) => {
+    const itemTotal = isNaN(item.total) ? 0 : item.total;
+    return sum + itemTotal;
+  }, 0);
+
+  const validTaxRate = isNaN(taxRate) || taxRate == null ? 0 : taxRate;
+  const validDiscountRate = isNaN(discountRate) || discountRate == null ? 0 : discountRate;
+
+  const taxAmount = subtotal * (validTaxRate / 100);
+  const discountAmount = subtotal * (validDiscountRate / 100);
   const total = subtotal + taxAmount - discountAmount;
 
   return {
-    subtotal,
-    taxAmount,
-    discountAmount,
-    total,
+    subtotal: isNaN(subtotal) ? 0 : subtotal,
+    taxAmount: isNaN(taxAmount) ? 0 : taxAmount,
+    discountAmount: isNaN(discountAmount) ? 0 : discountAmount,
+    total: isNaN(total) ? 0 : total,
   };
 };
 
