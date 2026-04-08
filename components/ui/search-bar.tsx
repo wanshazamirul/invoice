@@ -27,13 +27,15 @@ export function SearchBar({ value, onChange, placeholder = 'Search...' }: Search
 
   return (
     <div className="relative">
-      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+      <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-xs text-slate-400 hidden sm:block">
+        ⌘K
+      </div>
       <Input
         type="text"
         value={localValue}
         onChange={(e) => setLocalValue(e.target.value)}
         placeholder={placeholder}
-        className="pl-10"
+        className="pr-10"
         onKeyDown={(e) => {
           if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
             e.preventDefault();
@@ -41,9 +43,7 @@ export function SearchBar({ value, onChange, placeholder = 'Search...' }: Search
           }
         }}
       />
-      <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-slate-400 hidden sm:block">
-        ⌘K
-      </div>
+      <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
     </div>
   );
 }
