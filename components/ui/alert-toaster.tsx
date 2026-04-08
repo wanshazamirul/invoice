@@ -38,7 +38,7 @@ export function AlertToaster() {
   if (alerts.length === 0) return null;
 
   return (
-    <div className="fixed top-4 right-4 z-[100] flex flex-col gap-3 max-w-md w-full pointer-events-none">
+    <div className="fixed top-2 sm:top-4 right-2 sm:right-4 z-[100] flex flex-col gap-2 sm:gap-3 max-w-[calc(100vw-16px)] sm:max-w-md w-full pointer-events-none">
       {alerts.map((alert) => {
         const config = alertConfig[alert.type];
         const Icon = config.icon;
@@ -47,22 +47,22 @@ export function AlertToaster() {
           <div
             key={alert.id}
             className={cn(
-              'pointer-events-auto relative flex items-start gap-3 p-4 rounded-lg border shadow-lg',
+              'pointer-events-auto relative flex items-start gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-lg border shadow-lg',
               'animate-in slide-in-from-right-full',
               'bg-white',
               config.bgColor
             )}
           >
             <div className={cn('flex-shrink-0', config.iconColor)}>
-              <Icon className="w-5 h-5" />
+              <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
 
             <div className="flex-1 min-w-0">
-              <p className={cn('text-sm font-semibold', config.titleColor)}>
+              <p className={cn('text-xs sm:text-sm font-semibold', config.titleColor)}>
                 {alert.title}
               </p>
               {alert.message && (
-                <p className="text-sm text-slate-600 mt-1">
+                <p className="text-xs sm:text-sm text-slate-600 mt-0.5 sm:mt-1">
                   {alert.message}
                 </p>
               )}
@@ -71,10 +71,10 @@ export function AlertToaster() {
             <Button
               variant="ghost"
               size="icon"
-              className="flex-shrink-0 h-6 w-6 -mr-1 -mt-1"
+              className="flex-shrink-0 h-5 w-5 sm:h-6 sm:w-6 -mr-1 -mt-1"
               onClick={() => removeAlert(alert.id)}
             >
-              <X className="w-4 h-4 text-slate-400 hover:text-slate-600" />
+              <X className="w-3 h-3 sm:w-4 sm:h-4 text-slate-400 hover:text-slate-600" />
             </Button>
           </div>
         );
