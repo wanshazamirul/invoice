@@ -265,7 +265,7 @@ export default function InvoicesPage() {
             </div>
           ) : (
             <>
-              {/* Mobile Card Layout - Ultra Simplified */}
+              {/* Mobile Card Layout - Multiline */}
               <div className="md:hidden space-y-1">
                 {filteredInvoices.map((invoice) => (
                   <Card
@@ -280,22 +280,25 @@ export default function InvoicesPage() {
                       setTimeout(() => handleView(invoice.id), 150);
                     }}
                   >
-                    <CardContent className="p-2.5">
+                    <CardContent className="p-2">
+                      {/* Line 1: Invoice number, type, client name */}
+                      <div className="flex items-center gap-1.5 mb-1.5">
+                        <h3 className="font-semibold text-[11px] text-slate-900 dark:text-slate-100 truncate flex-1">{invoice.invoiceNumber}</h3>
+                        <Badge variant={invoice.type === 'invoice' ? 'default' : 'secondary'} className="text-[9px] px-1 py-0 flex-shrink-0">
+                          {invoice.type === 'invoice' ? 'INV' : 'QT'}
+                        </Badge>
+                        <p className="text-[10px] text-slate-600 dark:text-slate-400 truncate flex-1">{invoice.client.name}</p>
+                      </div>
+
+                      {/* Line 2: Status, amount, payment button, dropdown */}
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 min-w-0 flex-1">
-                          <h3 className="font-semibold text-xs text-slate-900 dark:text-slate-100 truncate">{invoice.invoiceNumber}</h3>
-                          <Badge variant={invoice.type === 'invoice' ? 'default' : 'secondary'} className="text-[9px] px-1 py-0 flex-shrink-0">
-                            {invoice.type === 'invoice' ? 'INV' : 'QT'}
-                          </Badge>
-                          <p className="text-[10px] text-slate-600 dark:text-slate-400 truncate flex-1">{invoice.client.name}</p>
-                        </div>
-                        <div className="flex items-center gap-2 ml-2 flex-shrink-0">
-                          <Badge className={`${getInvoiceStatusColor(invoice.status)} text-[9px] px-1 py-0`}>
-                            {invoice.status}
-                          </Badge>
-                          <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                            {formatCurrency(invoice.total, invoice.currency)}
-                          </p>
+                        <Badge className={`${getInvoiceStatusColor(invoice.status)} text-[9px] px-1 py-0`}>
+                          {invoice.status}
+                        </Badge>
+                        <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                          {formatCurrency(invoice.total, invoice.currency)}
+                        </p>
+                        <div className="flex items-center gap-1">
                           {invoice.type === 'invoice' && invoice.status !== 'paid' && (
                             <PaymentDialog invoice={invoice} onUpdate={refreshInvoice} size="sm" />
                           )}
