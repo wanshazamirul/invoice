@@ -227,18 +227,19 @@ export default function ClientsPage() {
                         </div>
                         <DropdownMenu>
                           <DropdownMenuTrigger>
-                            <Button variant="ghost" size="icon">
+                            <Button variant="ghost" size="icon" aria-label="More options">
                               <MoreVertical className="w-4 h-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleEdit(client)}>
+                            <DropdownMenuItem onClick={() => handleEdit(client)} aria-label="Edit client">
                               <Pencil className="w-4 h-4 mr-2" />
                               Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleDelete(client.id)}
                               className="text-red-600"
+                              aria-label="Delete client"
                             >
                               <Trash2 className="w-4 h-4 mr-2" />
                               Delete
@@ -289,18 +290,19 @@ export default function ClientsPage() {
                       <TableCell className="text-right">
                         <DropdownMenu>
                           <DropdownMenuTrigger>
-                            <Button variant="ghost" size="icon">
+                            <Button variant="ghost" size="icon" aria-label="More options">
                               <MoreVertical className="w-4 h-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleEdit(client)}>
+                            <DropdownMenuItem onClick={() => handleEdit(client)} aria-label="Edit client">
                               <Pencil className="w-4 h-4 mr-2" />
                               Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleDelete(client.id)}
                               className="text-red-600"
+                              aria-label="Delete client"
                             >
                               <Trash2 className="w-4 h-4 mr-2" />
                               Delete

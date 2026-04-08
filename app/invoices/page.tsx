@@ -276,36 +276,37 @@ export default function InvoicesPage() {
                         </p>
                         <DropdownMenu>
                           <DropdownMenuTrigger>
-                            <Button variant="ghost" size="icon">
+                            <Button variant="ghost" size="icon" aria-label="More options">
                               <MoreVertical className="w-4 h-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleView(invoice.id)}>
+                            <DropdownMenuItem onClick={() => handleView(invoice.id)} aria-label="View invoice details">
                               <Eye className="w-4 h-4 mr-2" />
                               View
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleEdit(invoice.id)}>
+                            <DropdownMenuItem onClick={() => handleEdit(invoice.id)} aria-label="Edit invoice">
                               <FileText className="w-4 h-4 mr-2" />
                               Edit
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleCopy(invoice)}>
+                            <DropdownMenuItem onClick={() => handleCopy(invoice)} aria-label="Copy invoice">
                               <Copy className="w-4 h-4 mr-2" />
                               Copy
                             </DropdownMenuItem>
                             {invoice.type === 'invoice' && (
-                              <DropdownMenuItem onClick={() => handleConvertToQuotation(invoice)}>
+                              <DropdownMenuItem onClick={() => handleConvertToQuotation(invoice)} aria-label="Convert to quotation">
                                 <FileOutput className="w-4 h-4 mr-2" />
                                 Convert to Quotation
                               </DropdownMenuItem>
                             )}
-                            <DropdownMenuItem onClick={() => handleDownload(invoice)}>
+                            <DropdownMenuItem onClick={() => handleDownload(invoice)} aria-label="Download PDF">
                               <Download className="w-4 h-4 mr-2" />
                               Download PDF
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleDelete(invoice.id)}
                               className="text-red-600"
+                              aria-label="Delete invoice"
                             >
                               <Trash2 className="w-4 h-4 mr-2" />
                               Delete
@@ -355,36 +356,37 @@ export default function InvoicesPage() {
                       <TableCell className="text-right">
                         <DropdownMenu>
                           <DropdownMenuTrigger>
-                            <Button variant="ghost" size="icon">
+                            <Button variant="ghost" size="icon" aria-label="More options">
                               <MoreVertical className="w-4 h-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleView(invoice.id)}>
+                            <DropdownMenuItem onClick={() => handleView(invoice.id)} aria-label="View invoice details">
                               <Eye className="w-4 h-4 mr-2" />
                               View
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleEdit(invoice.id)}>
+                            <DropdownMenuItem onClick={() => handleEdit(invoice.id)} aria-label="Edit invoice">
                               <FileText className="w-4 h-4 mr-2" />
                               Edit
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleCopy(invoice)}>
+                            <DropdownMenuItem onClick={() => handleCopy(invoice)} aria-label="Copy invoice">
                               <Copy className="w-4 h-4 mr-2" />
                               Copy
                             </DropdownMenuItem>
                             {invoice.type === 'invoice' && (
-                              <DropdownMenuItem onClick={() => handleConvertToQuotation(invoice)}>
+                              <DropdownMenuItem onClick={() => handleConvertToQuotation(invoice)} aria-label="Convert to quotation">
                                 <FileOutput className="w-4 h-4 mr-2" />
                                 Convert to Quotation
                               </DropdownMenuItem>
                             )}
-                            <DropdownMenuItem onClick={() => handleDownload(invoice)}>
+                            <DropdownMenuItem onClick={() => handleDownload(invoice)} aria-label="Download PDF">
                               <Download className="w-4 h-4 mr-2" />
                               Download PDF
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleDelete(invoice.id)}
                               className="text-red-600"
+                              aria-label="Delete invoice"
                             >
                               <Trash2 className="w-4 h-4 mr-2" />
                               Delete

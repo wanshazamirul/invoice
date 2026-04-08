@@ -198,18 +198,19 @@ export default function ProductsPage() {
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger>
-                          
+                          <Button variant="ghost" size="icon" aria-label="More options">
                             <MoreVertical className="w-4 h-4" />
-                          
+                          </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleEdit(product)}>
+                          <DropdownMenuItem onClick={() => handleEdit(product)} aria-label="Edit product">
                             <Pencil className="w-4 h-4 mr-2" />
                             Edit
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => handleDelete(product.id)}
                             className="text-red-600"
+                            aria-label="Delete product"
                           >
                             <Trash2 className="w-4 h-4 mr-2" />
                             Delete
