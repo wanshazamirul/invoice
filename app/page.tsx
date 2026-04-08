@@ -67,6 +67,28 @@ export default function DashboardPage() {
     return months;
   }, [invoices]);
 
+  // Calculate trends
+  const trends = useMemo(() => {
+    const currentMonth = revenueData[revenueData.length - 1];
+    const previousMonth = revenueData[revenueData.length - 2];
+
+    // Total Revenue trend (current month vs previous month)
+    const revenueTrend = previousMonth && previousMonth.revenue > 0
+      ? ((currentMonth.revenue - previousMonth.revenue) / previousMonth.revenue * 100).toFixed(1)
+      : '0.0';
+
+    // Paid This Month trend (current month vs 2 months ago for better comparison)
+    const twoMonthsAgo = revenueData[revenueData.length - 3];
+    const paidTrend = twoMonthsAgo && twoMonthsAgo.revenue > 0
+      ? ((currentMonth.revenue - twoMonthsAgo.revenue) / twoMonthsAgo.revenue * 100).toFixed(1)
+      : '0.0';
+
+    return {
+      revenueTrend: parseFloat(revenueTrend),
+      paidTrend: parseFloat(paidTrend),
+    };
+  }, [revenueData]);
+
   // Invoice status distribution
   const statusData = useMemo(() => {
     const statuses = invoices.reduce(
@@ -119,7 +141,7 @@ export default function DashboardPage() {
       icon: DollarSign,
       color: 'text-emerald-600',
       bgColor: 'bg-emerald-100',
-      trend: '+12.5%',
+      trend: trends.revenueTrend !== 0 ? `${trends.revenueTrend > 0 ? '+' : ''}${trends.revenueTrend}%` : 'No data',
     },
     {
       title: 'Pending Amount',
@@ -127,7 +149,7 @@ export default function DashboardPage() {
       icon: Clock,
       color: 'text-yellow-600',
       bgColor: 'bg-yellow-100',
-      trend: `${stats.pendingInvoices} invoices`,
+      trend: `${stats.pendingInvoices} invoice${stats.pendingInvoices !== 1 ? 's' : ''}`,
     },
     {
       title: 'Overdue Amount',
@@ -135,7 +157,7 @@ export default function DashboardPage() {
       icon: AlertCircle,
       color: 'text-red-600',
       bgColor: 'bg-red-100',
-      trend: `${stats.overdueInvoices} invoices`,
+      trend: `${stats.overdueInvoices} invoice${stats.overdueInvoices !== 1 ? 's' : ''}`,
     },
     {
       title: 'Paid This Month',
@@ -143,7 +165,7 @@ export default function DashboardPage() {
       icon: CheckCircle,
       color: 'text-blue-600',
       bgColor: 'bg-blue-100',
-      trend: '+8.2%',
+      trend: trends.paidTrend !== 0 ? `${trends.paidTrend > 0 ? '+' : ''}${trends.paidTrend}%` : 'No data',
     },
   ];
 
