@@ -27,14 +27,14 @@ export function LineItemList({ items, currency, onEdit, onDelete }: LineItemList
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 lg:hidden">
       {items.map((item, index) => (
         <Card
           key={item.id}
           className="group relative overflow-hidden transition-all hover:shadow-md"
         >
           <CardContent className="p-3">
-            <div className="flex items-start gap-3">
+            <div className="flex items-center gap-3">
               {/* Drag Handle (visual only for now) */}
               <div className="flex items-center justify-center w-6 text-muted-foreground cursor-grab">
                 <GripVertical className="w-4 h-4" />
@@ -42,7 +42,7 @@ export function LineItemList({ items, currency, onEdit, onDelete }: LineItemList
 
               {/* Item Details */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center justify-between gap-2">
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm truncate">{item.description}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">
@@ -75,7 +75,7 @@ export function LineItemList({ items, currency, onEdit, onDelete }: LineItemList
                 )}
               </div>
 
-              {/* Action Buttons - Always visible on mobile, visible on hover on desktop */}
+              {/* Action Buttons - Vertically centered with content */}
               <div className="flex items-center gap-1">
                 <Button
                   variant="ghost"
