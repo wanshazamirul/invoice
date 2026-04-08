@@ -17,12 +17,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Building2, FileText, Settings as SettingsIcon, Database } from 'lucide-react';
+import { Building2, FileText, Settings as SettingsIcon, Database, Sun, Moon, Monitor } from 'lucide-react';
 import { useAlert } from '@/contexts/alert-context';
+import { useTheme } from '@/contexts/theme-context';
 
 export default function SettingsPage() {
   const { settings, updateSettings, exportAllData, importAllData } = useStore();
   const { success, error } = useAlert();
+  const { theme, setTheme, actualTheme } = useTheme();
   const [formData, setFormData] = useState<InvoiceSettings>(settings);
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -272,12 +274,56 @@ export default function SettingsPage() {
         <TabsContent value="general">
           <Card>
             <CardHeader>
-              <CardTitle>General Settings</CardTitle>
+              <CardTitle>Appearance</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-sm text-slate-600">
-                More general settings will be added here in future updates.
-              </p>
+              <div>
+                <Label>Theme</Label>
+                <div className="grid grid-cols-3 gap-3 mt-2">
+                  <button
+                    onClick={() => setTheme('light')}
+                    className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                      theme === 'light'
+                        ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950'
+                        : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                    }`}
+                  >
+                    <Sun className={`w-6 h-6 ${theme === 'light' ? 'text-emerald-600' : 'text-slate-600 dark:text-slate-400'}`} />
+                    <span className="text-sm font-medium">Light</span>
+                  </button>
+
+                  <button
+                    onClick={() => setTheme('dark')}
+                    className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                      theme === 'dark'
+                        ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950'
+                        : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                    }`}
+                  >
+                    <Moon className={`w-6 h-6 ${theme === 'dark' ? 'text-emerald-600' : 'text-slate-600 dark:text-slate-400'}`} />
+                    <span className="text-sm font-medium">Dark</span>
+                  </button>
+
+                  <button
+                    onClick={() => setTheme('system')}
+                    className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                      theme === 'system'
+                        ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950'
+                        : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                    }`}
+                  >
+                    <Monitor className={`w-6 h-6 ${theme === 'system' ? 'text-emerald-600' : 'text-slate-600 dark:text-slate-400'}`} />
+                    <span className="text-sm font-medium">System</span>
+                  </button>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-2">
+                  {theme === 'system'
+                    ? `Using system theme (${actualTheme === 'dark' ? 'Dark' : 'Light'})`
+                    : theme === 'dark'
+                    ? 'Dark mode enabled'
+                    : 'Light mode enabled'}
+                </p>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
