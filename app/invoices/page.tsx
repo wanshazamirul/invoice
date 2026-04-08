@@ -27,7 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Plus, MoreVertical, FileText, Download, Eye, Trash2, Copy, FileOutput } from 'lucide-react';
+import { Plus, MoreVertical, FileText, Download, Trash2, Copy, FileOutput } from 'lucide-react';
 import { formatDate, formatCurrency, getInvoiceStatusColor } from '@/lib/helpers';
 import { useRouter } from 'next/navigation';
 import { generateInvoicePDF } from '@/lib/pdf-generator';
@@ -242,7 +242,11 @@ export default function InvoicesPage() {
               {/* Mobile Card Layout */}
               <div className="md:hidden space-y-4">
                 {filteredInvoices.map((invoice) => (
-                  <Card key={invoice.id} className="hover:shadow-md transition-shadow">
+                  <Card
+                    key={invoice.id}
+                    className="hover:shadow-md transition-shadow cursor-pointer"
+                    onClick={() => handleView(invoice.id)}
+                  >
                     <CardContent className="pt-4">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
@@ -275,16 +279,14 @@ export default function InvoicesPage() {
                           {formatCurrency(invoice.total, invoice.currency)}
                         </p>
                         <DropdownMenu>
-                          <DropdownMenuTrigger>
+                          <DropdownMenuTrigger
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <Button variant="ghost" size="icon" aria-label="More options">
                               <MoreVertical className="w-4 h-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleView(invoice.id)} aria-label="View invoice details">
-                              <Eye className="w-4 h-4 mr-2" />
-                              View
-                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleEdit(invoice.id)} aria-label="Edit invoice">
                               <FileText className="w-4 h-4 mr-2" />
                               Edit
@@ -335,7 +337,11 @@ export default function InvoicesPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredInvoices.map((invoice) => (
-                    <TableRow key={invoice.id}>
+                    <TableRow
+                      key={invoice.id}
+                      className="cursor-pointer hover:bg-slate-50"
+                      onClick={() => handleView(invoice.id)}
+                    >
                       <TableCell className="font-medium">{invoice.invoiceNumber}</TableCell>
                       <TableCell>{invoice.client.name}</TableCell>
                       <TableCell>
@@ -353,7 +359,7 @@ export default function InvoicesPage() {
                           {invoice.status}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                         <DropdownMenu>
                           <DropdownMenuTrigger>
                             <Button variant="ghost" size="icon" aria-label="More options">
@@ -361,10 +367,6 @@ export default function InvoicesPage() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleView(invoice.id)} aria-label="View invoice details">
-                              <Eye className="w-4 h-4 mr-2" />
-                              View
-                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleEdit(invoice.id)} aria-label="Edit invoice">
                               <FileText className="w-4 h-4 mr-2" />
                               Edit
