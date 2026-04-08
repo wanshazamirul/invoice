@@ -22,7 +22,7 @@ export function BottomNav() {
 
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-40 safe-area-bottom">
-      <div className="flex items-center justify-center gap-1 h-13 pb-safe pt-2">
+      <div className="flex items-center justify-center gap-1 h-13 pb-safe pt-4">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
