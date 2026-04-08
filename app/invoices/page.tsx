@@ -27,12 +27,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Plus, MoreVertical, FileText, Download, Trash2, Copy, FileOutput } from 'lucide-react';
+import { Plus, MoreVertical, FileText, Download, Trash2, Copy, FileOutput, DollarSign } from 'lucide-react';
 import { formatDate, formatCurrency, getInvoiceStatusColor } from '@/lib/helpers';
 import { useRouter } from 'next/navigation';
 import { generateInvoicePDF } from '@/lib/pdf-generator';
 import { SearchBar } from '@/components/ui/search-bar';
 import { useAlert } from '@/contexts/alert-context';
+import { PaymentDialog } from '@/components/payment-dialog';
 
 export default function InvoicesPage() {
   const { invoices, loadData, deleteInvoice, settings, addInvoice, generateInvoiceNumber } = useStore();
@@ -120,6 +121,10 @@ export default function InvoicesPage() {
 
     addInvoice(quotation);
     router.push(`/invoices/${quotation.id}/edit`);
+  };
+
+  const refreshInvoice = () => {
+    loadData();
   };
 
   const stats = {
@@ -291,6 +296,9 @@ export default function InvoicesPage() {
                           <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
                             {formatCurrency(invoice.total, invoice.currency)}
                           </p>
+                          {invoice.type === 'invoice' && invoice.status !== 'paid' && (
+                            <PaymentDialog invoice={invoice} onUpdate={refreshInvoice} size="sm" />
+                          )}
                           <DropdownMenu>
                             <DropdownMenuTrigger
                               onClick={(e) => {
@@ -377,41 +385,46 @@ export default function InvoicesPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger>
-                            <Button variant="ghost" size="icon" aria-label="More options">
-                              <MoreVertical className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleEdit(invoice.id)} aria-label="Edit invoice">
-                              <FileText className="w-4 h-4 mr-2" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleCopy(invoice)} aria-label="Copy invoice">
-                              <Copy className="w-4 h-4 mr-2" />
-                              Copy
-                            </DropdownMenuItem>
-                            {invoice.type === 'invoice' && (
-                              <DropdownMenuItem onClick={() => handleConvertToQuotation(invoice)} aria-label="Convert to quotation">
-                                <FileOutput className="w-4 h-4 mr-2" />
-                                Convert to Quotation
+                        <div className="flex items-center justify-end gap-2">
+                          {invoice.type === 'invoice' && invoice.status !== 'paid' && (
+                            <PaymentDialog invoice={invoice} onUpdate={refreshInvoice} size="sm" />
+                          )}
+                          <DropdownMenu>
+                            <DropdownMenuTrigger>
+                              <Button variant="ghost" size="icon" aria-label="More options">
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => handleEdit(invoice.id)} aria-label="Edit invoice">
+                                <FileText className="w-4 h-4 mr-2" />
+                                Edit
                               </DropdownMenuItem>
-                            )}
-                            <DropdownMenuItem onClick={() => handleDownload(invoice)} aria-label="Download PDF">
-                              <Download className="w-4 h-4 mr-2" />
-                              Download PDF
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(invoice.id)}
-                              className="text-red-600"
-                              aria-label="Delete invoice"
-                            >
-                              <Trash2 className="w-4 h-4 mr-2" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                              <DropdownMenuItem onClick={() => handleCopy(invoice)} aria-label="Copy invoice">
+                                <Copy className="w-4 h-4 mr-2" />
+                                Copy
+                              </DropdownMenuItem>
+                              {invoice.type === 'invoice' && (
+                                <DropdownMenuItem onClick={() => handleConvertToQuotation(invoice)} aria-label="Convert to quotation">
+                                  <FileOutput className="w-4 h-4 mr-2" />
+                                  Convert to Quotation
+                                </DropdownMenuItem>
+                              )}
+                              <DropdownMenuItem onClick={() => handleDownload(invoice)} aria-label="Download PDF">
+                                <Download className="w-4 h-4 mr-2" />
+                                Download PDF
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleDelete(invoice.id)}
+                                className="text-red-600"
+                                aria-label="Delete invoice"
+                              >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}

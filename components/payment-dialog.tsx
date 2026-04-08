@@ -22,9 +22,10 @@ import { useAlert } from '@/contexts/alert-context';
 interface PaymentDialogProps {
   invoice: Invoice;
   onUpdate: () => void;
+  size?: 'default' | 'sm';
 }
 
-export function PaymentDialog({ invoice, onUpdate }: PaymentDialogProps) {
+export function PaymentDialog({ invoice, onUpdate, size = 'default' }: PaymentDialogProps) {
   const { updateInvoice } = useStore();
   const { error, success } = useAlert();
   const [open, setOpen] = useState(false);
@@ -78,9 +79,9 @@ export function PaymentDialog({ invoice, onUpdate }: PaymentDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button className="gap-2 flex-1 min-w-0 sm:min-w-fit">
-          <DollarSign className="w-4 h-4" />
-          Record Payment
+        <Button className={size === 'sm' ? 'gap-1 h-6 w-6 p-0' : 'gap-2 flex-1 min-w-0 sm:min-w-fit'}>
+          <DollarSign className={size === 'sm' ? 'w-3 h-3' : 'w-4 h-4'} />
+          {size === 'default' && 'Record Payment'}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
