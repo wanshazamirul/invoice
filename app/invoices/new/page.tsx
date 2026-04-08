@@ -202,7 +202,7 @@ export default function NewInvoicePage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-lg sm:text-2xl font-bold text-slate-900">New Invoice</h1>
+            <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100">New Invoice</h1>
             <p className="text-slate-600 mt-1 text-[10px] sm:text-sm">Create and send professional invoices</p>
           </div>
         </div>
@@ -479,7 +479,7 @@ export default function NewInvoicePage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between">
-                <span className="text-slate-600">Subtotal</span>
+                <span className="text-slate-600 dark:text-slate-400">Subtotal</span>
                 <span className="font-medium">
                   {settings.currency}
                   {calculateTotals().subtotal.toFixed(2)}
@@ -488,7 +488,7 @@ export default function NewInvoicePage() {
 
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-slate-600">Tax Rate</span>
+                  <span className="text-slate-600 dark:text-slate-400">Tax Rate</span>
                   <Input
                     type="number"
                     min="0"
@@ -502,7 +502,7 @@ export default function NewInvoicePage() {
                   %
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Tax Amount</span>
+                  <span className="text-slate-600 dark:text-slate-400">Tax Amount</span>
                   <span className="font-medium">
                     {settings.currency}
                     {calculateTotals().taxAmount.toFixed(2)}
@@ -512,7 +512,7 @@ export default function NewInvoicePage() {
 
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-slate-600">Discount</span>
+                  <span className="text-slate-600 dark:text-slate-400">Discount</span>
                   <Input
                     type="number"
                     min="0"
@@ -526,7 +526,7 @@ export default function NewInvoicePage() {
                   %
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Discount Amount</span>
+                  <span className="text-slate-600 dark:text-slate-400">Discount Amount</span>
                   <span className="font-medium text-red-600">
                     -{settings.currency}
                     {calculateTotals().discountAmount.toFixed(2)}
@@ -574,8 +574,8 @@ export default function NewInvoicePage() {
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               <p className="font-semibold">{settings.companyInfo.name}</p>
-              <p className="text-slate-600">{settings.companyInfo.email}</p>
-              <p className="text-slate-600">{settings.companyInfo.phone}</p>
+              <p className="text-slate-600 dark:text-slate-400">{settings.companyInfo.email}</p>
+              <p className="text-slate-600 dark:text-slate-400">{settings.companyInfo.phone}</p>
               <p className="text-slate-600 whitespace-pre-line">{settings.companyInfo.address}</p>
             </CardContent>
           </Card>
@@ -588,10 +588,10 @@ export default function NewInvoicePage() {
               <CardContent className="space-y-2 text-sm">
                 <p className="font-semibold">{selectedClient.name}</p>
                 {selectedClient.company && (
-                  <p className="text-slate-600">{selectedClient.company}</p>
+                  <p className="text-slate-600 dark:text-slate-400">{selectedClient.company}</p>
                 )}
-                <p className="text-slate-600">{selectedClient.email}</p>
-                <p className="text-slate-600">{selectedClient.phone}</p>
+                <p className="text-slate-600 dark:text-slate-400">{selectedClient.email}</p>
+                <p className="text-slate-600 dark:text-slate-400">{selectedClient.phone}</p>
                 <p className="text-slate-600 whitespace-pre-line">{selectedClient.address}</p>
               </CardContent>
             </Card>

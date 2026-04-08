@@ -22,12 +22,12 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
+    <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30">
       <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
         {/* Search - Hidden on mobile, shown on tablet+ */}
         <div className="hidden sm:block flex-1 max-w-md">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
             <Input
               type="search"
               placeholder="Search invoices, clients..."
@@ -38,7 +38,7 @@ export default function Header() {
 
         {/* Mobile Title - Only shown on mobile */}
         <div className="sm:hidden">
-          <h1 className="text-lg font-semibold text-slate-900">{settings.companyInfo.name || 'Invoice App'}</h1>
+          <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{settings.companyInfo.name || 'Invoice App'}</h1>
         </div>
 
         {/* Actions */}

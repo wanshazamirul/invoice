@@ -81,8 +81,8 @@ export default function SettingsPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">Settings</h1>
-        <p className="text-slate-600 mt-2">Configure your invoice application</p>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Settings</h1>
+        <p className="text-slate-600 dark:text-slate-400 mt-2">Configure your invoice application</p>
       </div>
 
       {hasChanges && (

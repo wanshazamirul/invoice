@@ -89,7 +89,7 @@ export function PaymentDialog({ invoice, onUpdate }: PaymentDialogProps) {
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="bg-slate-50 p-3 rounded-lg">
-            <p className="text-sm text-slate-600">Invoice Total</p>
+            <p className="text-sm text-slate-600 dark:text-slate-400">Invoice Total</p>
             <p className="text-lg font-semibold">{invoice.currency} {invoice.total.toFixed(2)}</p>
             <p className="text-sm text-slate-600 mt-2">Remaining Balance</p>
             <p className="text-lg font-semibold text-emerald-600">

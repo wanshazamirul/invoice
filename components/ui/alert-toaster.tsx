@@ -74,7 +74,7 @@ export function AlertToaster() {
               className="flex-shrink-0 h-5 w-5 sm:h-6 sm:w-6 -mr-1 -mt-1"
               onClick={() => removeAlert(alert.id)}
             >
-              <X className="w-3 h-3 sm:w-4 sm:h-4 text-slate-400 hover:text-slate-600" />
+              <X className="w-3 h-3 sm:w-4 sm:h-4 text-slate-400 hover:text-slate-600 dark:text-slate-400" />
             </Button>
           </div>
         );

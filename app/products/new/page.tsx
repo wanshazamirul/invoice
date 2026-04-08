@@ -50,7 +50,7 @@ export default function NewProductPage() {
           <ArrowLeft className="w-3 h-3" />
         </Button>
         <div>
-          <h1 className="text-lg sm:text-2xl font-bold text-slate-900">New Product</h1>
+          <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100">New Product</h1>
           <p className="text-slate-600 mt-1 text-[10px] sm:text-sm">Add a new product or service</p>
         </div>
       </div>

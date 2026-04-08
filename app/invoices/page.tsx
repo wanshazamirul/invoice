@@ -134,8 +134,8 @@ export default function InvoicesPage() {
       {/* Header */}
       <div className="flex flex-row items-center justify-between gap-2">
         <div>
-          <h1 className="text-lg sm:text-2xl font-bold text-slate-900">Invoices</h1>
-          <p className="text-slate-600 mt-1 text-[10px] sm:text-sm">Manage your invoices and quotations</p>
+          <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100">Invoices</h1>
+          <p className="text-slate-600 dark:text-slate-400 mt-1 text-[10px] sm:text-sm">Manage your invoices and quotations</p>
         </div>
         <Button onClick={() => router.push('/invoices/new')} className="gap-1">
           <Plus className="w-3 h-3" />
@@ -147,31 +147,31 @@ export default function InvoicesPage() {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         <Card>
           <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
-            <p className="text-[10px] sm:text-xs text-slate-600">Total</p>
-            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-900">{stats.total}</p>
+            <p className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400">Total</p>
+            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-900 dark:text-slate-100">{stats.total}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
-            <p className="text-[10px] sm:text-xs text-slate-600">Draft</p>
-            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-500">{stats.draft}</p>
+            <p className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400">Draft</p>
+            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-500 dark:text-slate-500">{stats.draft}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
-            <p className="text-[10px] sm:text-xs text-slate-600">Pending</p>
+            <p className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400">Pending</p>
             <p className="text-lg sm:text-xl lg:text-2xl font-bold text-yellow-600">{stats.pending}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
-            <p className="text-[10px] sm:text-xs text-slate-600">Paid</p>
+            <p className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400">Paid</p>
             <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600">{stats.paid}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
-            <p className="text-[10px] sm:text-xs text-slate-600">Overdue</p>
+            <p className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400">Overdue</p>
             <p className="text-lg sm:text-xl lg:text-2xl font-bold text-red-600">{stats.overdue}</p>
           </CardContent>
         </Card>
@@ -251,12 +251,12 @@ export default function InvoicesPage() {
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-slate-900">{invoice.invoiceNumber}</h3>
+                            <h3 className="font-semibold text-slate-900 dark:text-slate-100">{invoice.invoiceNumber}</h3>
                             <Badge variant={invoice.type === 'invoice' ? 'default' : 'secondary'}>
                               {invoice.type}
                             </Badge>
                           </div>
-                          <p className="text-sm text-slate-600">{invoice.client.name}</p>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">{invoice.client.name}</p>
                         </div>
                         <Badge className={getInvoiceStatusColor(invoice.status)}>
                           {invoice.status}
@@ -265,16 +265,16 @@ export default function InvoicesPage() {
 
                       <div className="grid grid-cols-2 gap-3 mb-3">
                         <div>
-                          <p className="text-xs text-slate-500">Issue Date</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-500">Issue Date</p>
                           <p className="text-sm font-medium">{formatDate(invoice.issueDate)}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-slate-500">Due Date</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-500">Due Date</p>
                           <p className="text-sm font-medium">{formatDate(invoice.dueDate)}</p>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+                      <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
                         <p className="text-lg font-bold text-emerald-600">
                           {formatCurrency(invoice.total, invoice.currency)}
                         </p>
@@ -339,7 +339,7 @@ export default function InvoicesPage() {
                   {filteredInvoices.map((invoice) => (
                     <TableRow
                       key={invoice.id}
-                      className="cursor-pointer hover:bg-slate-50"
+                      className="cursor-pointer hover:bg-slate-50 dark:bg-slate-900"
                       onClick={() => handleView(invoice.id)}
                     >
                       <TableCell className="font-medium">{invoice.invoiceNumber}</TableCell>

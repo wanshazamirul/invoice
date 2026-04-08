@@ -21,7 +21,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-40 safe-area-bottom">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-40 safe-area-bottom">
       <div className="flex items-center justify-center gap-1 h-13 pb-safe pt-4">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -34,22 +34,24 @@ export function BottomNav() {
               className={cn(
                 'flex flex-col items-center justify-start flex-1 h-full transition-colors duration-150',
                 isActive
-                  ? 'text-emerald-600'
-                  : 'text-slate-400 hover:text-slate-600'
+                  ? 'text-emerald-600 dark:text-emerald-500'
+                  : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'
               )}
             >
               <div className="relative flex items-center justify-center">
-                <Icon className={cn(
-                  'w-5 h-5 transition-all duration-150',
-                  isActive && 'scale-110'
-                )} />
-                {isActive && (
-                  <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-emerald-600 rounded-full" />
-                )}
+                <div className={cn(
+                  'p-1.5 rounded-lg transition-all duration-150',
+                  isActive ? 'bg-emerald-100 dark:bg-emerald-950' : ''
+                )}>
+                  <Icon className={cn(
+                    'w-5 h-5 transition-all duration-150',
+                    isActive && 'scale-110'
+                  )} />
+                </div>
               </div>
               <span className={cn(
                 'text-[10px] mt-0.5 font-medium transition-all duration-150',
-                isActive ? 'text-emerald-600' : 'text-slate-400'
+                isActive ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-400 dark:text-slate-500'
               )}>
                 {item.label}
               </span>

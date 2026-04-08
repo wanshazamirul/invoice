@@ -25,12 +25,12 @@ export default function Sidebar() {
   const { settings } = useStore();
 
   return (
-    <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-slate-900 text-white">
+    <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-slate-900 dark:bg-slate-950 text-white">
       <div className="flex flex-col h-full">
         {/* Logo */}
-        <div className="p-6 border-b border-slate-700">
+        <div className="p-6 border-b border-slate-700 dark:border-slate-800">
           <h1 className="text-xl font-bold">{settings.companyInfo.name || 'Invoice App'}</h1>
-          <p className="text-sm text-slate-400 mt-1">Professional Invoicing</p>
+          <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">Professional Invoicing</p>
         </div>
 
         {/* Navigation */}
@@ -47,7 +47,7 @@ export default function Sidebar() {
                   'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
                   isActive
                     ? 'bg-emerald-600 text-white'
-                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                    : 'text-slate-300 dark:text-slate-400 hover:bg-slate-800 dark:hover:bg-slate-800 hover:text-white dark:hover:text-white'
                 )}
               >
                 <Icon className="w-5 h-5" />
@@ -58,8 +58,8 @@ export default function Sidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-700">
-          <p className="text-xs text-slate-400 text-center">
+        <div className="p-4 border-t border-slate-700 dark:border-slate-800">
+          <p className="text-xs text-slate-400 dark:text-slate-500 text-center">
             Built with Next.js 16 + TypeScript
           </p>
         </div>

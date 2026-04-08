@@ -105,7 +105,7 @@ export default function ProductsPage() {
       {/* Header */}
       <div className="flex flex-row items-center justify-between gap-2">
         <div>
-          <h1 className="text-lg sm:text-2xl font-bold text-slate-900">Products & Services</h1>
+          <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100">Products & Services</h1>
           <p className="text-slate-600 mt-1 text-[10px] sm:text-sm">Manage your products and services for quick invoicing</p>
         </div>
         <Button onClick={handleAdd} className="gap-1">
@@ -120,7 +120,7 @@ export default function ProductsPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600">Total Products</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Total Products</p>
                 <p className="text-3xl font-bold text-slate-900 mt-2">{products.length}</p>
               </div>
               <div className="p-3 bg-emerald-100 rounded-lg">
@@ -134,7 +134,7 @@ export default function ProductsPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600">Average Price</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Average Price</p>
                 <p className="text-3xl font-bold text-slate-900 mt-2">
                   {products.length > 0
                     ? formatCurrency(

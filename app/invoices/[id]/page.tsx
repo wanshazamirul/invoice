@@ -52,7 +52,7 @@ export default function InvoiceDetailPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p className="text-slate-600">Loading invoice...</p>
+        <p className="text-slate-600 dark:text-slate-400">Loading invoice...</p>
       </div>
     );
   }
@@ -120,7 +120,7 @@ export default function InvoiceDetailPage() {
               <p className="text-slate-600 text-sm max-w-md mt-1">{settings.companyInfo.address}</p>
             </div>
             <div className="text-left sm:text-right w-full sm:w-auto">
-              <h3 className="text-2xl sm:text-3xl font-bold text-slate-900">
+              <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100">
                 {invoice.type === 'invoice' ? 'INVOICE' : 'QUOTATION'}
               </h3>
               <p className="text-slate-600 text-base sm:text-lg mt-2">{invoice.invoiceNumber}</p>
@@ -135,7 +135,7 @@ export default function InvoiceDetailPage() {
           <div className="mb-8">
             <h4 className="text-sm font-semibold text-slate-900 mb-2">BILL TO</h4>
             <div className="bg-slate-50 p-4 rounded-lg">
-              <p className="font-semibold text-slate-900">{invoice.client.name}</p>
+              <p className="font-semibold text-slate-900 dark:text-slate-100">{invoice.client.name}</p>
               {invoice.client.company && (
                 <p className="text-slate-600 text-sm">{invoice.client.company}</p>
               )}
@@ -184,16 +184,16 @@ export default function InvoiceDetailPage() {
           <div className="flex justify-end mb-8">
             <div className="w-full sm:w-80">
               <div className="flex justify-between py-2 text-sm">
-                <span className="text-slate-600">Subtotal:</span>
+                <span className="text-slate-600 dark:text-slate-400">Subtotal:</span>
                 <span className="font-semibold">{formatCurrency(invoice.subtotal, invoice.currency)}</span>
               </div>
               <div className="flex justify-between py-2 text-sm">
-                <span className="text-slate-600">Tax ({invoice.taxRate}%):</span>
+                <span className="text-slate-600 dark:text-slate-400">Tax ({invoice.taxRate}%):</span>
                 <span className="font-semibold">{formatCurrency(invoice.taxAmount, invoice.currency)}</span>
               </div>
               {invoice.discountRate > 0 && (
                 <div className="flex justify-between py-2 text-sm">
-                  <span className="text-slate-600">Discount ({invoice.discountRate}%):</span>
+                  <span className="text-slate-600 dark:text-slate-400">Discount ({invoice.discountRate}%):</span>
                   <span className="font-semibold text-red-600">
                     -{formatCurrency(invoice.discountAmount, invoice.currency)}
                   </span>
@@ -245,21 +245,21 @@ export default function InvoiceDetailPage() {
                 <table className="w-full">
                   <thead className="bg-slate-100">
                     <tr>
-                      <th className="text-left p-3 text-xs font-semibold text-slate-600">Date</th>
-                      <th className="text-left p-3 text-xs font-semibold text-slate-600">Method</th>
-                      <th className="text-right p-3 text-xs font-semibold text-slate-600">Amount</th>
-                      <th className="text-left p-3 text-xs font-semibold text-slate-600">Notes</th>
+                      <th className="text-left p-3 text-xs font-semibold text-slate-600 dark:text-slate-400">Date</th>
+                      <th className="text-left p-3 text-xs font-semibold text-slate-600 dark:text-slate-400">Method</th>
+                      <th className="text-right p-3 text-xs font-semibold text-slate-600 dark:text-slate-400">Amount</th>
+                      <th className="text-left p-3 text-xs font-semibold text-slate-600 dark:text-slate-400">Notes</th>
                     </tr>
                   </thead>
                   <tbody>
                     {invoice.payments.map((payment) => (
-                      <tr key={payment.id} className="border-t border-slate-200">
+                      <tr key={payment.id} className="border-t border-slate-200 dark:border-slate-800">
                         <td className="p-3 text-sm">{formatDate(payment.date)}</td>
                         <td className="p-3 text-sm capitalize">{payment.method.replace('_', ' ')}</td>
                         <td className="p-3 text-sm text-right font-semibold text-emerald-600">
                           {formatCurrency(payment.amount, invoice.currency)}
                         </td>
-                        <td className="p-3 text-sm text-slate-600">{payment.notes || '-'}</td>
+                        <td className="p-3 text-sm text-slate-600 dark:text-slate-400">{payment.notes || '-'}</td>
                       </tr>
                     ))}
                   </tbody>

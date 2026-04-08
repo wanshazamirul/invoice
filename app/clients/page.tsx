@@ -130,7 +130,7 @@ export default function ClientsPage() {
       {/* Header */}
       <div className="flex flex-row items-center justify-between gap-2">
         <div>
-          <h1 className="text-lg sm:text-2xl font-bold text-slate-900">Clients</h1>
+          <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100">Clients</h1>
           <p className="text-slate-600 mt-1 text-[10px] sm:text-sm">Manage your client database</p>
         </div>
         <div className="flex flex-row gap-2 items-center">
@@ -152,7 +152,7 @@ export default function ClientsPage() {
           <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-slate-600">Total Clients</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400">Total Clients</p>
                 <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{clients.length}</p>
               </div>
               <div className="p-2 sm:p-3 bg-blue-100 rounded-lg">
@@ -166,7 +166,7 @@ export default function ClientsPage() {
           <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-slate-600">Companies</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400">Companies</p>
                 <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">
                   {clients.filter(c => c.company).length}
                 </p>
@@ -182,7 +182,7 @@ export default function ClientsPage() {
           <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-slate-600">Individuals</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400">Individuals</p>
                 <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">
                   {clients.filter(c => !c.company).length}
                 </p>
@@ -250,12 +250,12 @@ export default function ClientsPage() {
 
                       <div className="space-y-2 mb-3">
                         <div className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-slate-400" />
-                          <p className="text-sm text-slate-600">{client.email}</p>
+                          <Mail className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                          <p className="text-sm text-slate-600 dark:text-slate-400">{client.email}</p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-slate-400" />
-                          <p className="text-sm text-slate-600">{client.phone}</p>
+                          <Phone className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                          <p className="text-sm text-slate-600 dark:text-slate-400">{client.phone}</p>
                         </div>
                       </div>
                     </CardContent>
@@ -284,7 +284,7 @@ export default function ClientsPage() {
                         {client.company ? (
                           <Badge variant="secondary">{client.company}</Badge>
                         ) : (
-                          <span className="text-slate-400">-</span>
+                          <span className="text-slate-400 dark:text-slate-500">-</span>
                         )}
                       </TableCell>
                       <TableCell className="text-right">

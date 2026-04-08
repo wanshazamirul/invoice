@@ -43,7 +43,7 @@ export function EmailDialog({ invoice }: EmailDialogProps) {
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="bg-slate-50 p-3 rounded-lg">
-            <p className="text-sm text-slate-600">To</p>
+            <p className="text-sm text-slate-600 dark:text-slate-400">To</p>
             <p className="font-semibold">{invoice.client.email}</p>
           </div>
 
