@@ -92,8 +92,9 @@ export default function InvoiceDetailPage() {
           </div>
         </div>
 
-        {/* Bottom row: Action buttons */}
+        {/* Action buttons - 2 rows on mobile, single row on desktop */}
         <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-nowrap">
+          {/* Row 1: Print, Download, Email */}
           <Button variant="outline" onClick={handlePrint} className="gap-1.5 text-xs h-9 px-2">
             <Printer className="w-3.5 h-3.5" />
             Print
@@ -103,6 +104,7 @@ export default function InvoiceDetailPage() {
             Download
           </Button>
           <EmailDialog invoice={invoice} />
+          {/* Row 2: Record Payment, Edit */}
           <PaymentDialog invoice={invoice} onUpdate={refreshInvoice} isDetailPage={true} />
           <Button onClick={handleEdit} className="gap-1.5 text-xs h-9 px-2 col-span-2 sm:col-span-1">
             <Edit className="w-3.5 h-3.5" />

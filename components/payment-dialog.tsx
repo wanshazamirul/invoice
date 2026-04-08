@@ -79,7 +79,11 @@ export function PaymentDialog({ invoice, onUpdate, size = 'default', isDetailPag
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
         <Button
           className={
             size === 'sm'
@@ -88,12 +92,10 @@ export function PaymentDialog({ invoice, onUpdate, size = 'default', isDetailPag
               ? 'gap-1.5 text-xs h-9 px-2 w-full sm:w-auto'
               : 'gap-2 flex-1 min-w-0 sm:min-w-fit'
           }
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
         >
           <DollarSign className={size === 'sm' ? 'w-4 h-4' : 'w-3.5 h-3.5'} />
           {size === 'default' && 'Record Payment'}
+          {size !== 'sm' && size !== 'default' && 'Record Payment'}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
