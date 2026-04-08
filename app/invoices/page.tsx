@@ -280,25 +280,16 @@ export default function InvoicesPage() {
                       setTimeout(() => handleView(invoice.id), 150);
                     }}
                   >
-                    <CardContent className="p-2">
-                      {/* Line 1: Invoice number, type, client name */}
-                      <div className="flex items-center gap-1.5 mb-1.5">
-                        <h3 className="font-semibold text-[11px] text-slate-900 dark:text-slate-100 truncate flex-1">{invoice.invoiceNumber}</h3>
-                        <Badge variant={invoice.type === 'invoice' ? 'default' : 'secondary'} className="text-[9px] px-1 py-0 flex-shrink-0">
-                          {invoice.type === 'invoice' ? 'INV' : 'QT'}
-                        </Badge>
-                        <p className="text-[10px] text-slate-600 dark:text-slate-400 truncate flex-1">{invoice.client.name}</p>
-                      </div>
-
-                      {/* Line 2: Status, amount, payment button, dropdown */}
-                      <div className="flex items-center justify-between">
-                        <Badge className={`${getInvoiceStatusColor(invoice.status)} text-[9px] px-1 py-0`}>
-                          {invoice.status}
-                        </Badge>
-                        <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                          {formatCurrency(invoice.total, invoice.currency)}
-                        </p>
-                        <div className="flex items-center gap-1">
+                    <CardContent className="p-2.5">
+                      {/* Row 1: Invoice # + Type badge + Actions */}
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                          <h3 className="font-semibold text-xs text-slate-900 dark:text-slate-100">{invoice.invoiceNumber}</h3>
+                          <Badge variant={invoice.type === 'invoice' ? 'default' : 'secondary'} className="text-[9px] px-1 py-0 flex-shrink-0">
+                            {invoice.type === 'invoice' ? 'INV' : 'QT'}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-0.5 flex-shrink-0">
                           {invoice.type === 'invoice' && invoice.status !== 'paid' && (
                             <PaymentDialog invoice={invoice} onUpdate={refreshInvoice} size="sm" />
                           )}
@@ -343,6 +334,19 @@ export default function InvoicesPage() {
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </div>
+                      </div>
+
+                      {/* Row 2: Client name */}
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mb-1.5">{invoice.client.name}</p>
+
+                      {/* Row 3: Status + Amount */}
+                      <div className="flex items-center justify-between">
+                        <Badge className={`${getInvoiceStatusColor(invoice.status)} text-[9px] px-1.5 py-0`}>
+                          {invoice.status}
+                        </Badge>
+                        <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                          {formatCurrency(invoice.total, invoice.currency)}
+                        </p>
                       </div>
                     </CardContent>
                   </Card>
