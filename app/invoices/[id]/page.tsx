@@ -78,31 +78,34 @@ export default function InvoiceDetailPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => router.push('/invoices')}>
+      <div className="no-print space-y-4">
+        {/* Top row: Back button + Invoice info */}
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" onClick={() => router.push('/invoices')} className="flex-shrink-0">
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100">{invoice.invoiceNumber}</h1>
+          <div className="min-w-0 flex-1">
+            <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100 truncate">{invoice.invoiceNumber}</h1>
             <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm">
               {invoice.type === 'invoice' ? 'Invoice' : 'Quotation'} • {formatDate(invoice.issueDate)}
             </p>
           </div>
         </div>
-        <div className="flex flex-wrap sm:flex-nowrap gap-2">
-          <Button variant="outline" onClick={handlePrint} className="gap-2 flex-1 min-w-0 sm:min-w-fit">
-            <Printer className="w-4 h-4" />
+
+        {/* Bottom row: Action buttons */}
+        <div className="grid grid-cols-2 sm:flex sm:flex-nowrap gap-2">
+          <Button variant="outline" onClick={handlePrint} className="gap-2 text-xs sm:text-sm">
+            <Printer className="w-3 h-3 sm:w-4 sm:h-4" />
             Print
           </Button>
-          <Button variant="outline" onClick={handleDownload} className="gap-2 flex-1 min-w-0 sm:min-w-fit">
-            <Download className="w-4 h-4" />
+          <Button variant="outline" onClick={handleDownload} className="gap-2 text-xs sm:text-sm">
+            <Download className="w-3 h-3 sm:w-4 sm:h-4" />
             Download
           </Button>
           <EmailDialog invoice={invoice} />
-          <PaymentDialog invoice={invoice} onUpdate={refreshInvoice} />
-          <Button onClick={handleEdit} className="gap-2 flex-1 min-w-0 sm:min-w-fit">
-            <Edit className="w-4 h-4" />
+          <PaymentDialog invoice={invoice} onUpdate={refreshInvoice} isDetailPage={true} />
+          <Button onClick={handleEdit} className="gap-2 col-span-2 sm:col-span-1 text-xs sm:text-sm">
+            <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
             Edit
           </Button>
         </div>

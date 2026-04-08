@@ -23,9 +23,10 @@ interface PaymentDialogProps {
   invoice: Invoice;
   onUpdate: () => void;
   size?: 'default' | 'sm';
+  isDetailPage?: boolean;
 }
 
-export function PaymentDialog({ invoice, onUpdate, size = 'default' }: PaymentDialogProps) {
+export function PaymentDialog({ invoice, onUpdate, size = 'default', isDetailPage = false }: PaymentDialogProps) {
   const { updateInvoice } = useStore();
   const { error, success } = useAlert();
   const [open, setOpen] = useState(false);
@@ -80,12 +81,18 @@ export function PaymentDialog({ invoice, onUpdate, size = 'default' }: PaymentDi
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <Button
-          className={size === 'sm' ? 'gap-1 h-6 w-6 p-0' : 'gap-2 flex-1 min-w-0 sm:min-w-fit'}
+          className={
+            size === 'sm'
+              ? 'gap-1 h-6 w-6 p-0'
+              : isDetailPage
+              ? 'gap-2 text-xs sm:text-sm'
+              : 'gap-2 flex-1 min-w-0 sm:min-w-fit'
+          }
           onClick={(e) => {
             e.stopPropagation();
           }}
         >
-          <DollarSign className={size === 'sm' ? 'w-3 h-3' : 'w-4 h-4'} />
+          <DollarSign className={size === 'sm' ? 'w-3 h-3' : 'w-3 h-3 sm:w-4 sm:h-4'} />
           {size === 'default' && 'Record Payment'}
         </Button>
       </DialogTrigger>
