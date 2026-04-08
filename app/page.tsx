@@ -247,8 +247,9 @@ export default function DashboardPage() {
             <CardTitle className="text-slate-900 dark:text-slate-100">Revenue Over Time</CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={revenueData}>
+            <div className="h-56 sm:h-72 lg:h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={revenueData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" className="dark:stroke-slate-700" />
                 <XAxis dataKey="name" stroke="#64748b" className="dark:stroke-slate-400" />
                 <YAxis stroke="#64748b" className="dark:stroke-slate-400" />
@@ -274,7 +275,8 @@ export default function DashboardPage() {
                   name="Revenue"
                 />
               </LineChart>
-            </ResponsiveContainer>
+              </ResponsiveContainer>
+            </div>
           </CardContent>
         </Card>
 
@@ -284,8 +286,9 @@ export default function DashboardPage() {
             <CardTitle className="text-slate-900 dark:text-slate-100">Invoice Status</CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
+            <div className="h-56 sm:h-72 lg:h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
                 <Pie
                   data={statusData}
                   cx="50%"
@@ -308,6 +311,7 @@ export default function DashboardPage() {
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -321,8 +325,9 @@ export default function DashboardPage() {
           {topClientsData.length === 0 ? (
             <p className="text-slate-500 dark:text-slate-400 text-center py-8">No client data yet</p>
           ) : (
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={topClientsData}>
+            <div className="h-56 sm:h-72 lg:h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={topClientsData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" className="dark:stroke-slate-700" />
                 <XAxis dataKey="name" stroke="#64748b" className="dark:stroke-slate-400" />
                 <YAxis stroke="#64748b" className="dark:stroke-slate-400" />
@@ -343,6 +348,7 @@ export default function DashboardPage() {
                 <Bar dataKey="revenue" fill="#10b981" name="Revenue" />
               </BarChart>
             </ResponsiveContainer>
+            </div>
           )}
         </CardContent>
       </Card>

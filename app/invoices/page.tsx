@@ -206,9 +206,9 @@ export default function InvoicesPage() {
       {/* Filters */}
       <Card>
         <CardHeader>
-          <div className="flex flex-row items-center justify-between gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <CardTitle className="text-base sm:text-lg">All Invoices</CardTitle>
-            <div className="flex flex-row gap-2 items-center">
+            <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
               <SearchBar
                 value={searchQuery}
                 onChange={setSearchQuery}
@@ -216,7 +216,7 @@ export default function InvoicesPage() {
               />
               <div className="flex gap-2">
                 <Select value={typeFilter} onValueChange={(v: any) => setTypeFilter(v)}>
-                  <SelectTrigger className="w-[100px] sm:w-[140px]">
+                  <SelectTrigger className="flex-1 sm:w-[140px]">
                     <SelectValue placeholder="Type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -227,7 +227,7 @@ export default function InvoicesPage() {
                 </Select>
 
                 <Select value={statusFilter} onValueChange={(v: any) => setStatusFilter(v)}>
-                  <SelectTrigger className="w-full sm:w-[140px]">
+                  <SelectTrigger className="flex-1 sm:w-[140px]">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -309,8 +309,8 @@ export default function InvoicesPage() {
                                 setSelectedInvoiceId(invoice.id);
                               }}
                             >
-                              <Button variant="ghost" size="icon" className="h-6 w-6 p-0" aria-label="More options">
-                                <MoreVertical className="w-3 h-3" />
+                              <Button variant="ghost" size="icon" className="h-9 w-9 p-0" aria-label="More options">
+                                <MoreVertical className="w-4 h-4" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-[180px]">

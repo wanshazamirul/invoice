@@ -242,8 +242,8 @@ export default function ClientsPage() {
                         </div>
                         <DropdownMenu>
                           <DropdownMenuTrigger>
-                            <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0 ml-1.5 text-slate-600 dark:text-slate-400" aria-label="More options">
-                              <MoreVertical className="w-3 h-3" />
+                            <Button variant="ghost" size="icon" className="h-9 w-9 flex-shrink-0 ml-1.5 text-slate-600 dark:text-slate-400" aria-label="More options">
+                              <MoreVertical className="w-4 h-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="w-[150px]">
