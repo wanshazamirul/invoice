@@ -32,7 +32,7 @@ export function EmailDialog({ invoice }: EmailDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button variant="outline" className="gap-2">
+        <Button variant="outline" className="gap-2 flex-1 min-w-0 sm:min-w-fit">
           <Mail className="w-4 h-4" />
           Email
         </Button>
