@@ -78,9 +78,9 @@ export function PaymentDialog({ invoice, onUpdate }: PaymentDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button size="sm" className="gap-2">
+        <Button className="gap-2 flex-1 sm:flex-none">
           <DollarSign className="w-4 h-4" />
-          Record Payment
+          <span className="hidden sm:inline">Record Payment</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

@@ -144,38 +144,58 @@ export default function InvoicesPage() {
         </Button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-        <Card>
+      {/* Stats Cards - Compact on mobile */}
+      <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4">
+        <Card className="hidden sm:block">
           <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
             <p className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400">Total</p>
             <p className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-900 dark:text-slate-100">{stats.total}</p>
           </CardContent>
         </Card>
-        <Card>
+        <div className="sm:hidden flex items-center justify-between bg-slate-100 dark:bg-slate-800 rounded-lg px-3 py-2">
+          <span className="text-[10px] text-slate-600 dark:text-slate-400">Total</span>
+          <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{stats.total}</span>
+        </div>
+        <Card className="hidden sm:block">
           <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
             <p className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400">Draft</p>
             <p className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-500 dark:text-slate-500">{stats.draft}</p>
           </CardContent>
         </Card>
-        <Card>
+        <div className="sm:hidden flex items-center justify-between bg-slate-100 dark:bg-slate-800 rounded-lg px-3 py-2">
+          <span className="text-[10px] text-slate-600 dark:text-slate-400">Draft</span>
+          <span className="text-sm font-bold text-slate-500 dark:text-slate-400">{stats.draft}</span>
+        </div>
+        <Card className="hidden sm:block">
           <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
             <p className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400">Pending</p>
             <p className="text-lg sm:text-xl lg:text-2xl font-bold text-yellow-600 dark:text-yellow-500">{stats.pending}</p>
           </CardContent>
         </Card>
-        <Card>
+        <div className="sm:hidden flex items-center justify-between bg-slate-100 dark:bg-slate-800 rounded-lg px-3 py-2">
+          <span className="text-[10px] text-slate-600 dark:text-slate-400">Pending</span>
+          <span className="text-sm font-bold text-yellow-600 dark:text-yellow-500">{stats.pending}</span>
+        </div>
+        <Card className="hidden sm:block">
           <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
             <p className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400">Paid</p>
             <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 dark:text-green-500">{stats.paid}</p>
           </CardContent>
         </Card>
-        <Card>
+        <div className="sm:hidden flex items-center justify-between bg-slate-100 dark:bg-slate-800 rounded-lg px-3 py-2">
+          <span className="text-[10px] text-slate-600 dark:text-slate-400">Paid</span>
+          <span className="text-sm font-bold text-green-600 dark:text-green-500">{stats.paid}</span>
+        </div>
+        <Card className="hidden sm:block">
           <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
             <p className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400">Overdue</p>
             <p className="text-lg sm:text-xl lg:text-2xl font-bold text-red-600 dark:text-red-500">{stats.overdue}</p>
           </CardContent>
         </Card>
+        <div className="sm:hidden flex items-center justify-between bg-slate-100 dark:bg-slate-800 rounded-lg px-3 py-2">
+          <span className="text-[10px] text-slate-600 dark:text-slate-400">Overdue</span>
+          <span className="text-sm font-bold text-red-600 dark:text-red-500">{stats.overdue}</span>
+        </div>
       </div>
 
       {/* Filters */}

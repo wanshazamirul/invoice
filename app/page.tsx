@@ -244,14 +244,14 @@ export default function DashboardPage() {
         {/* Revenue Over Time */}
         <Card>
           <CardHeader>
-            <CardTitle>Revenue Over Time</CardTitle>
+            <CardTitle className="text-slate-900 dark:text-slate-100">Revenue Over Time</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" className="dark:stroke-slate-700" />
+                <XAxis dataKey="name" stroke="#64748b" className="dark:stroke-slate-400" />
+                <YAxis stroke="#64748b" className="dark:stroke-slate-400" />
                 <Tooltip
                   formatter={(value: any) => {
                     if (typeof value === 'number') {
@@ -281,7 +281,7 @@ export default function DashboardPage() {
         {/* Invoice Status Distribution */}
         <Card>
           <CardHeader>
-            <CardTitle>Invoice Status</CardTitle>
+            <CardTitle className="text-slate-900 dark:text-slate-100">Invoice Status</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -315,7 +315,7 @@ export default function DashboardPage() {
       {/* Top Clients */}
       <Card>
         <CardHeader>
-          <CardTitle>Top Clients by Revenue</CardTitle>
+          <CardTitle className="text-slate-900 dark:text-slate-100">Top Clients by Revenue</CardTitle>
         </CardHeader>
         <CardContent>
           {topClientsData.length === 0 ? (
@@ -323,9 +323,9 @@ export default function DashboardPage() {
           ) : (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={topClientsData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" className="dark:stroke-slate-700" />
+                <XAxis dataKey="name" stroke="#64748b" className="dark:stroke-slate-400" />
+                <YAxis stroke="#64748b" className="dark:stroke-slate-400" />
                 <Tooltip
                   formatter={(value: any) => {
                     if (typeof value === 'number') {

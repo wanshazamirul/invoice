@@ -27,6 +27,7 @@ export default function SettingsPage() {
   const { theme, setTheme, actualTheme } = useTheme();
   const [formData, setFormData] = useState<InvoiceSettings>(settings);
   const [hasChanges, setHasChanges] = useState(false);
+  const [currentTab, setCurrentTab] = useState('company');
 
   const handleSave = () => {
     updateSettings(formData);
@@ -94,23 +95,23 @@ export default function SettingsPage() {
         </div>
       )}
 
-      <Tabs defaultValue="company" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="company">
-            <Building2 className="w-4 h-4 mr-2" />
-            Company
+      <Tabs defaultValue="company" value={currentTab} onValueChange={setCurrentTab} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4 h-auto p-1">
+          <TabsTrigger value="company" className="gap-2">
+            <Building2 className="w-4 h-4" />
+            <span className="hidden sm:inline">Company</span>
           </TabsTrigger>
-          <TabsTrigger value="invoice">
-            <FileText className="w-4 h-4 mr-2" />
-            Invoice
+          <TabsTrigger value="invoice" className="gap-2">
+            <FileText className="w-4 h-4" />
+            <span className="hidden sm:inline">Invoice</span>
           </TabsTrigger>
-          <TabsTrigger value="general">
-            <SettingsIcon className="w-4 h-4 mr-2" />
-            General
+          <TabsTrigger value="general" className="gap-2">
+            <SettingsIcon className="w-4 h-4" />
+            <span className="hidden sm:inline">General</span>
           </TabsTrigger>
-          <TabsTrigger value="data">
-            <Database className="w-4 h-4 mr-2" />
-            Data
+          <TabsTrigger value="data" className="gap-2">
+            <Database className="w-4 h-4" />
+            <span className="hidden sm:inline">Data</span>
           </TabsTrigger>
         </TabsList>
 
@@ -333,10 +334,10 @@ export default function SettingsPage() {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Export Data</CardTitle>
+                <CardTitle className="text-slate-900 dark:text-slate-100">Export Data</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-slate-600 mb-4">
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
                   Download all your invoices, clients, products, and settings as a JSON file.
                 </p>
                 <Button onClick={handleExport} variant="outline" className="gap-2">
@@ -348,10 +349,10 @@ export default function SettingsPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Import Data</CardTitle>
+                <CardTitle className="text-slate-900 dark:text-slate-100">Import Data</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-slate-600 mb-4">
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
                   Restore your data from a previously exported JSON file. This will replace all
                   existing data.
                 </p>
@@ -359,12 +360,12 @@ export default function SettingsPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-red-200">
+            <Card className="border-red-200 dark:border-red-900">
               <CardHeader>
-                <CardTitle className="text-red-600">Danger Zone</CardTitle>
+                <CardTitle className="text-red-600 dark:text-red-400">Danger Zone</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-slate-600 mb-4">
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
                   Clear all data from the application. This action cannot be undone.
                 </p>
                 <Button
@@ -388,12 +389,14 @@ export default function SettingsPage() {
         </TabsContent>
       </Tabs>
 
-      {/* Save Button */}
-      <div className="flex justify-end">
-        <Button onClick={handleSave} size="lg" disabled={!hasChanges}>
-          Save All Settings
-        </Button>
-      </div>
+      {/* Save Button - Only show for Company and Invoice tabs */}
+      {(currentTab === 'company' || currentTab === 'invoice') && (
+        <div className="flex justify-end">
+          <Button onClick={handleSave} size="lg" disabled={!hasChanges}>
+            Save All Settings
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

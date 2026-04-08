@@ -32,9 +32,9 @@ export function EmailDialog({ invoice }: EmailDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button size="sm" variant="outline" className="gap-2">
+        <Button variant="outline" className="gap-2 flex-1 sm:flex-none">
           <Mail className="w-4 h-4" />
-          Email
+          <span className="hidden sm:inline">Email</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">

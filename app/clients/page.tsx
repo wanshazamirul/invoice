@@ -146,49 +146,65 @@ export default function ClientsPage() {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-6">
+      {/* Stats Cards - Compact on mobile */}
+      <div className="grid grid-cols-3 gap-2 sm:hidden">
+        <div className="flex items-center justify-between bg-blue-50 dark:bg-blue-900/20 rounded-lg px-3 py-2">
+          <span className="text-[10px] text-slate-600 dark:text-slate-400">Total</span>
+          <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{clients.length}</span>
+        </div>
+        <div className="flex items-center justify-between bg-emerald-50 dark:bg-emerald-900/20 rounded-lg px-3 py-2">
+          <span className="text-[10px] text-slate-600 dark:text-slate-400">Companies</span>
+          <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{clients.filter(c => c.company).length}</span>
+        </div>
+        <div className="flex items-center justify-between bg-purple-50 dark:bg-purple-900/20 rounded-lg px-3 py-2">
+          <span className="text-[10px] text-slate-600 dark:text-slate-400">Individuals</span>
+          <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{clients.filter(c => !c.company).length}</span>
+        </div>
+      </div>
+
+      {/* Desktop Stats Cards */}
+      <div className="hidden sm:grid grid-cols-3 gap-6">
         <Card>
-          <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
+          <CardContent className="pt-6 px-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-slate-600 dark:text-slate-400">Total Clients</p>
-                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{clients.length}</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Total Clients</p>
+                <p className="text-3xl font-bold text-slate-900 dark:text-slate-100 mt-2">{clients.length}</p>
               </div>
-              <div className="p-2 sm:p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                <Mail className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-500" />
+              <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                <Mail className="w-6 h-6 text-blue-600 dark:text-blue-500" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
+          <CardContent className="pt-6 px-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-slate-600 dark:text-slate-400">Companies</p>
-                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">
+                <p className="text-sm text-slate-600 dark:text-slate-400">Companies</p>
+                <p className="text-3xl font-bold text-slate-900 dark:text-slate-100 mt-2">
                   {clients.filter(c => c.company).length}
                 </p>
               </div>
-              <div className="p-2 sm:p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
-                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-emerald-600 dark:text-emerald-500" />
+              <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
+                <MapPin className="w-6 h-6 text-emerald-600 dark:text-emerald-500" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
+          <CardContent className="pt-6 px-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-slate-600 dark:text-slate-400">Individuals</p>
-                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">
+                <p className="text-sm text-slate-600 dark:text-slate-400">Individuals</p>
+                <p className="text-3xl font-bold text-slate-900 dark:text-slate-100 mt-2">
                   {clients.filter(c => !c.company).length}
                 </p>
               </div>
-              <div className="p-2 sm:p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                <Phone className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-purple-600 dark:text-purple-500" />
+              <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                <Phone className="w-6 h-6 text-purple-600 dark:text-purple-500" />
               </div>
             </div>
           </CardContent>
@@ -211,34 +227,33 @@ export default function ClientsPage() {
             </div>
           ) : (
             <>
-              {/* Mobile Card Layout */}
-              <div className="md:hidden space-y-4">
+              {/* Mobile Card Layout - Simplified */}
+              <div className="md:hidden space-y-2">
                 {filteredClients.map((client) => (
-                  <Card key={client.id} className="hover:shadow-md transition-shadow">
-                    <CardContent className="pt-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-slate-900 mb-1">{client.name}</h3>
-                          {client.company && (
-                            <Badge variant="secondary" className="text-xs">
-                              {client.company}
-                            </Badge>
-                          )}
+                  <Card
+                    key={client.id}
+                    className="hover:shadow-md transition-shadow cursor-pointer active:scale-[0.98]"
+                  >
+                    <CardContent className="p-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-sm text-slate-900 dark:text-slate-100 truncate">{client.name}</h3>
+                          <p className="text-xs text-slate-600 dark:text-slate-400 truncate">{client.email}</p>
                         </div>
                         <DropdownMenu>
                           <DropdownMenuTrigger>
-                            <Button variant="ghost" size="icon" aria-label="More options">
+                            <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0 ml-2 text-slate-600 dark:text-slate-400" aria-label="More options">
                               <MoreVertical className="w-4 h-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
+                          <DropdownMenuContent align="end" className="w-[150px]">
                             <DropdownMenuItem onClick={() => handleEdit(client)} aria-label="Edit client">
                               <Pencil className="w-4 h-4 mr-2" />
                               Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleDelete(client.id)}
-                              className="text-red-600"
+                              className="text-red-600 dark:text-red-400"
                               aria-label="Delete client"
                             >
                               <Trash2 className="w-4 h-4 mr-2" />
@@ -246,17 +261,6 @@ export default function ClientsPage() {
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
-                      </div>
-
-                      <div className="space-y-2 mb-3">
-                        <div className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-slate-400 dark:text-slate-500" />
-                          <p className="text-sm text-slate-600 dark:text-slate-400">{client.email}</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-slate-400 dark:text-slate-500" />
-                          <p className="text-sm text-slate-600 dark:text-slate-400">{client.phone}</p>
-                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -277,10 +281,10 @@ export default function ClientsPage() {
                 <TableBody>
                   {filteredClients.map((client) => (
                     <TableRow key={client.id}>
-                      <TableCell className="font-medium">{client.name}</TableCell>
-                      <TableCell>{client.email}</TableCell>
-                      <TableCell>{client.phone}</TableCell>
-                      <TableCell>
+                      <TableCell className="font-medium text-slate-900 dark:text-slate-100">{client.name}</TableCell>
+                      <TableCell className="text-slate-900 dark:text-slate-100">{client.email}</TableCell>
+                      <TableCell className="text-slate-900 dark:text-slate-100">{client.phone}</TableCell>
+                      <TableCell className="text-slate-900 dark:text-slate-100">
                         {client.company ? (
                           <Badge variant="secondary">{client.company}</Badge>
                         ) : (
@@ -301,7 +305,7 @@ export default function ClientsPage() {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleDelete(client.id)}
-                              className="text-red-600"
+                              className="text-red-600 dark:text-red-400"
                               aria-label="Delete client"
                             >
                               <Trash2 className="w-4 h-4 mr-2" />
