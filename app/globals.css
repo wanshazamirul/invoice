@@ -196,7 +196,7 @@
     user-select: none;
   }
 
-  /* Mobile input improvements - balanced sizing */
+  /* Mobile input improvements - compact sizing */
   input[type="text"],
   input[type="email"],
   input[type="tel"],
@@ -205,9 +205,9 @@
   input[type="search"],
   textarea,
   select {
-    font-size: 14px !important; /* Smaller text, better visibility */
-    min-height: 40px !important; /* Reduced height for more content visibility */
-    padding: 10px 12px !important; /* Tighter padding */
+    font-size: 13px !important; /* Even smaller text */
+    min-height: 36px !important; /* Compact height */
+    padding: 8px 10px !important; /* Minimal padding */
   }
 
   /* Better input focus on mobile */
@@ -221,7 +221,7 @@
   /* Input placeholder text */
   input::placeholder,
   textarea::placeholder {
-    font-size: 13px !important;
+    font-size: 12px !important;
     opacity: 0.6;
   }
 
@@ -237,7 +237,7 @@
 
 /* Extra small devices */
 @media (max-width: 640px) {
-  /* Optimized inputs for very small screens */
+  /* Ultra-compact inputs for very small screens */
   input[type="text"],
   input[type="email"],
   input[type="tel"],
@@ -246,22 +246,22 @@
   input[type="search"],
   textarea,
   select {
-    font-size: 14px !important;
-    min-height: 38px !important; /* Even smaller for tiny screens */
-    padding: 8px 12px !important; /* Minimal padding */
+    font-size: 12px !important;
+    min-height: 34px !important; /* Ultra compact */
+    padding: 6px 10px !important; /* Super minimal padding */
   }
 
   /* Better label sizing */
   label {
-    font-size: 13px !important;
+    font-size: 12px !important;
     font-weight: 500 !important;
   }
 
   /* Larger buttons for easier tapping */
   button {
     min-height: 44px !important;
-    font-size: 14px !important;
-    padding: 10px 16px !important;
+    font-size: 13px !important;
+    padding: 8px 14px !important;
   }
 
   /* Better card spacing */
