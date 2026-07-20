@@ -52,7 +52,7 @@ export default function InvoiceDetailPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p className="text-slate-600 dark:text-slate-400">Loading invoice...</p>
+        <p className="text-muted-foreground">Loading invoice...</p>
       </div>
     );
   }
@@ -62,9 +62,9 @@ export default function InvoiceDetailPage() {
       <div className="flex items-center justify-center h-screen">
         <Card className="max-w-md">
           <CardContent className="pt-6 text-center">
-            <FileText className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-2">Invoice Not Found</h2>
-            <p className="text-slate-600 dark:text-slate-400 mb-4">The invoice you're looking for doesn't exist.</p>
+            <FileText className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
+            <h2 className="text-xl font-semibold text-foreground mb-2">Invoice Not Found</h2>
+            <p className="text-muted-foreground mb-4">The invoice you're looking for doesn't exist.</p>
             <Button onClick={() => router.push('/invoices')}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Invoices
@@ -85,8 +85,8 @@ export default function InvoiceDetailPage() {
             <ArrowLeft className="w-4 h-4" />
           </Button>
           <div className="min-w-0 flex-1">
-            <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100 truncate">{invoice.invoiceNumber}</h1>
-            <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm">
+            <h1 className="text-lg sm:text-2xl font-bold text-foreground truncate">{invoice.invoiceNumber}</h1>
+            <p className="text-muted-foreground text-xs sm:text-sm">
               {invoice.type === 'invoice' ? 'Invoice' : 'Quotation'} • {formatDate(invoice.issueDate)}
             </p>
           </div>
@@ -156,7 +156,7 @@ export default function InvoiceDetailPage() {
             <div className="hidden sm:block overflow-x-auto">
               <table className="w-full min-w-[600px]">
                 <thead>
-                  <tr className="bg-emerald-600 text-white">
+                  <tr className="bg-success text-white">
                     <th className="text-left p-2 sm:p-3 rounded-tl-lg text-xs sm:text-sm">Description</th>
                     <th className="text-center p-2 sm:p-3 text-xs sm:text-sm">Qty</th>
                     <th className="text-center p-2 sm:p-3 text-xs sm:text-sm">Unit Price</th>
@@ -229,7 +229,7 @@ export default function InvoiceDetailPage() {
                   </span>
                 </div>
               )}
-              <div className="flex justify-between py-3 bg-emerald-600 text-white px-4 rounded-lg mt-2">
+              <div className="flex justify-between py-3 bg-success text-white px-4 rounded-lg mt-2">
                 <span className="font-bold text-base sm:text-lg">TOTAL:</span>
                 <span className="font-bold text-base sm:text-lg">
                   {formatCurrency(invoice.total, invoice.currency)}

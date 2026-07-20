@@ -7,9 +7,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-sans: var(--font-manrope);
+  --font-mono: var(--font-jetbrains-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -27,6 +26,9 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -49,72 +51,110 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  /* Warm paper neutrals */
+  --background: oklch(98.5% 0.005 75);
+  --foreground: oklch(22% 0.012 75);
+  --card: oklch(100% 0 0);
+  --card-foreground: oklch(22% 0.012 75);
+  --popover: oklch(100% 0 0);
+  --popover-foreground: oklch(22% 0.012 75);
+
+  /* Amber-copper primary — warm, trustworthy, not corporate blue or finance green */
+  --primary: oklch(56% 0.14 55);
+  --primary-foreground: oklch(99% 0 0);
+
+  /* Warm secondary */
+  --secondary: oklch(96% 0.008 75);
+  --secondary-foreground: oklch(28% 0.015 75);
+
+  /* Muted */
+  --muted: oklch(96.5% 0.006 75);
+  --muted-foreground: oklch(48% 0.02 80);
+
+  /* Accent */
+  --accent: oklch(94% 0.02 75);
+  --accent-foreground: oklch(22% 0.012 75);
+
+  /* Semantic states */
+  --destructive: oklch(54% 0.22 25);
+  --destructive-foreground: oklch(99% 0 0);
+  --success: oklch(58% 0.16 160);
+  --warning: oklch(68% 0.16 85);
+  --info: oklch(55% 0.14 245);
+
+  /* Borders & inputs */
+  --border: oklch(91% 0.01 80);
+  --input: oklch(91% 0.01 80);
+  --ring: oklch(56% 0.14 55 / 30%);
+
+  /* Chart palette */
+  --chart-1: oklch(60% 0.16 55);
+  --chart-2: oklch(58% 0.14 160);
+  --chart-3: oklch(55% 0.14 245);
+  --chart-4: oklch(68% 0.14 85);
+  --chart-5: oklch(54% 0.18 25);
+
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Sidebar — slightly cooler panel */
+  --sidebar: oklch(97% 0.004 80);
+  --sidebar-foreground: oklch(22% 0.012 75);
+  --sidebar-primary: oklch(56% 0.14 55);
+  --sidebar-primary-foreground: oklch(99% 0 0);
+  --sidebar-accent: oklch(93% 0.015 75);
+  --sidebar-accent-foreground: oklch(22% 0.012 75);
+  --sidebar-border: oklch(90% 0.008 80);
+  --sidebar-ring: oklch(56% 0.14 55 / 30%);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Warm dark neutrals */
+  --background: oklch(17% 0.01 75);
+  --foreground: oklch(92% 0.005 75);
+  --card: oklch(21% 0.012 75);
+  --card-foreground: oklch(92% 0.005 75);
+  --popover: oklch(21% 0.012 75);
+  --popover-foreground: oklch(92% 0.005 75);
+
+  /* Brighter amber-copper for dark */
+  --primary: oklch(68% 0.16 55);
+  --primary-foreground: oklch(15% 0.01 75);
+
+  --secondary: oklch(24% 0.01 75);
+  --secondary-foreground: oklch(92% 0.005 75);
+
+  --muted: oklch(24% 0.01 75);
+  --muted-foreground: oklch(65% 0.015 80);
+
+  --accent: oklch(28% 0.02 75);
+  --accent-foreground: oklch(92% 0.005 75);
+
+  /* Semantic — adjusted for dark */
+  --destructive: oklch(58% 0.2 22);
+  --destructive-foreground: oklch(99% 0 0);
+  --success: oklch(62% 0.14 160);
+  --warning: oklch(72% 0.14 85);
+  --info: oklch(60% 0.12 245);
+
+  --border: oklch(28% 0.015 75);
+  --input: oklch(28% 0.015 75);
+  --ring: oklch(68% 0.16 55 / 30%);
+
+  --chart-1: oklch(68% 0.16 55);
+  --chart-2: oklch(62% 0.14 160);
+  --chart-3: oklch(60% 0.12 245);
+  --chart-4: oklch(72% 0.14 85);
+  --chart-5: oklch(58% 0.2 22);
+
+  /* Sidebar */
+  --sidebar: oklch(19% 0.01 75);
+  --sidebar-foreground: oklch(92% 0.005 75);
+  --sidebar-primary: oklch(68% 0.16 55);
+  --sidebar-primary-foreground: oklch(15% 0.01 75);
+  --sidebar-accent: oklch(26% 0.015 75);
+  --sidebar-accent-foreground: oklch(92% 0.005 75);
+  --sidebar-border: oklch(28% 0.015 75);
+  --sidebar-ring: oklch(68% 0.16 55 / 30%);
 }
 
 @layer base {
@@ -122,10 +162,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
+    @apply bg-background text-foreground antialiased;
   }
 
   /* Remove number input spinners */
@@ -134,220 +171,40 @@
     -webkit-appearance: none;
     margin: 0;
   }
-
   input[type="number"] {
     -moz-appearance: textfield;
   }
 }
 
-/* Mobile Safe Area Support */
+/* Mobile Safe Area */
 @layer base {
-  /* Safe area insets for devices with notches */
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }
-
   .pb-safe {
     padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
-
-  /* Prevent bounce scrolling on iOS */
   html {
     -webkit-overflow-scrolling: touch;
   }
-
   body {
     overscroll-behavior-y: none;
   }
-
-  /* Mobile tap highlight */
   * {
     -webkit-tap-highlight-color: transparent;
   }
-
-  /* Focus styles for touch */
-  button:focus-visible,
-  a:focus-visible,
-  input:focus-visible,
-  textarea:focus-visible,
-  select:focus-visible {
-    outline: 2px solid oklch(0.708 0 0);
-    outline-offset: 2px;
-  }
 }
 
-/* Mobile-specific improvements */
-@media (max-width: 1024px) {
-  /* Better touch targets */
-  button,
-  a {
-    min-height: 36px;
-    min-width: 36px;
-  }
-
-  /* Smooth scrolling */
-  html {
-    scroll-behavior: smooth;
-  }
-
-  /* Prevent text selection on UI elements */
-  .no-select {
-    -webkit-user-select: none;
-    user-select: none;
-  }
-
-  /* Mobile input improvements - balanced for readability */
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  input[type="number"],
-  input[type="password"],
-  input[type="search"],
-  textarea,
-  select {
-    font-size: 13px !important; /* Readable text size */
-    min-height: 34px !important; /* Compact but usable */
-    padding: 7px 9px !important; /* Balanced padding */
-  }
-
-  /* Better input focus on mobile */
-  input:focus,
-  textarea:focus,
-  select:focus {
-    outline-offset: 1px;
-    outline-width: 1px;
-  }
-
-  /* Input placeholder text */
-  input::placeholder,
-  textarea::placeholder {
-    font-size: 12px !important;
-    opacity: 0.6;
-  }
-
-  /* Better spacing for form groups */
-  .space-y-2 > * + * {
-    margin-top: 0.5rem !important;
-  }
-
-  .space-y-4 > * + * {
-    margin-top: 0.75rem !important;
-  }
-
-  /* Compact buttons */
-  button {
-    min-height: 36px !important;
-    font-size: 12px !important;
-    padding: 7px 11px !important;
-  }
-}
-
-/* Extra small devices */
-@media (max-width: 640px) {
-  /* Optimized inputs for very small screens */
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  input[type="number"],
-  input[type="password"],
-  input[type="search"],
-  textarea,
-  select {
-    font-size: 12px !important;
-    min-height: 32px !important;
-    padding: 6px 8px !important;
-  }
-
-  /* Compact labels */
-  label {
-    font-size: 11px !important;
-    font-weight: 500 !important;
-  }
-
-  /* Minimal buttons */
-  button {
-    min-height: 32px !important;
-    font-size: 11px !important;
-    padding: 6px 9px !important;
-  }
-
-  /* Tighter gaps */
-  .gap-3 {
-    gap: 0.5rem !important;
-  }
-
-  .gap-4 {
-    gap: 0.75rem !important;
-  }
-
-  .gap-6 {
-    gap: 1rem !important;
-  }
-}
-
-/* Print Styles - Hide navigation and show invoice details */
+/* Print Styles */
 @media print {
-  /* Hide sidebar, header, buttons, and non-essential elements */
-  .no-print {
-    display: none !important;
-  }
-
-  /* Hide layout elements */
-  aside,
-  header,
-  nav,
-  .print-hide {
-    display: none !important;
-  }
-
-  /* Ensure invoice content is visible */
-  .print-show {
-    display: block !important;
-  }
-
-  /* Remove backgrounds and shadows for printing */
-  * {
-    box-shadow: none !important;
-    text-shadow: none !important;
-  }
-
-  /* Ensure proper spacing */
-  body {
-    background: white !important;
-    color: black !important;
-  }
-
-  /* Page break handling */
-  .page-break {
-    page-break-after: always;
-  }
-
-  .no-break {
-    page-break-inside: avoid;
-  }
-
-  /* Links - show URLs */
-  a[href]:after {
-    content: " (" attr(href) ")";
-    font-size: 0.8em;
-  }
-
-  /* Ensure tables look good */
-  table {
-    page-break-inside: avoid;
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  th,
-  td {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-
-  /* Ensure colors print correctly */
-  * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
+  .no-print { display: none !important; }
+  aside, header, nav, .print-hide { display: none !important; }
+  .print-show { display: block !important; }
+  * { box-shadow: none !important; text-shadow: none !important; }
+  body { background: white !important; color: black !important; }
+  .page-break { page-break-after: always; }
+  .no-break { page-break-inside: avoid; }
+  table { page-break-inside: avoid; width: 100%; border-collapse: collapse; }
+  th, td { border: 1px solid #ddd; padding: 8px; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 }

@@ -81,8 +81,8 @@ export default function SettingsPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Settings</h1>
-        <p className="text-slate-600 dark:text-slate-400 mt-2">Configure your invoice application</p>
+        <h1 className="text-3xl font-bold text-foreground">Settings</h1>
+        <p className="text-muted-foreground mt-2">Configure your invoice application</p>
       </div>
 
       {hasChanges && (
@@ -101,10 +101,10 @@ export default function SettingsPage() {
           className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
             currentTab === 'company'
               ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
-              : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+              : 'border-border hover:border-slate-300 dark:hover:border-slate-600'
           }`}
         >
-          <Building2 className={`w-4 h-4 flex-shrink-0 ${currentTab === 'company' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
+          <Building2 className={`w-4 h-4 flex-shrink-0 ${currentTab === 'company' ? 'text-success' : 'text-muted-foreground'}`} />
           <span className="text-xs sm:text-sm font-medium">Company</span>
         </button>
 
@@ -113,10 +113,10 @@ export default function SettingsPage() {
           className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
             currentTab === 'invoice'
               ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
-              : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+              : 'border-border hover:border-slate-300 dark:hover:border-slate-600'
           }`}
         >
-          <FileText className={`w-4 h-4 flex-shrink-0 ${currentTab === 'invoice' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
+          <FileText className={`w-4 h-4 flex-shrink-0 ${currentTab === 'invoice' ? 'text-success' : 'text-muted-foreground'}`} />
           <span className="text-xs sm:text-sm font-medium">Invoice</span>
         </button>
 
@@ -125,10 +125,10 @@ export default function SettingsPage() {
           className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
             currentTab === 'general'
               ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
-              : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+              : 'border-border hover:border-slate-300 dark:hover:border-slate-600'
           }`}
         >
-          <SettingsIcon className={`w-4 h-4 flex-shrink-0 ${currentTab === 'general' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
+          <SettingsIcon className={`w-4 h-4 flex-shrink-0 ${currentTab === 'general' ? 'text-success' : 'text-muted-foreground'}`} />
           <span className="text-xs sm:text-sm font-medium">General</span>
         </button>
 
@@ -137,10 +137,10 @@ export default function SettingsPage() {
           className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-lg border-2 transition-all whitespace-nowrap ${
             currentTab === 'data'
               ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30'
-              : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+              : 'border-border hover:border-slate-300 dark:hover:border-slate-600'
           }`}
         >
-          <Database className={`w-4 h-4 flex-shrink-0 ${currentTab === 'data' ? 'text-emerald-600 dark:text-emerald-500' : 'text-slate-600 dark:text-slate-400'}`} />
+          <Database className={`w-4 h-4 flex-shrink-0 ${currentTab === 'data' ? 'text-success' : 'text-muted-foreground'}`} />
           <span className="text-xs sm:text-sm font-medium">Data</span>
         </button>
       </div>
@@ -322,10 +322,10 @@ export default function SettingsPage() {
                   className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
                     theme === 'light'
                       ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950'
-                      : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                      : 'border-border hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
-                  <Sun className={`w-6 h-6 ${theme === 'light' ? 'text-emerald-600' : 'text-slate-600 dark:text-slate-400'}`} />
+                  <Sun className={`w-6 h-6 ${theme === 'light' ? 'text-emerald-600' : 'text-muted-foreground'}`} />
                   <span className="text-sm font-medium">Light</span>
                 </button>
 
@@ -334,10 +334,10 @@ export default function SettingsPage() {
                   className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
                     theme === 'dark'
                       ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950'
-                      : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                      : 'border-border hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
-                  <Moon className={`w-6 h-6 ${theme === 'dark' ? 'text-emerald-600' : 'text-slate-600 dark:text-slate-400'}`} />
+                  <Moon className={`w-6 h-6 ${theme === 'dark' ? 'text-emerald-600' : 'text-muted-foreground'}`} />
                   <span className="text-sm font-medium">Dark</span>
                 </button>
 
@@ -346,14 +346,14 @@ export default function SettingsPage() {
                   className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
                     theme === 'system'
                       ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950'
-                      : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                      : 'border-border hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
-                  <Monitor className={`w-6 h-6 ${theme === 'system' ? 'text-emerald-600' : 'text-slate-600 dark:text-slate-400'}`} />
+                  <Monitor className={`w-6 h-6 ${theme === 'system' ? 'text-emerald-600' : 'text-muted-foreground'}`} />
                   <span className="text-sm font-medium">System</span>
                 </button>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-400 mt-2">
+              <p className="text-xs text-muted-foreground mt-2">
                 {theme === 'system'
                   ? `Using system theme (${actualTheme === 'dark' ? 'Dark' : 'Light'})`
                   : theme === 'dark'
@@ -370,10 +370,10 @@ export default function SettingsPage() {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-slate-900 dark:text-slate-100">Export Data</CardTitle>
+              <CardTitle className="text-foreground">Export Data</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+              <p className="text-sm text-muted-foreground mb-4">
                 Download all your invoices, clients, products, and settings as a JSON file.
               </p>
               <Button onClick={handleExport} variant="outline" className="gap-2">
@@ -385,10 +385,10 @@ export default function SettingsPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-slate-900 dark:text-slate-100">Import Data</CardTitle>
+              <CardTitle className="text-foreground">Import Data</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+              <p className="text-sm text-muted-foreground mb-4">
                 Restore your data from a previously exported JSON file. This will replace all
                 existing data.
               </p>
@@ -398,10 +398,10 @@ export default function SettingsPage() {
 
           <Card className="border-red-200 dark:border-red-900">
             <CardHeader>
-              <CardTitle className="text-red-600 dark:text-red-400">Danger Zone</CardTitle>
+              <CardTitle className="text-destructive">Danger Zone</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+              <p className="text-sm text-muted-foreground mb-4">
                 Clear all data from the application. This action cannot be undone.
               </p>
               <Button

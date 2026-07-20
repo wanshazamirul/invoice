@@ -1,57 +1,122 @@
 'use client';
 
-import { Bell, Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Search, Command } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useStore } from '@/lib/store/useStore';
 
 export default function Header() {
-  const { settings } = useStore();
+  const { settings, invoices, clients } = useStore();
+  const [query, setQuery] = useState('');
+  const [focused, setFocused] = useState(false);
+  const router = useRouter();
 
-  // Get initials from company name or default to "WA"
-  const getInitials = () => {
-    if (settings.companyInfo.name) {
-      const words = settings.companyInfo.name.split(' ');
-      if (words.length >= 2) {
-        return (words[0][0] + words[1][0]).toUpperCase();
-      }
-      return words[0].substring(0, 2).toUpperCase();
-    }
-    return 'WA';
-  };
+  const results =
+    query.trim().length > 0
+      ? [
+          ...invoices
+            .filter(
+              (inv) =>
+                inv.invoiceNumber
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase()) ||
+                inv.status?.toLowerCase().includes(query.toLowerCase())
+            )
+            .slice(0, 3)
+            .map((inv) => ({
+              type: 'invoice' as const,
+              id: inv.id,
+              label: inv.invoiceNumber || `Invoice #${inv.id.slice(0, 8)}`,
+              sub: inv.status,
+            })),
+          ...clients
+            .filter(
+              (c) =>
+                c.name.toLowerCase().includes(query.toLowerCase()) ||
+                c.email?.toLowerCase().includes(query.toLowerCase())
+            )
+            .slice(0, 2)
+            .map((c) => ({
+              type: 'client' as const,
+              id: c.id,
+              label: c.name,
+              sub: c.email || c.phone || '',
+            })),
+        ].slice(0, 5)
+      : [];
 
   return (
-    <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30">
-      <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
-        {/* Search - Hidden on mobile, shown on tablet+ */}
-        <div className="hidden sm:block flex-1 max-w-md">
+    <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border">
+      <div className="flex items-center justify-between px-4 sm:px-6 h-14">
+        {/* Search */}
+        <div className="hidden sm:block flex-1 max-w-sm relative">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               type="search"
               placeholder="Search invoices, clients..."
-              className="pl-10"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setTimeout(() => setFocused(false), 200)}
+              className="pl-10 h-9 text-sm"
             />
+            {!query && !focused && (
+              <kbd className="absolute right-3 top-1/2 -translate-y-1/2 hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium bg-muted text-muted-foreground border border-border">
+                <Command className="w-2.5 h-2.5" />K
+              </kbd>
+            )}
           </div>
+
+          {/* Search results dropdown */}
+          {focused && results.length > 0 && (
+            <div className="absolute top-full mt-1 left-0 right-0 bg-popover border border-border rounded-lg shadow-lg overflow-hidden z-50">
+              {results.map((r) => (
+                <button
+                  key={`${r.type}-${r.id}`}
+                  onMouseDown={() => {
+                    router.push(
+                      r.type === 'invoice'
+                        ? `/invoices/${r.id}`
+                        : `/clients`
+                    );
+                    setQuery('');
+                  }}
+                  className="w-full text-left px-4 py-2.5 hover:bg-muted transition-colors flex items-center justify-between gap-3"
+                >
+                  <span className="text-sm font-medium truncate">
+                    {r.label}
+                  </span>
+                  <span className="text-[11px] text-muted-foreground capitalize shrink-0">
+                    {r.type}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Mobile Title - Only shown on mobile */}
+        {/* Mobile title */}
         <div className="sm:hidden">
-          <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{settings.companyInfo.name || 'Invoice App'}</h1>
+          <h1 className="text-sm font-semibold">
+            {settings.companyInfo.name || 'Invoice'}
+          </h1>
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-2 sm:gap-4">
-          <Button variant="ghost" size="icon" className="hidden sm:flex">
-            <Bell className="w-5 h-5" />
-          </Button>
-
-          <Avatar className="w-8 h-8 sm:w-10 sm:h-10">
-            <AvatarFallback className="bg-emerald-600 text-white text-xs sm:text-sm">
-              {getInitials()}
-            </AvatarFallback>
-          </Avatar>
+        {/* Right side */}
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="w-1.5 h-1.5 rounded-full bg-success" />
+            <span>
+              {invoices.filter((i) => i.status === 'paid').length} paid
+            </span>
+            <span className="text-border">|</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-destructive" />
+            <span>
+              {invoices.filter((i) => i.status === 'overdue').length} overdue
+            </span>
+          </div>
         </div>
       </div>
     </header>

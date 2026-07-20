@@ -1,34 +1,28 @@
 'use client';
 
 import { useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import { useStore } from '@/lib/store/useStore';
 import {
   DollarSign,
   Clock,
   AlertCircle,
   CheckCircle,
-  TrendingUp,
   Users,
   FileText,
-  ArrowUpRight,
+  ArrowRight,
+  Plus,
+  Send,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatCurrency } from '@/lib/helpers';
-import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts';
+
+const CHART_COLORS = [
+  'oklch(60% 0.16 55)',  // amber-copper
+  'oklch(58% 0.14 160)', // green
+  'oklch(55% 0.14 245)', // blue
+  'oklch(68% 0.14 85)',  // warm amber
+  'oklch(54% 0.18 25)',  // red
+];
 
 export default function DashboardPage() {
   const { loadData, getDashboardStats, invoices, clients } = useStore();
@@ -38,369 +32,314 @@ export default function DashboardPage() {
     loadData();
   }, [loadData]);
 
-  // Revenue over time (last 6 months)
+  // Revenue trend (last 6 months)
   const revenueData = useMemo(() => {
     const months = [];
     const now = new Date();
+    const allValues: number[] = [];
 
     for (let i = 5; i >= 0; i--) {
       const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const monthName = date.toLocaleString('default', { month: 'short' });
-
       const paidInvoices = invoices.filter(
         (inv) =>
           inv.status === 'paid' &&
           new Date(inv.paidDate || '').getMonth() === date.getMonth() &&
           new Date(inv.paidDate || '').getFullYear() === date.getFullYear()
       );
-
       const revenue = paidInvoices.reduce((sum, inv) => sum + inv.paidAmount, 0);
-      const count = paidInvoices.length;
-
-      months.push({
-        name: monthName,
-        revenue,
-        invoices: count,
-      });
+      allValues.push(revenue);
+      months.push({ name: monthName, revenue, count: paidInvoices.length });
     }
 
-    return months;
+    const maxVal = Math.max(...allValues, 1);
+    return months.map((m) => ({ ...m, maxVal, pct: (m.revenue / maxVal) * 100 }));
   }, [invoices]);
 
-  // Calculate trends
-  const trends = useMemo(() => {
-    const currentMonth = revenueData[revenueData.length - 1];
-    const previousMonth = revenueData[revenueData.length - 2];
-
-    // Total Revenue trend (current month vs previous month)
-    const revenueTrend = previousMonth && previousMonth.revenue > 0
-      ? ((currentMonth.revenue - previousMonth.revenue) / previousMonth.revenue * 100).toFixed(1)
-      : '0.0';
-
-    // Paid This Month trend (current month vs 2 months ago for better comparison)
-    const twoMonthsAgo = revenueData[revenueData.length - 3];
-    const paidTrend = twoMonthsAgo && twoMonthsAgo.revenue > 0
-      ? ((currentMonth.revenue - twoMonthsAgo.revenue) / twoMonthsAgo.revenue * 100).toFixed(1)
-      : '0.0';
-
-    return {
-      revenueTrend: parseFloat(revenueTrend),
-      paidTrend: parseFloat(paidTrend),
-    };
-  }, [revenueData]);
-
-  // Invoice status distribution
+  // Invoice status breakdown
   const statusData = useMemo(() => {
-    const statuses = invoices.reduce(
-      (acc, inv) => {
-        acc[inv.status] = (acc[inv.status] || 0) + 1;
-        return acc;
-      },
-      {} as Record<string, number>
-    );
-
-    return Object.entries(statuses).map(([name, value]) => ({
-      name: name.charAt(0).toUpperCase() + name.slice(1),
-      value,
-    }));
+    const counts: Record<string, number> = { draft: 0, pending: 0, paid: 0, overdue: 0, partial: 0 };
+    invoices.forEach((inv) => {
+      counts[inv.status] = (counts[inv.status] || 0) + 1;
+    });
+    const total = invoices.length || 1;
+    return [
+      { label: 'Paid', count: counts.paid, color: 'bg-success', pct: (counts.paid / total) * 100 },
+      { label: 'Pending', count: counts.pending, color: 'bg-warning', pct: (counts.pending / total) * 100 },
+      { label: 'Overdue', count: counts.overdue, color: 'bg-destructive', pct: (counts.overdue / total) * 100 },
+      { label: 'Draft', count: counts.draft, color: 'bg-muted-foreground/50', pct: (counts.draft / total) * 100 },
+      { label: 'Partial', count: counts.partial, color: 'bg-info', pct: (counts.partial / total) * 100 },
+    ].filter((s) => s.count > 0);
   }, [invoices]);
 
-  const STATUS_COLORS = {
-    Draft: '#94a3b8',
-    Pending: '#eab308',
-    Paid: '#10b981',
-    Overdue: '#ef4444',
-    Partial: '#3b82f6',
-  };
-
-  // Top clients by revenue
-  const topClientsData = useMemo(() => {
-    const clientRevenue = clients.map((client) => {
-      const clientInvoices = invoices.filter(
-        (inv) => inv.clientId === client.id && inv.status === 'paid'
-      );
-      const revenue = clientInvoices.reduce((sum, inv) => sum + inv.paidAmount, 0);
-
-      return {
-        name: client.name,
-        revenue,
-        invoices: clientInvoices.length,
-      };
-    });
-
-    return clientRevenue
+  // Top clients
+  const topClients = useMemo(() => {
+    return clients
+      .map((c) => {
+        const rev = invoices
+          .filter((inv) => inv.clientId === c.id && inv.status === 'paid')
+          .reduce((sum, inv) => sum + inv.paidAmount, 0);
+        return { name: c.name, revenue: rev, count: invoices.filter((inv) => inv.clientId === c.id).length };
+      })
       .filter((c) => c.revenue > 0)
       .sort((a, b) => b.revenue - a.revenue)
       .slice(0, 5);
   }, [invoices, clients]);
+
+  const maxClientRev = Math.max(...topClients.map((c) => c.revenue), 1);
+
+  // Donut segments for status
+  const donutSegments = useMemo(() => {
+    const total = invoices.length || 1;
+    let accum = 0;
+    const map: Record<string, string> = { paid: '#4ade80', pending: '#fbbf24', overdue: '#f87171', draft: '#94a3b8', partial: '#60a5fa' };
+    return statusData.map((s) => {
+      const start = accum;
+      accum += s.pct;
+      return { ...s, hex: map[s.label.toLowerCase()] || '#94a3b8', start };
+    });
+  }, [statusData, invoices.length]);
+
+  const conicGradient = donutSegments
+    .map((s) => `${s.hex} ${s.start}% ${s.start + s.pct}%`)
+    .join(', ');
 
   const statCards = [
     {
       title: 'Total Revenue',
       value: formatCurrency(stats.totalRevenue),
       icon: DollarSign,
-      color: 'text-emerald-600 dark:text-emerald-500',
-      bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
-      trend: trends.revenueTrend !== 0 ? `${trends.revenueTrend > 0 ? '+' : ''}${trends.revenueTrend}%` : 'No data',
+      color: 'text-success',
+      bg: 'bg-success/10',
+      sub: `${stats.totalInvoices} invoices`,
     },
     {
-      title: 'Pending Amount',
+      title: 'Pending',
       value: formatCurrency(stats.pendingAmount),
       icon: Clock,
-      color: 'text-yellow-600 dark:text-yellow-500',
-      bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
-      trend: `${stats.pendingInvoices} invoice${stats.pendingInvoices !== 1 ? 's' : ''}`,
+      color: 'text-warning',
+      bg: 'bg-warning/10',
+      sub: `${stats.pendingInvoices} awaiting payment`,
     },
     {
-      title: 'Overdue Amount',
+      title: 'Overdue',
       value: formatCurrency(stats.overdueAmount),
       icon: AlertCircle,
-      color: 'text-red-600 dark:text-red-500',
-      bgColor: 'bg-red-100 dark:bg-red-900/30',
-      trend: `${stats.overdueInvoices} invoice${stats.overdueInvoices !== 1 ? 's' : ''}`,
+      color: 'text-destructive',
+      bg: 'bg-destructive/10',
+      sub: `${stats.overdueInvoices} past due`,
     },
     {
       title: 'Paid This Month',
       value: formatCurrency(stats.paidThisMonth),
       icon: CheckCircle,
-      color: 'text-blue-600 dark:text-blue-500',
-      bgColor: 'bg-blue-100 dark:bg-blue-900/30',
-      trend: trends.paidTrend !== 0 ? `${trends.paidTrend > 0 ? '+' : ''}${trends.paidTrend}%` : 'No data',
-    },
-  ];
-
-  const quickStats = [
-    {
-      title: 'Total Clients',
-      value: stats.totalClients,
-      icon: Users,
-    },
-    {
-      title: 'Total Invoices',
-      value: stats.totalInvoices,
-      icon: FileText,
+      color: 'text-info',
+      bg: 'bg-info/10',
+      sub: `${stats.totalClients} clients`,
     },
   ];
 
   return (
     <div className="space-y-6 sm:space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100">Dashboard</h1>
-        <p className="text-slate-600 dark:text-slate-400 mt-2 text-sm sm:text-base">Welcome back! Here's your business overview.</p>
+      <div className="flex items-start sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Overview of your invoicing activity
+          </p>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <Link
+            href="/invoices/new"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
+          >
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">New Invoice</span>
+          </Link>
+        </div>
       </div>
 
-      {/* Main Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+      {/* KPI Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.title} className="hover:shadow-lg transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between pb-2 px-3 sm:px-6">
-                <CardTitle className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400">
-                  {stat.title}
-                </CardTitle>
-                <div className={`p-1.5 sm:p-2 rounded-lg ${stat.bgColor}`}>
-                  <Icon className={`w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 ${stat.color}`} />
+            <div
+              key={stat.title}
+              className="rounded-xl border border-border bg-card p-4 sm:p-5 hover:border-primary/30 hover:shadow-sm transition-all duration-200"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="space-y-1 min-w-0">
+                  <p className="text-xs text-muted-foreground font-medium truncate">
+                    {stat.title}
+                  </p>
+                  <p className="text-lg sm:text-xl font-bold tracking-tight truncate">
+                    {stat.value}
+                  </p>
                 </div>
-              </CardHeader>
-              <CardContent className="px-3 sm:px-6">
-                <div className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-900 dark:text-slate-100">{stat.value}</div>
-                <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
-                  <TrendingUp className="w-3 h-3" />
-                  <span className="hidden sm:inline">{stat.trend}</span>
-                  <span className="sm:hidden">{stat.trend}</span>
-                </p>
-              </CardContent>
-            </Card>
+                <div className={`p-2 rounded-lg ${stat.bg} shrink-0`}>
+                  <Icon className={`w-4 h-4 ${stat.color}`} />
+                </div>
+              </div>
+              <p className="text-[11px] text-muted-foreground mt-2">
+                {stat.sub}
+              </p>
+            </div>
           );
         })}
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-6">
-        {quickStats.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={stat.title}>
-              <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">{stat.title}</p>
-                    <p className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 mt-1 sm:mt-2">{stat.value}</p>
-                  </div>
-                  <div className="p-2 sm:p-3 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                    <Icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-slate-600 dark:text-slate-400" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Revenue Over Time */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-slate-900 dark:text-slate-100">Revenue Over Time</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-56 sm:h-72 lg:h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" className="dark:stroke-slate-700" />
-                <XAxis dataKey="name" stroke="#64748b" className="dark:stroke-slate-400" />
-                <YAxis stroke="#64748b" className="dark:stroke-slate-400" />
-                <Tooltip
-                  formatter={(value: any) => {
-                    if (typeof value === 'number') {
-                      return formatCurrency(value, 'RM');
-                    }
-                    return value;
-                  }}
-                  contentStyle={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '8px',
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        {/* Revenue Trend — CSS bar chart */}
+        <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
+          <h3 className="text-sm font-semibold mb-4">Revenue Trend</h3>
+          <div className="flex items-end gap-2 sm:gap-3 h-44">
+            {revenueData.map((m, i) => (
+              <div key={m.name} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+                <span className="text-[10px] font-medium text-muted-foreground">
+                  {m.revenue > 0 ? formatCurrency(m.revenue, '').replace('.00', '') : ''}
+                </span>
+                <div
+                  className="w-full rounded-t-md transition-all duration-500"
+                  style={{
+                    height: `${Math.max(m.pct, 2)}%`,
+                    backgroundColor: CHART_COLORS[i % CHART_COLORS.length],
+                    opacity: m.revenue > 0 ? 1 : 0.15,
                   }}
                 />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="revenue"
-                  stroke="#10b981"
-                  strokeWidth={2}
-                  name="Revenue"
-                />
-              </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+                <span className="text-[10px] text-muted-foreground">{m.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
 
-        {/* Invoice Status Distribution */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-slate-900 dark:text-slate-100">Invoice Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-56 sm:h-72 lg:h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                <Pie
-                  data={statusData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) =>
-                    `${name}: ${((percent || 0) * 100).toFixed(0)}%`
-                  }
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {statusData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={STATUS_COLORS[entry.name as keyof typeof STATUS_COLORS] || '#94a3b8'}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+        {/* Invoice Status — CSS donut */}
+        <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
+          <h3 className="text-sm font-semibold mb-4">Invoice Status</h3>
+          {invoices.length === 0 ? (
+            <div className="flex items-center justify-center h-44 text-sm text-muted-foreground">
+              No invoices yet
             </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Top Clients */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-slate-900 dark:text-slate-100">Top Clients by Revenue</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {topClientsData.length === 0 ? (
-            <p className="text-slate-500 dark:text-slate-400 text-center py-8">No client data yet</p>
           ) : (
-            <div className="h-56 sm:h-72 lg:h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={topClientsData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" className="dark:stroke-slate-700" />
-                <XAxis dataKey="name" stroke="#64748b" className="dark:stroke-slate-400" />
-                <YAxis stroke="#64748b" className="dark:stroke-slate-400" />
-                <Tooltip
-                  formatter={(value: any) => {
-                    if (typeof value === 'number') {
-                      return formatCurrency(value, 'RM');
-                    }
-                    return value;
-                  }}
-                  contentStyle={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '8px',
-                  }}
-                />
-                <Legend />
-                <Bar dataKey="revenue" fill="#10b981" name="Revenue" />
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="flex items-center gap-6">
+              {/* Donut */}
+              <div
+                className="w-28 h-28 shrink-0 rounded-full relative"
+                style={{
+                  background: `conic-gradient(${conicGradient || '#e5e7eb 0% 100%'})`,
+                  mask: 'radial-gradient(circle, transparent 55%, black 56%)',
+                  WebkitMask: 'radial-gradient(circle, transparent 55%, black 56%)',
+                }}
+              />
+              {/* Legend */}
+              <div className="flex-1 space-y-2 min-w-0">
+                {statusData.map((s) => (
+                  <div key={s.label} className="flex items-center justify-between gap-2 text-sm">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className={`w-2.5 h-2.5 rounded-full ${s.color} shrink-0`} />
+                      <span className="truncate">{s.label}</span>
+                    </div>
+                    <span className="font-semibold tabular-nums shrink-0">{s.count}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      {/* Recent Activity & Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Top Clients + Quick Actions */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        {/* Top Clients */}
+        <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-semibold">Top Clients</h3>
+            <Link
+              href="/clients"
+              className="text-xs text-primary hover:opacity-80 font-medium flex items-center gap-1"
+            >
+              View all <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+          {topClients.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-10 text-center gap-2">
+              <Users className="w-8 h-8 text-muted-foreground/40" />
+              <p className="text-sm text-muted-foreground">No client revenue yet</p>
+              <Link
+                href="/clients/new"
+                className="text-xs text-primary hover:opacity-80 font-medium"
+              >
+                Add your first client
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {topClients.map((c, i) => (
+                <div key={c.name} className="space-y-1.5">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium truncate">{c.name}</span>
+                    <span className="text-muted-foreground tabular-nums shrink-0 ml-2">
+                      {formatCurrency(c.revenue)}
+                    </span>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{
+                        width: `${(c.revenue / maxClientRev) * 100}%`,
+                        backgroundColor: CHART_COLORS[i % CHART_COLORS.length],
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <a
-              href="/invoices/new"
-              className="flex items-center justify-between p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
-            >
-              <div className="flex items-center gap-3">
-                <FileText className="w-5 h-5 text-emerald-600 dark:text-emerald-500" />
-                <span className="font-medium dark:text-slate-100">Create New Invoice</span>
-              </div>
-              <ArrowUpRight className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-emerald-600 dark:group-hover:text-emerald-500" />
-            </a>
-            <a
-              href="/clients/new"
-              className="flex items-center justify-between p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
-            >
-              <div className="flex items-center gap-3">
-                <Users className="w-5 h-5 text-blue-600 dark:text-blue-500" />
-                <span className="font-medium dark:text-slate-100">Add New Client</span>
-              </div>
-              <ArrowUpRight className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
-            </a>
-          </CardContent>
-        </Card>
+        <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
+          <h3 className="text-sm font-semibold mb-4">Quick Actions</h3>
+          <div className="space-y-2">
+            {[
+              { href: '/invoices/new', icon: Plus, label: 'Create new invoice', color: 'text-primary' },
+              { href: '/clients/new', icon: Users, label: 'Add new client', color: 'text-info' },
+              { href: '/products/new', icon: FileText, label: 'Add product or service', color: 'text-success' },
+            ].map((action) => {
+              const Icon = action.icon;
+              return (
+                <Link
+                  key={action.href}
+                  href={action.href}
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg border border-border hover:border-primary/30 hover:bg-muted/50 transition-all group"
+                >
+                  <div className={`p-1.5 rounded-md bg-muted ${action.color}`}>
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <span className="text-sm font-medium flex-1">{action.label}</span>
+                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                </Link>
+              );
+            })}
+          </div>
 
-        {/* Getting Started */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Getting Started</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <p className="text-sm text-slate-600 dark:text-slate-400">
-              👋 Welcome to your new invoicing system! Here's how to get started:
-            </p>
-            <ol className="text-sm text-slate-600 space-y-2 mt-4 list-decimal list-inside">
-              <li>Add your clients in the Clients section</li>
-              <li>Create products/services for quick invoicing</li>
-              <li>Configure your settings in Settings</li>
-              <li>Create your first invoice!</li>
-            </ol>
-          </CardContent>
-        </Card>
+          {/* Reminder CTA */}
+          {stats.pendingInvoices > 0 && (
+            <div className="mt-4 p-4 rounded-lg bg-warning/10 border border-warning/20 flex items-start gap-3">
+              <Send className="w-4 h-4 text-warning shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium">
+                  {stats.pendingInvoices} invoice{stats.pendingInvoices > 1 ? 's' : ''} awaiting payment
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Send reminders to follow up on outstanding payments.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

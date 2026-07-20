@@ -130,8 +130,8 @@ export default function ClientsPage() {
       {/* Header */}
       <div className="flex flex-row items-center justify-between gap-2">
         <div>
-          <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100">Clients</h1>
-          <p className="text-slate-600 dark:text-slate-400 mt-1 text-[10px] sm:text-sm">Manage your client database</p>
+          <h1 className="text-lg sm:text-2xl font-bold text-foreground">Clients</h1>
+          <p className="text-muted-foreground mt-1 text-[10px] sm:text-sm">Manage your client database</p>
         </div>
         <div className="flex flex-row gap-2 items-center">
           <SearchBar
@@ -148,17 +148,17 @@ export default function ClientsPage() {
 
       {/* Stats Cards - Compact on mobile */}
       <div className="grid grid-cols-3 gap-2 sm:hidden">
-        <div className="flex items-center justify-between bg-blue-50 dark:bg-blue-900/20 rounded-lg px-3 py-2">
-          <span className="text-[10px] text-slate-600 dark:text-slate-400">Total</span>
-          <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{clients.length}</span>
+        <div className="flex items-center justify-between bg-info/10 rounded-lg px-3 py-2">
+          <span className="text-[10px] text-muted-foreground">Total</span>
+          <span className="text-sm font-bold text-foreground">{clients.length}</span>
         </div>
-        <div className="flex items-center justify-between bg-emerald-50 dark:bg-emerald-900/20 rounded-lg px-3 py-2">
-          <span className="text-[10px] text-slate-600 dark:text-slate-400">Companies</span>
-          <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{clients.filter(c => c.company).length}</span>
+        <div className="flex items-center justify-between bg-success/10 rounded-lg px-3 py-2">
+          <span className="text-[10px] text-muted-foreground">Companies</span>
+          <span className="text-sm font-bold text-foreground">{clients.filter(c => c.company).length}</span>
         </div>
-        <div className="flex items-center justify-between bg-purple-50 dark:bg-purple-900/20 rounded-lg px-3 py-2">
-          <span className="text-[10px] text-slate-600 dark:text-slate-400">Individuals</span>
-          <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{clients.filter(c => !c.company).length}</span>
+        <div className="flex items-center justify-between bg-accent/10 rounded-lg px-3 py-2">
+          <span className="text-[10px] text-muted-foreground">Individuals</span>
+          <span className="text-sm font-bold text-foreground">{clients.filter(c => !c.company).length}</span>
         </div>
       </div>
 
@@ -168,11 +168,11 @@ export default function ClientsPage() {
           <CardContent className="pt-6 px-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Total Clients</p>
-                <p className="text-3xl font-bold text-slate-900 dark:text-slate-100 mt-2">{clients.length}</p>
+                <p className="text-sm text-muted-foreground">Total Clients</p>
+                <p className="text-3xl font-bold text-foreground mt-2">{clients.length}</p>
               </div>
-              <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                <Mail className="w-6 h-6 text-blue-600 dark:text-blue-500" />
+              <div className="p-3 bg-info/10 rounded-lg">
+                <Mail className="w-6 h-6 text-info" />
               </div>
             </div>
           </CardContent>
@@ -182,13 +182,13 @@ export default function ClientsPage() {
           <CardContent className="pt-6 px-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Companies</p>
-                <p className="text-3xl font-bold text-slate-900 dark:text-slate-100 mt-2">
+                <p className="text-sm text-muted-foreground">Companies</p>
+                <p className="text-3xl font-bold text-foreground mt-2">
                   {clients.filter(c => c.company).length}
                 </p>
               </div>
-              <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
-                <MapPin className="w-6 h-6 text-emerald-600 dark:text-emerald-500" />
+              <div className="p-3 bg-success/10 rounded-lg">
+                <MapPin className="w-6 h-6 text-success" />
               </div>
             </div>
           </CardContent>
@@ -198,13 +198,13 @@ export default function ClientsPage() {
           <CardContent className="pt-6 px-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Individuals</p>
-                <p className="text-3xl font-bold text-slate-900 dark:text-slate-100 mt-2">
+                <p className="text-sm text-muted-foreground">Individuals</p>
+                <p className="text-3xl font-bold text-foreground mt-2">
                   {clients.filter(c => !c.company).length}
                 </p>
               </div>
-              <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                <Phone className="w-6 h-6 text-purple-600 dark:text-purple-500" />
+              <div className="p-3 bg-accent/10 rounded-lg">
+                <Phone className="w-6 h-6 text-accent-foreground" />
               </div>
             </div>
           </CardContent>
@@ -219,7 +219,7 @@ export default function ClientsPage() {
         <CardContent>
           {clients.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-slate-500 mb-4">No clients yet. Add your first client!</p>
+              <p className="text-muted-foreground mb-4">No clients yet. Add your first client!</p>
               <Button onClick={handleAdd} variant="outline" className="gap-2">
                 <Plus className="w-4 h-4" />
                 Add Client
@@ -237,12 +237,12 @@ export default function ClientsPage() {
                     <CardContent className="p-1.5">
                       <div className="flex items-center justify-between">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-[11px] text-slate-900 dark:text-slate-100 truncate leading-tight">{client.name}</h3>
-                          <p className="text-[9px] text-slate-600 dark:text-slate-400 truncate leading-tight">{client.email}</p>
+                          <h3 className="font-semibold text-[11px] text-foreground truncate leading-tight">{client.name}</h3>
+                          <p className="text-[9px] text-muted-foreground truncate leading-tight">{client.email}</p>
                         </div>
                         <DropdownMenu>
                           <DropdownMenuTrigger>
-                            <Button variant="ghost" size="icon" className="h-9 w-9 flex-shrink-0 ml-1.5 text-slate-600 dark:text-slate-400" aria-label="More options">
+                            <Button variant="ghost" size="icon" className="h-9 w-9 flex-shrink-0 ml-1.5 text-muted-foreground" aria-label="More options">
                               <MoreVertical className="w-4 h-4" />
                             </Button>
                           </DropdownMenuTrigger>
@@ -253,7 +253,7 @@ export default function ClientsPage() {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleDelete(client.id)}
-                              className="text-red-600 dark:text-red-400"
+                              className="text-destructive"
                               aria-label="Delete client"
                             >
                               <Trash2 className="w-4 h-4 mr-2" />
@@ -281,14 +281,14 @@ export default function ClientsPage() {
                 <TableBody>
                   {filteredClients.map((client) => (
                     <TableRow key={client.id}>
-                      <TableCell className="font-medium text-slate-900 dark:text-slate-100">{client.name}</TableCell>
-                      <TableCell className="text-slate-900 dark:text-slate-100">{client.email}</TableCell>
-                      <TableCell className="text-slate-900 dark:text-slate-100">{client.phone}</TableCell>
-                      <TableCell className="text-slate-900 dark:text-slate-100">
+                      <TableCell className="font-medium text-foreground">{client.name}</TableCell>
+                      <TableCell className="text-foreground">{client.email}</TableCell>
+                      <TableCell className="text-foreground">{client.phone}</TableCell>
+                      <TableCell className="text-foreground">
                         {client.company ? (
                           <Badge variant="secondary">{client.company}</Badge>
                         ) : (
-                          <span className="text-slate-400 dark:text-slate-500">-</span>
+                          <span className="text-slate-400 dark:text-muted-foreground">-</span>
                         )}
                       </TableCell>
                       <TableCell className="text-right">
@@ -305,7 +305,7 @@ export default function ClientsPage() {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleDelete(client.id)}
-                              className="text-red-600 dark:text-red-400"
+                              className="text-destructive"
                               aria-label="Delete client"
                             >
                               <Trash2 className="w-4 h-4 mr-2" />

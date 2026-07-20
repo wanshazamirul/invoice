@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/layout/sidebar";
 import Header from "@/components/layout/header";
@@ -8,11 +8,21 @@ import { AlertProvider } from "@/contexts/alert-context";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { AlertToaster } from "@/components/ui/alert-toaster";
 
-const inter = Inter({ subsets: ["latin"] });
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "Invoice App - Professional Invoicing System",
-  description: "Full-featured invoicing application with client management, PDF generation, and payment tracking",
+  title: "Invoice — Professional Invoicing for Malaysian Businesses",
+  description: "Full-featured invoicing with client management, SST support, PDF generation, and payment tracking. Built for Malaysian SMEs and freelancers.",
   icons: {
     icon: '/icon.png',
     shortcut: '/icon.png',
@@ -35,8 +45,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.className} antialiased`} suppressHydrationWarning>
-      <body className="min-h-screen bg-slate-50 dark:bg-slate-950">
+    <html lang="en" className={`${manrope.variable} ${jetbrainsMono.variable} antialiased`} suppressHydrationWarning>
+      <body className="min-h-screen bg-background">
         <ThemeProvider>
           <AlertProvider>
             <div className="flex h-screen overflow-hidden">

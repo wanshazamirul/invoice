@@ -35,6 +35,7 @@ interface InvoiceStore {
   exportAllData: () => any;
   importAllData: (data: any) => void;
   generateInvoiceNumber: (type: 'invoice' | 'quotation') => string;
+  addReminderToInvoice: (invoiceId: string, method: 'email' | 'manual') => void;
 }
 
 export const useStore = create<InvoiceStore>((set, get) => ({
@@ -62,7 +63,7 @@ export const useStore = create<InvoiceStore>((set, get) => ({
 
   // Invoice actions
   addInvoice: (invoice) => {
-    const invoices = [...get().invoices, invoice];
+    const invoices = [...get().invoices, { ...invoice, remindersSent: invoice.remindersSent || [] }];
     invoiceStorage.setInvoices(invoices);
     set({ invoices });
   },
@@ -163,6 +164,22 @@ export const useStore = create<InvoiceStore>((set, get) => ({
   importAllData: (data) => {
     importData(data);
     get().loadData();
+  },
+
+  // Reminders
+  addReminderToInvoice: (invoiceId, method) => {
+    const invoices = get().invoices.map((inv) => {
+      if (inv.id !== invoiceId) return inv;
+      return {
+        ...inv,
+        remindersSent: [
+          ...(inv.remindersSent || []),
+          { date: new Date().toISOString(), method },
+        ],
+      };
+    });
+    invoiceStorage.setInvoices(invoices);
+    set({ invoices });
   },
 
   // Generate invoice number

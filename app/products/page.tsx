@@ -105,8 +105,8 @@ export default function ProductsPage() {
       {/* Header */}
       <div className="flex flex-row items-center justify-between gap-2">
         <div>
-          <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100">Products & Services</h1>
-          <p className="text-slate-600 dark:text-slate-400 mt-1 text-[10px] sm:text-sm">Manage your products and services for quick invoicing</p>
+          <h1 className="text-lg sm:text-2xl font-bold text-foreground">Products & Services</h1>
+          <p className="text-muted-foreground mt-1 text-[10px] sm:text-sm">Manage your products and services for quick invoicing</p>
         </div>
         <Button onClick={handleAdd} className="gap-1">
           <Plus className="w-3 h-3" />
@@ -120,11 +120,11 @@ export default function ProductsPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Total Products</p>
-                <p className="text-3xl font-bold text-slate-900 mt-2">{products.length}</p>
+                <p className="text-sm text-muted-foreground">Total Products</p>
+                <p className="text-3xl font-bold text-foreground mt-2">{products.length}</p>
               </div>
-              <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
-                <Package className="w-6 h-6 text-emerald-600 dark:text-emerald-500" />
+              <div className="p-3 bg-success/10 rounded-lg">
+                <Package className="w-6 h-6 text-success" />
               </div>
             </div>
           </CardContent>
@@ -134,8 +134,8 @@ export default function ProductsPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Average Price</p>
-                <p className="text-3xl font-bold text-slate-900 mt-2">
+                <p className="text-sm text-muted-foreground">Average Price</p>
+                <p className="text-3xl font-bold text-foreground mt-2">
                   {products.length > 0
                     ? formatCurrency(
                         products.reduce((sum, p) => sum + p.price, 0) / products.length
@@ -143,8 +143,8 @@ export default function ProductsPage() {
                     : formatCurrency(0)}
                 </p>
               </div>
-              <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                <Package className="w-6 h-6 text-blue-600 dark:text-blue-500" />
+              <div className="p-3 bg-info/10 rounded-lg">
+                <Package className="w-6 h-6 text-info" />
               </div>
             </div>
           </CardContent>
@@ -159,7 +159,7 @@ export default function ProductsPage() {
         <CardContent>
           {products.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-slate-500 mb-4">No products yet. Add your first product!</p>
+              <p className="text-muted-foreground mb-4">No products yet. Add your first product!</p>
               <Button onClick={handleAdd} variant="outline" className="gap-2">
                 <Plus className="w-4 h-4" />
                 Add Product
@@ -180,12 +180,12 @@ export default function ProductsPage() {
                 {products.map((product) => (
                   <TableRow key={product.id}>
                     <TableCell className="font-medium">{product.name}</TableCell>
-                    <TableCell className="text-slate-600 max-w-xs truncate">
+                    <TableCell className="text-muted-foreground max-w-xs truncate">
                       {product.description || '-'}
                     </TableCell>
                     <TableCell>
                       {product.sku ? (
-                        <span className="font-mono text-sm bg-slate-100 px-2 py-1 rounded">
+                        <span className="font-mono text-sm bg-muted px-2 py-1 rounded">
                           {product.sku}
                         </span>
                       ) : (
@@ -209,7 +209,7 @@ export default function ProductsPage() {
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => handleDelete(product.id)}
-                            className="text-red-600"
+                            className="text-destructive"
                             aria-label="Delete product"
                           >
                             <Trash2 className="w-4 h-4 mr-2" />

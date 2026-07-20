@@ -202,7 +202,7 @@ export default function NewInvoicePage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100">New Invoice</h1>
+            <h1 className="text-lg sm:text-2xl font-bold text-foreground">New Invoice</h1>
             <p className="text-slate-600 mt-1 text-[10px] sm:text-sm">Create and send professional invoices</p>
           </div>
         </div>
@@ -479,7 +479,7 @@ export default function NewInvoicePage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between">
-                <span className="text-slate-600 dark:text-slate-400">Subtotal</span>
+                <span className="text-muted-foreground">Subtotal</span>
                 <span className="font-medium">
                   {settings.currency}
                   {calculateTotals().subtotal.toFixed(2)}
@@ -488,7 +488,7 @@ export default function NewInvoicePage() {
 
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-slate-600 dark:text-slate-400">Tax Rate</span>
+                  <span className="text-muted-foreground">Tax Rate</span>
                   <Input
                     type="number"
                     min="0"
@@ -502,7 +502,7 @@ export default function NewInvoicePage() {
                   %
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-400">Tax Amount</span>
+                  <span className="text-muted-foreground">Tax Amount</span>
                   <span className="font-medium">
                     {settings.currency}
                     {calculateTotals().taxAmount.toFixed(2)}
@@ -512,7 +512,7 @@ export default function NewInvoicePage() {
 
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-slate-600 dark:text-slate-400">Discount</span>
+                  <span className="text-muted-foreground">Discount</span>
                   <Input
                     type="number"
                     min="0"
@@ -526,7 +526,7 @@ export default function NewInvoicePage() {
                   %
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-400">Discount Amount</span>
+                  <span className="text-muted-foreground">Discount Amount</span>
                   <span className="font-medium text-red-600">
                     -{settings.currency}
                     {calculateTotals().discountAmount.toFixed(2)}
@@ -537,7 +537,7 @@ export default function NewInvoicePage() {
               <Separator />
 
               <div className="flex justify-between text-lg">
-                <span className="font-semibold text-slate-900 dark:text-slate-100">Total</span>
+                <span className="font-semibold text-foreground">Total</span>
                 <span className="font-bold text-emerald-600 dark:text-emerald-400">
                   {settings.currency}
                   {calculateTotals().total.toFixed(2)}
@@ -573,10 +573,10 @@ export default function NewInvoicePage() {
               <CardTitle>From</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
-              <p className="font-semibold text-slate-900 dark:text-slate-100">{settings.companyInfo.name}</p>
-              <p className="text-slate-600 dark:text-slate-400">{settings.companyInfo.email}</p>
-              <p className="text-slate-600 dark:text-slate-400">{settings.companyInfo.phone}</p>
-              <p className="text-slate-600 dark:text-slate-400 whitespace-pre-line">{settings.companyInfo.address}</p>
+              <p className="font-semibold text-foreground">{settings.companyInfo.name}</p>
+              <p className="text-muted-foreground">{settings.companyInfo.email}</p>
+              <p className="text-muted-foreground">{settings.companyInfo.phone}</p>
+              <p className="text-muted-foreground whitespace-pre-line">{settings.companyInfo.address}</p>
             </CardContent>
           </Card>
 
@@ -586,13 +586,13 @@ export default function NewInvoicePage() {
                 <CardTitle>To</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm">
-                <p className="font-semibold text-slate-900 dark:text-slate-100">{selectedClient.name}</p>
+                <p className="font-semibold text-foreground">{selectedClient.name}</p>
                 {selectedClient.company && (
-                  <p className="text-slate-600 dark:text-slate-400">{selectedClient.company}</p>
+                  <p className="text-muted-foreground">{selectedClient.company}</p>
                 )}
-                <p className="text-slate-600 dark:text-slate-400">{selectedClient.email}</p>
-                <p className="text-slate-600 dark:text-slate-400">{selectedClient.phone}</p>
-                <p className="text-slate-600 dark:text-slate-400 whitespace-pre-line">{selectedClient.address}</p>
+                <p className="text-muted-foreground">{selectedClient.email}</p>
+                <p className="text-muted-foreground">{selectedClient.phone}</p>
+                <p className="text-muted-foreground whitespace-pre-line">{selectedClient.address}</p>
               </CardContent>
             </Card>
           )}

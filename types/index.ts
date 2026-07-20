@@ -42,6 +42,11 @@ export interface Payment {
   createdAt: string;
 }
 
+export interface ReminderRecord {
+  date: string;
+  method: 'email' | 'manual';
+}
+
 export interface Invoice {
   id: string;
   invoiceNumber: string;
@@ -67,6 +72,11 @@ export interface Invoice {
   recurringEndDate?: string;
   template: string;
   payments: Payment[];
+  // E-invoicing
+  einvoiceUuid?: string;
+  einvoiceQrCode?: string;
+  // Reminders
+  remindersSent?: ReminderRecord[];
   createdAt: string;
   updatedAt: string;
 }
@@ -83,6 +93,10 @@ export interface InvoiceSettings {
     phone: string;
     address: string;
     logo?: string;
+    // E-invoicing
+    tin?: string;
+    sstNumber?: string;
+    msicCode?: string;
   };
   invoicePrefix: string;
   startingNumber: number;
