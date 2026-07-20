@@ -3,71 +3,63 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '@/lib/store/useStore';
 import { Invoice, InvoiceStatus } from '@/types';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Plus, MoreVertical, FileText, Download, Trash2, Copy, FileOutput } from 'lucide-react';
-import { formatDate, formatCurrency, getInvoiceStatusColor } from '@/lib/helpers';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { generateInvoicePDF } from '@/lib/pdf-generator';
-import { SearchBar } from '@/components/ui/search-bar';
 import { useAlert } from '@/contexts/alert-context';
+import {
+  Plus,
+  FileText,
+  Calendar,
+  Users,
+  MoreHorizontal,
+  Download,
+  Trash2,
+  Copy,
+  FileOutput,
+  Mail,
+} from 'lucide-react';
+import { formatCurrency, formatDate } from '@/lib/helpers';
+import { generateInvoicePDF } from '@/lib/pdf-generator';
 import { PaymentDialog } from '@/components/payment-dialog';
+import { EmailDialog } from '@/components/email-dialog';
 
-const STATUS_STYLES: Record<string, string> = {
-  draft: 'bg-muted text-muted-foreground',
-  pending: 'bg-warning/15 text-warning',
-  paid: 'bg-success/15 text-success',
-  overdue: 'bg-destructive/15 text-destructive',
-  partial: 'bg-info/15 text-info',
+type Tab = 'all' | InvoiceStatus;
+
+const TABS: { key: Tab; label: string }[] = [
+  { key: 'all', label: 'All' },
+  { key: 'pending', label: 'Pending' },
+  { key: 'overdue', label: 'Overdue' },
+  { key: 'draft', label: 'Draft' },
+  { key: 'paid', label: 'Paid' },
+  { key: 'partial', label: 'Partial' },
+];
+
+const STATUS_COLORS: Record<string, string> = {
+  pending: 'border-l-warning',
+  overdue: 'border-l-destructive',
+  draft: 'border-l-muted-foreground/40',
+  paid: 'border-l-success',
+  partial: 'border-l-info',
 };
 
 export default function InvoicesPage() {
   const { invoices, loadData, deleteInvoice, settings, addInvoice, generateInvoiceNumber } = useStore();
   const router = useRouter();
   const { success, error: showError } = useAlert();
-  const [statusFilter, setStatusFilter] = useState<'all' | InvoiceStatus>('all');
-  const [typeFilter, setTypeFilter] = useState<'all' | 'invoice' | 'quotation'>('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
+  const [tab, setTab] = useState<Tab>('all');
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
+  useEffect(() => { loadData(); }, [loadData]);
 
-  const filteredInvoices = invoices.filter((invoice) => {
-    const statusMatch = statusFilter === 'all' || invoice.status === statusFilter;
-    const typeMatch = typeFilter === 'all' || invoice.type === typeFilter;
-    const searchMatch =
-      !searchQuery ||
-      invoice.invoiceNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      invoice.client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      invoice.client.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      invoice.client.company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      invoice.client.phone.includes(searchQuery);
-    return statusMatch && typeMatch && searchMatch;
-  });
+  const filtered =
+    tab === 'all' ? invoices : invoices.filter((i) => i.status === tab);
+
+  const counts = TABS.reduce(
+    (acc, t) => {
+      acc[t.key] = t.key === 'all' ? invoices.length : invoices.filter((i) => i.status === t.key).length;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   const handleDelete = (id: string) => {
     if (confirm('Delete this invoice?')) {
@@ -76,23 +68,11 @@ export default function InvoicesPage() {
     }
   };
 
-  const handleView = (id: string) => router.push(`/invoices/${id}`);
-  const handleEdit = (id: string) => router.push(`/invoices/${id}/edit`);
-
-  const handleDownload = (invoice: Invoice) => {
-    try {
-      generateInvoicePDF(invoice, settings);
-      success('Downloaded', 'PDF generated.');
-    } catch {
-      showError('Failed', 'Could not generate PDF.');
-    }
-  };
-
-  const handleCopy = (invoice: Invoice) => {
+  const handleCopy = (inv: Invoice) => {
     addInvoice({
-      ...invoice,
+      ...inv,
       id: crypto.randomUUID(),
-      invoiceNumber: generateInvoiceNumber(invoice.type),
+      invoiceNumber: generateInvoiceNumber(inv.type),
       issueDate: new Date().toISOString(),
       dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       status: 'draft' as const,
@@ -102,264 +82,149 @@ export default function InvoicesPage() {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
-    success('Copied', 'Invoice duplicated as draft.');
+    success('Copied', 'Duplicate created as draft.');
   };
 
-  const handleConvertToQuotation = (invoice: Invoice) => {
-    addInvoice({
-      ...invoice,
-      id: crypto.randomUUID(),
-      invoiceNumber: generateInvoiceNumber('quotation'),
-      type: 'quotation' as const,
-      status: 'draft' as const,
-      paidAmount: 0,
-      paidDate: undefined,
-      payments: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
-    success('Converted', 'Quotation created.');
-  };
-
-  const refreshInvoice = () => loadData();
-
-  const stats = [
-    { label: 'Total', value: invoices.length, color: 'text-foreground' },
-    { label: 'Draft', value: invoices.filter((i) => i.status === 'draft').length, color: 'text-muted-foreground' },
-    { label: 'Pending', value: invoices.filter((i) => i.status === 'pending').length, color: 'text-warning' },
-    { label: 'Paid', value: invoices.filter((i) => i.status === 'paid').length, color: 'text-success' },
-    { label: 'Overdue', value: invoices.filter((i) => i.status === 'overdue').length, color: 'text-destructive' },
-  ];
+  const refresh = () => loadData();
 
   return (
-    <div className="space-y-6">
+    <div className="py-6 sm:py-10 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Invoices</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            {filteredInvoices.length} invoice{filteredInvoices.length !== 1 ? 's' : ''}
+            {filtered.length} invoice{filtered.length !== 1 ? 's' : ''}
           </p>
         </div>
-        <Button onClick={() => router.push('/invoices/new')} className="gap-1.5">
+        <Link
+          href="/invoices/new"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
+        >
           <Plus className="w-4 h-4" />
           <span className="hidden sm:inline">Create Invoice</span>
-        </Button>
+        </Link>
       </div>
 
-      {/* Stats strip */}
-      <div className="flex gap-1 sm:gap-2">
-        {stats.map((s) => (
-          <div
-            key={s.label}
-            className="flex-1 rounded-lg border border-border bg-card px-3 py-2.5 sm:px-4 sm:py-3 text-center"
+      {/* Tabs */}
+      <div className="flex items-center gap-1 overflow-x-auto pb-1 -mx-1 px-1">
+        {TABS.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setTab(t.key)}
+            className={`shrink-0 px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+              tab === t.key
+                ? 'bg-foreground text-background'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+            }`}
           >
-            <p className={`text-lg sm:text-xl font-bold tabular-nums ${s.color}`}>{s.value}</p>
-            <p className="text-[10px] sm:text-xs text-muted-foreground">{s.label}</p>
-          </div>
+            {t.label}
+            <span className="ml-1.5 text-xs opacity-60">{counts[t.key]}</span>
+          </button>
         ))}
       </div>
 
-      {/* Filters */}
-      <Card>
-        <CardHeader className="pb-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <CardTitle className="text-base">All Invoices</CardTitle>
-            <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
-              <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Search invoices..." />
-              <div className="flex gap-2">
-                <Select value={typeFilter} onValueChange={(v: any) => setTypeFilter(v)}>
-                  <SelectTrigger className="flex-1 sm:w-[130px] h-9 text-xs">
-                    <SelectValue placeholder="Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Types</SelectItem>
-                    <SelectItem value="invoice">Invoices</SelectItem>
-                    <SelectItem value="quotation">Quotations</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select value={statusFilter} onValueChange={(v: any) => setStatusFilter(v)}>
-                  <SelectTrigger className="flex-1 sm:w-[130px] h-9 text-xs">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="paid">Paid</SelectItem>
-                    <SelectItem value="overdue">Overdue</SelectItem>
-                    <SelectItem value="partial">Partial</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+      {/* Card grid */}
+      {filtered.length === 0 ? (
+        <div className="text-center py-20">
+          <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
+            <FileText className="w-7 h-7 text-muted-foreground/40" />
           </div>
-        </CardHeader>
-        <CardContent>
-          {filteredInvoices.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-                <FileText className="w-6 h-6 text-muted-foreground/50" />
-              </div>
-              <p className="text-sm text-muted-foreground mb-4">
-                {invoices.length === 0 ? 'No invoices yet.' : 'No invoices match your filters.'}
-              </p>
-              {invoices.length === 0 && (
-                <Button onClick={() => router.push('/invoices/new')} variant="outline" className="gap-2">
-                  <Plus className="w-4 h-4" />
-                  Create your first invoice
-                </Button>
-              )}
-            </div>
-          ) : (
-            <>
-              {/* Mobile cards */}
-              <div className="md:hidden space-y-2">
-                {filteredInvoices.map((invoice) => (
-                  <div
-                    key={invoice.id}
-                    onClick={() => {
-                      setSelectedInvoiceId(invoice.id);
-                      setTimeout(() => handleView(invoice.id), 150);
-                    }}
-                    className={`rounded-lg border bg-card p-3 cursor-pointer transition-all active:scale-[0.98] ${
-                      selectedInvoiceId === invoice.id
-                        ? 'ring-2 ring-primary border-primary/30'
-                        : 'hover:border-primary/20 hover:shadow-sm'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-1.5">
-                      <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                        <span className="font-semibold text-sm truncate">{invoice.invoiceNumber}</span>
-                        <Badge variant={invoice.type === 'invoice' ? 'default' : 'secondary'} className="text-[9px] px-1 py-0">
-                          {invoice.type === 'invoice' ? 'INV' : 'QT'}
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-0.5 shrink-0" onClick={(e) => e.stopPropagation()}>
-                        {invoice.type === 'invoice' && invoice.status !== 'paid' && (
-                          <PaymentDialog invoice={invoice} onUpdate={refreshInvoice} size="sm" />
-                        )}
-                        <DropdownMenu>
-                          <DropdownMenuTrigger>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <MoreVertical className="w-3.5 h-3.5" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-44">
-                            <DropdownMenuItem onClick={() => handleEdit(invoice.id)}>
-                              <FileText className="w-4 h-4 mr-2" />Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleCopy(invoice)}>
-                              <Copy className="w-4 h-4 mr-2" />Copy
-                            </DropdownMenuItem>
-                            {invoice.type === 'invoice' && (
-                              <DropdownMenuItem onClick={() => handleConvertToQuotation(invoice)}>
-                                <FileOutput className="w-4 h-4 mr-2" />Convert
-                              </DropdownMenuItem>
-                            )}
-                            <DropdownMenuItem onClick={() => handleDownload(invoice)}>
-                              <Download className="w-4 h-4 mr-2" />Download
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(invoice.id)}
-                              className="text-destructive focus:text-destructive"
-                            >
-                              <Trash2 className="w-4 h-4 mr-2" />Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </div>
-                    <p className="text-xs text-muted-foreground truncate mb-2">{invoice.client.name}</p>
-                    <div className="flex items-center justify-between">
-                      <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${STATUS_STYLES[invoice.status] || ''}`}>
-                        {invoice.status}
-                      </span>
-                      <span className="text-sm font-bold">{formatCurrency(invoice.total, invoice.currency)}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Desktop table */}
-              <Table className="hidden md:table">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Invoice #</TableHead>
-                    <TableHead>Client</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Due Date</TableHead>
-                    <TableHead className="text-right">Total</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredInvoices.map((invoice) => (
-                    <TableRow
-                      key={invoice.id}
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => handleView(invoice.id)}
-                    >
-                      <TableCell className="font-medium">{invoice.invoiceNumber}</TableCell>
-                      <TableCell>{invoice.client.name}</TableCell>
-                      <TableCell>
-                        <Badge variant={invoice.type === 'invoice' ? 'default' : 'secondary'} className="text-[10px]">
-                          {invoice.type}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">{formatDate(invoice.issueDate)}</TableCell>
-                      <TableCell className="text-muted-foreground">{formatDate(invoice.dueDate)}</TableCell>
-                      <TableCell className="text-right font-semibold tabular-nums">
-                        {formatCurrency(invoice.total, invoice.currency)}
-                      </TableCell>
-                      <TableCell>
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium ${STATUS_STYLES[invoice.status] || ''}`}>
-                          {invoice.status}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-end gap-1">
-                          {invoice.type === 'invoice' && invoice.status !== 'paid' && (
-                            <PaymentDialog invoice={invoice} onUpdate={refreshInvoice} size="sm" />
-                          )}
-                          <DropdownMenu>
-                            <DropdownMenuTrigger>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <MoreVertical className="w-4 h-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => handleEdit(invoice.id)}>
-                                <FileText className="w-4 h-4 mr-2" />Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleCopy(invoice)}>
-                                <Copy className="w-4 h-4 mr-2" />Copy
-                              </DropdownMenuItem>
-                              {invoice.type === 'invoice' && (
-                                <DropdownMenuItem onClick={() => handleConvertToQuotation(invoice)}>
-                                  <FileOutput className="w-4 h-4 mr-2" />Convert to Quotation
-                                </DropdownMenuItem>
-                              )}
-                              <DropdownMenuItem onClick={() => handleDownload(invoice)}>
-                                <Download className="w-4 h-4 mr-2" />Download PDF
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleDelete(invoice.id)} className="text-destructive focus:text-destructive">
-                                <Trash2 className="w-4 h-4 mr-2" />Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </>
+          <p className="text-muted-foreground mb-4">
+            {tab === 'all' ? 'No invoices yet.' : `No ${tab} invoices.`}
+          </p>
+          {tab === 'all' && (
+            <Link
+              href="/invoices/new"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold"
+            >
+              <Plus className="w-4 h-4" />
+              Create your first invoice
+            </Link>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {filtered.map((inv) => (
+            <div
+              key={inv.id}
+              onClick={() => router.push(`/invoices/${inv.id}`)}
+              className={`relative rounded-xl border border-border bg-card hover:shadow-md hover:border-primary/30 transition-all cursor-pointer border-l-[3px] overflow-hidden ${STATUS_COLORS[inv.status] || ''}`}
+            >
+              <div className="p-4">
+                {/* Top row */}
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <div className="min-w-0">
+                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                      {inv.invoiceNumber}
+                    </p>
+                    <p className="text-sm font-semibold truncate mt-0.5">
+                      {inv.client?.name || 'Unknown'}
+                    </p>
+                  </div>
+                  <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase ${
+                    inv.status === 'paid' ? 'bg-success/10 text-success' :
+                    inv.status === 'pending' ? 'bg-warning/10 text-warning' :
+                    inv.status === 'overdue' ? 'bg-destructive/10 text-destructive' :
+                    inv.status === 'partial' ? 'bg-info/10 text-info' :
+                    'bg-muted text-muted-foreground'
+                  }`}>
+                    {inv.status}
+                  </span>
+                </div>
+
+                {/* Amount */}
+                <p className="text-2xl font-bold tracking-tight">
+                  {formatCurrency(inv.total)}
+                </p>
+
+                {/* Meta */}
+                <div className="flex items-center gap-3 mt-3 text-[11px] text-muted-foreground">
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    {formatDate(inv.issueDate)}
+                  </span>
+                  {inv.dueDate && (
+                    <span className={inv.status === 'overdue' ? 'text-destructive font-medium' : ''}>
+                      Due {formatDate(inv.dueDate)}
+                    </span>
+                  )}
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center gap-1 mt-3 pt-3 border-t border-border" onClick={(e) => e.stopPropagation()}>
+                  {inv.status !== 'paid' && (
+                    <PaymentDialog invoice={inv} onUpdate={refresh} />
+                  )}
+                  <EmailDialog invoice={inv} onUpdate={refresh} />
+                  <button
+                    onClick={() => handleCopy(inv)}
+                    className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                    title="Duplicate"
+                  >
+                    <Copy className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => generateInvoicePDF(inv, settings)}
+                    className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                    title="Download PDF"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                  </button>
+                  <div className="flex-1" />
+                  <button
+                    onClick={() => handleDelete(inv.id)}
+                    className="p-1.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                    title="Delete"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

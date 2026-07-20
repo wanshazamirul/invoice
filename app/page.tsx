@@ -3,340 +3,322 @@
 import { useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useStore } from '@/lib/store/useStore';
+import { Invoice } from '@/types';
 import {
-  DollarSign,
+  ArrowRight,
+  Plus,
   Clock,
   AlertCircle,
   CheckCircle,
-  Users,
   FileText,
-  ArrowRight,
-  Plus,
-  Send,
+  Users,
 } from 'lucide-react';
-import { formatCurrency } from '@/lib/helpers';
+import { formatCurrency, formatDate } from '@/lib/helpers';
 
-const CHART_COLORS = [
-  'oklch(60% 0.16 55)',  // amber-copper
-  'oklch(58% 0.14 160)', // green
-  'oklch(55% 0.14 245)', // blue
-  'oklch(68% 0.14 85)',  // warm amber
-  'oklch(54% 0.18 25)',  // red
-];
+const STATUS_STYLES: Record<string, string> = {
+  paid: 'bg-success/10 text-success border-success/20',
+  pending: 'bg-warning/10 text-warning border-warning/20',
+  overdue: 'bg-destructive/10 text-destructive border-destructive/20',
+  draft: 'bg-muted text-muted-foreground border-border',
+  partial: 'bg-info/10 text-info border-info/20',
+};
 
 export default function DashboardPage() {
-  const { loadData, getDashboardStats, invoices, clients } = useStore();
-  const stats = getDashboardStats();
+  const { loadData, invoices, clients } = useStore();
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
-  // Revenue trend (last 6 months)
-  const revenueData = useMemo(() => {
-    const months = [];
+  const stats = useMemo(() => {
+    const pending = invoices.filter((i) => i.status === 'pending');
+    const overdue = invoices.filter((i) => i.status === 'overdue');
+    const paid = invoices.filter((i) => i.status === 'paid');
     const now = new Date();
-    const allValues: number[] = [];
+    const thisMonth = paid.filter(
+      (i) => new Date(i.paidDate || '').getMonth() === now.getMonth()
+    );
 
-    for (let i = 5; i >= 0; i--) {
-      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const monthName = date.toLocaleString('default', { month: 'short' });
-      const paidInvoices = invoices.filter(
-        (inv) =>
-          inv.status === 'paid' &&
-          new Date(inv.paidDate || '').getMonth() === date.getMonth() &&
-          new Date(inv.paidDate || '').getFullYear() === date.getFullYear()
-      );
-      const revenue = paidInvoices.reduce((sum, inv) => sum + inv.paidAmount, 0);
-      allValues.push(revenue);
-      months.push({ name: monthName, revenue, count: paidInvoices.length });
-    }
-
-    const maxVal = Math.max(...allValues, 1);
-    return months.map((m) => ({ ...m, maxVal, pct: (m.revenue / maxVal) * 100 }));
-  }, [invoices]);
-
-  // Invoice status breakdown
-  const statusData = useMemo(() => {
-    const counts: Record<string, number> = { draft: 0, pending: 0, paid: 0, overdue: 0, partial: 0 };
-    invoices.forEach((inv) => {
-      counts[inv.status] = (counts[inv.status] || 0) + 1;
-    });
-    const total = invoices.length || 1;
-    return [
-      { label: 'Paid', count: counts.paid, color: 'bg-success', pct: (counts.paid / total) * 100 },
-      { label: 'Pending', count: counts.pending, color: 'bg-warning', pct: (counts.pending / total) * 100 },
-      { label: 'Overdue', count: counts.overdue, color: 'bg-destructive', pct: (counts.overdue / total) * 100 },
-      { label: 'Draft', count: counts.draft, color: 'bg-muted-foreground/50', pct: (counts.draft / total) * 100 },
-      { label: 'Partial', count: counts.partial, color: 'bg-info', pct: (counts.partial / total) * 100 },
-    ].filter((s) => s.count > 0);
-  }, [invoices]);
-
-  // Top clients
-  const topClients = useMemo(() => {
-    return clients
-      .map((c) => {
-        const rev = invoices
-          .filter((inv) => inv.clientId === c.id && inv.status === 'paid')
-          .reduce((sum, inv) => sum + inv.paidAmount, 0);
-        return { name: c.name, revenue: rev, count: invoices.filter((inv) => inv.clientId === c.id).length };
-      })
-      .filter((c) => c.revenue > 0)
-      .sort((a, b) => b.revenue - a.revenue)
-      .slice(0, 5);
+    return {
+      outstanding: [...pending, ...overdue].reduce((s, i) => s + i.total, 0),
+      overdueCount: overdue.length,
+      pendingCount: pending.length,
+      paidThisMonth: thisMonth.reduce((s, i) => s + i.paidAmount, 0),
+      totalClients: clients.length,
+    };
   }, [invoices, clients]);
 
-  const maxClientRev = Math.max(...topClients.map((c) => c.revenue), 1);
+  // Revenue trend — last 6 months
+  const sparkline = useMemo(() => {
+    const months: { label: string; value: number }[] = [];
+    const now = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const val = invoices
+        .filter(
+          (inv) =>
+            inv.status === 'paid' &&
+            new Date(inv.paidDate || '').getMonth() === d.getMonth() &&
+            new Date(inv.paidDate || '').getFullYear() === d.getFullYear()
+        )
+        .reduce((s, inv) => s + inv.paidAmount, 0);
+      months.push({
+        label: d.toLocaleString('default', { month: 'short' }),
+        value: val,
+      });
+    }
+    const max = Math.max(...months.map((m) => m.value), 1);
+    return months.map((m) => ({ ...m, pct: (m.value / max) * 100 }));
+  }, [invoices]);
 
-  // Donut segments for status
-  const donutSegments = useMemo(() => {
-    const total = invoices.length || 1;
-    let accum = 0;
-    const map: Record<string, string> = { paid: '#4ade80', pending: '#fbbf24', overdue: '#f87171', draft: '#94a3b8', partial: '#60a5fa' };
-    return statusData.map((s) => {
-      const start = accum;
-      accum += s.pct;
-      return { ...s, hex: map[s.label.toLowerCase()] || '#94a3b8', start };
+  // Recent invoices — last 8
+  const recent = useMemo(
+    () =>
+      [...invoices]
+        .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+        .slice(0, 8),
+    [invoices]
+  );
+
+  // Status counts for breakdown
+  const statusCounts = useMemo(() => {
+    const groups = { overdue: 0, pending: 0, draft: 0, partial: 0, paid: 0 };
+    invoices.forEach((i) => {
+      if (i.status in groups) groups[i.status as keyof typeof groups]++;
     });
-  }, [statusData, invoices.length]);
+    return groups;
+  }, [invoices]);
 
-  const conicGradient = donutSegments
-    .map((s) => `${s.hex} ${s.start}% ${s.start + s.pct}%`)
-    .join(', ');
-
-  const statCards = [
-    {
-      title: 'Total Revenue',
-      value: formatCurrency(stats.totalRevenue),
-      icon: DollarSign,
-      color: 'text-success',
-      bg: 'bg-success/10',
-      sub: `${stats.totalInvoices} invoices`,
-    },
-    {
-      title: 'Pending',
-      value: formatCurrency(stats.pendingAmount),
-      icon: Clock,
-      color: 'text-warning',
-      bg: 'bg-warning/10',
-      sub: `${stats.pendingInvoices} awaiting payment`,
-    },
-    {
-      title: 'Overdue',
-      value: formatCurrency(stats.overdueAmount),
-      icon: AlertCircle,
-      color: 'text-destructive',
-      bg: 'bg-destructive/10',
-      sub: `${stats.overdueInvoices} past due`,
-    },
-    {
-      title: 'Paid This Month',
-      value: formatCurrency(stats.paidThisMonth),
-      icon: CheckCircle,
-      color: 'text-info',
-      bg: 'bg-info/10',
-      sub: `${stats.totalClients} clients`,
-    },
-  ];
+  const total = invoices.length || 1;
 
   return (
-    <div className="space-y-6 sm:space-y-8">
-      {/* Header */}
-      <div className="flex items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Overview of your invoicing activity
+    <div className="space-y-8 py-6 sm:py-10">
+      {/* Hero stat */}
+      <div>
+        <p className="text-sm text-muted-foreground font-medium">Outstanding</p>
+        <p className="text-4xl sm:text-5xl font-bold tracking-tight mt-1">
+          {formatCurrency(stats.outstanding)}
+        </p>
+        <div className="flex items-center gap-3 mt-2 text-sm">
+          {stats.overdueCount > 0 && (
+            <span className="inline-flex items-center gap-1 text-destructive font-semibold">
+              <AlertCircle className="w-3.5 h-3.5" />
+              {stats.overdueCount} overdue
+            </span>
+          )}
+          {stats.pendingCount > 0 && (
+            <span className="inline-flex items-center gap-1 text-warning font-semibold">
+              <Clock className="w-3.5 h-3.5" />
+              {stats.pendingCount} pending
+            </span>
+          )}
+          {stats.overdueCount === 0 && stats.pendingCount === 0 && (
+            <span className="text-success font-semibold flex items-center gap-1">
+              <CheckCircle className="w-3.5 h-3.5" />
+              All clear
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Status breakdown bar */}
+      {invoices.length > 0 && (
+        <div className="space-y-2">
+          <div className="flex h-2 rounded-full overflow-hidden bg-muted">
+            {statusCounts.overdue > 0 && (
+              <div
+                className="bg-destructive"
+                style={{ width: `${(statusCounts.overdue / total) * 100}%` }}
+              />
+            )}
+            {statusCounts.pending > 0 && (
+              <div
+                className="bg-warning"
+                style={{ width: `${(statusCounts.pending / total) * 100}%` }}
+              />
+            )}
+            {statusCounts.partial > 0 && (
+              <div
+                className="bg-info"
+                style={{ width: `${(statusCounts.partial / total) * 100}%` }}
+              />
+            )}
+            {statusCounts.draft > 0 && (
+              <div
+                className="bg-muted-foreground/30"
+                style={{ width: `${(statusCounts.draft / total) * 100}%` }}
+              />
+            )}
+            {statusCounts.paid > 0 && (
+              <div
+                className="bg-success"
+                style={{ width: `${(statusCounts.paid / total) * 100}%` }}
+              />
+            )}
+          </div>
+          <div className="flex items-center gap-4 text-xs text-muted-foreground flex-wrap">
+            {statusCounts.overdue > 0 && (
+              <span className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-destructive" />
+                {statusCounts.overdue} Overdue
+              </span>
+            )}
+            {statusCounts.pending > 0 && (
+              <span className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-warning" />
+                {statusCounts.pending} Pending
+              </span>
+            )}
+            {statusCounts.paid > 0 && (
+              <span className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-success" />
+                {statusCounts.paid} Paid
+              </span>
+            )}
+            {statusCounts.draft > 0 && (
+              <span className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+                {statusCounts.draft} Draft
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Quick stat row */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <Link
+          href="/invoices?status=paid"
+          className="rounded-xl border border-border p-4 hover:border-success/30 hover:bg-success/5 transition-all group"
+        >
+          <p className="text-2xl font-bold">{formatCurrency(stats.paidThisMonth)}</p>
+          <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+            <CheckCircle className="w-3 h-3 text-success" />
+            Paid this month
           </p>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <Link
-            href="/invoices/new"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
-          >
-            <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">New Invoice</span>
-          </Link>
-        </div>
+        </Link>
+        <Link
+          href="/clients"
+          className="rounded-xl border border-border p-4 hover:border-info/30 hover:bg-info/5 transition-all group"
+        >
+          <p className="text-2xl font-bold">{stats.totalClients}</p>
+          <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+            <Users className="w-3 h-3 text-info" />
+            Clients
+          </p>
+        </Link>
+        <Link
+          href="/invoices/new"
+          className="rounded-xl border border-dashed border-border p-4 hover:border-primary/40 hover:bg-primary/5 transition-all group"
+        >
+          <p className="text-2xl font-bold text-primary">
+            <Plus className="w-6 h-6" />
+          </p>
+          <p className="text-xs text-muted-foreground mt-1">Create invoice</p>
+        </Link>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        {statCards.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <div
-              key={stat.title}
-              className="rounded-xl border border-border bg-card p-4 sm:p-5 hover:border-primary/30 hover:shadow-sm transition-all duration-200"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div className="space-y-1 min-w-0">
-                  <p className="text-xs text-muted-foreground font-medium truncate">
-                    {stat.title}
-                  </p>
-                  <p className="text-lg sm:text-xl font-bold tracking-tight truncate">
-                    {stat.value}
-                  </p>
-                </div>
-                <div className={`p-2 rounded-lg ${stat.bg} shrink-0`}>
-                  <Icon className={`w-4 h-4 ${stat.color}`} />
-                </div>
-              </div>
-              <p className="text-[11px] text-muted-foreground mt-2">
-                {stat.sub}
-              </p>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        {/* Revenue Trend — CSS bar chart */}
-        <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
-          <h3 className="text-sm font-semibold mb-4">Revenue Trend</h3>
-          <div className="flex items-end gap-2 sm:gap-3 h-44">
-            {revenueData.map((m, i) => (
-              <div key={m.name} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                <span className="text-[10px] font-medium text-muted-foreground">
-                  {m.revenue > 0 ? formatCurrency(m.revenue, '').replace('.00', '') : ''}
-                </span>
+      {/* Revenue sparkline + Recent invoices */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Sparkline */}
+        <div className="rounded-xl border border-border p-5">
+          <h3 className="text-sm font-semibold mb-4">Revenue</h3>
+          <div className="flex items-end gap-1.5 h-24">
+            {sparkline.map((m, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
                 <div
-                  className="w-full rounded-t-md transition-all duration-500"
+                  className="w-full rounded-sm transition-all duration-500"
                   style={{
-                    height: `${Math.max(m.pct, 2)}%`,
-                    backgroundColor: CHART_COLORS[i % CHART_COLORS.length],
-                    opacity: m.revenue > 0 ? 1 : 0.15,
+                    height: `${Math.max(m.pct, 3)}%`,
+                    backgroundColor: 'oklch(60% 0.16 55)',
+                    opacity: m.value > 0 ? 1 : 0.12,
                   }}
                 />
-                <span className="text-[10px] text-muted-foreground">{m.name}</span>
               </div>
+            ))}
+          </div>
+          <div className="flex justify-between mt-2">
+            {sparkline.map((m, i) => (
+              <span key={i} className="text-[10px] text-muted-foreground">
+                {m.label}
+              </span>
             ))}
           </div>
         </div>
 
-        {/* Invoice Status — CSS donut */}
-        <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
-          <h3 className="text-sm font-semibold mb-4">Invoice Status</h3>
-          {invoices.length === 0 ? (
-            <div className="flex items-center justify-center h-44 text-sm text-muted-foreground">
-              No invoices yet
-            </div>
-          ) : (
-            <div className="flex items-center gap-6">
-              {/* Donut */}
-              <div
-                className="w-28 h-28 shrink-0 rounded-full relative"
-                style={{
-                  background: `conic-gradient(${conicGradient || '#e5e7eb 0% 100%'})`,
-                  mask: 'radial-gradient(circle, transparent 55%, black 56%)',
-                  WebkitMask: 'radial-gradient(circle, transparent 55%, black 56%)',
-                }}
-              />
-              {/* Legend */}
-              <div className="flex-1 space-y-2 min-w-0">
-                {statusData.map((s) => (
-                  <div key={s.label} className="flex items-center justify-between gap-2 text-sm">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className={`w-2.5 h-2.5 rounded-full ${s.color} shrink-0`} />
-                      <span className="truncate">{s.label}</span>
-                    </div>
-                    <span className="font-semibold tabular-nums shrink-0">{s.count}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Top Clients + Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        {/* Top Clients */}
-        <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
+        {/* Recent activity */}
+        <div className="rounded-xl border border-border p-5 lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold">Top Clients</h3>
+            <h3 className="text-sm font-semibold">Recent activity</h3>
             <Link
-              href="/clients"
-              className="text-xs text-primary hover:opacity-80 font-medium flex items-center gap-1"
+              href="/invoices"
+              className="text-xs text-primary font-medium flex items-center gap-1 hover:opacity-80"
             >
               View all <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
-          {topClients.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-10 text-center gap-2">
-              <Users className="w-8 h-8 text-muted-foreground/40" />
-              <p className="text-sm text-muted-foreground">No client revenue yet</p>
+
+          {recent.length === 0 ? (
+            <div className="text-center py-10">
+              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
+                <FileText className="w-5 h-5 text-muted-foreground/50" />
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">No invoices yet</p>
               <Link
-                href="/clients/new"
-                className="text-xs text-primary hover:opacity-80 font-medium"
+                href="/invoices/new"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90"
               >
-                Add your first client
+                <Plus className="w-4 h-4" />
+                Create your first invoice
               </Link>
             </div>
           ) : (
-            <div className="space-y-3">
-              {topClients.map((c, i) => (
-                <div key={c.name} className="space-y-1.5">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium truncate">{c.name}</span>
-                    <span className="text-muted-foreground tabular-nums shrink-0 ml-2">
-                      {formatCurrency(c.revenue)}
-                    </span>
-                  </div>
-                  <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{
-                        width: `${(c.revenue / maxClientRev) * 100}%`,
-                        backgroundColor: CHART_COLORS[i % CHART_COLORS.length],
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Quick Actions */}
-        <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
-          <h3 className="text-sm font-semibold mb-4">Quick Actions</h3>
-          <div className="space-y-2">
-            {[
-              { href: '/invoices/new', icon: Plus, label: 'Create new invoice', color: 'text-primary' },
-              { href: '/clients/new', icon: Users, label: 'Add new client', color: 'text-info' },
-              { href: '/products/new', icon: FileText, label: 'Add product or service', color: 'text-success' },
-            ].map((action) => {
-              const Icon = action.icon;
-              return (
+            <div className="space-y-1">
+              {recent.map((inv) => (
                 <Link
-                  key={action.href}
-                  href={action.href}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg border border-border hover:border-primary/30 hover:bg-muted/50 transition-all group"
+                  key={inv.id}
+                  href={`/invoices/${inv.id}`}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted/50 transition-colors group"
                 >
-                  <div className={`p-1.5 rounded-md bg-muted ${action.color}`}>
-                    <Icon className="w-4 h-4" />
+                  <span
+                    className={`w-2 h-2 rounded-full shrink-0 ${
+                      inv.status === 'paid'
+                        ? 'bg-success'
+                        : inv.status === 'overdue'
+                        ? 'bg-destructive'
+                        : inv.status === 'pending'
+                        ? 'bg-warning'
+                        : 'bg-muted-foreground/40'
+                    }`}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-sm font-medium truncate">
+                        {inv.client?.name || 'Unknown client'}
+                      </p>
+                      <p className="text-sm font-semibold tabular-nums shrink-0">
+                        {formatCurrency(inv.total)}
+                      </p>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {inv.invoiceNumber} &middot; {formatDate(inv.issueDate)}
+                      {inv.dueDate && (
+                        <span
+                          className={
+                            inv.status === 'overdue'
+                              ? 'text-destructive font-medium'
+                              : ''
+                          }
+                        >
+                          {' '}
+                          &middot; Due {formatDate(inv.dueDate)}
+                        </span>
+                      )}
+                    </p>
                   </div>
-                  <span className="text-sm font-medium flex-1">{action.label}</span>
-                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <ArrowRight className="w-3.5 h-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                 </Link>
-              );
-            })}
-          </div>
-
-          {/* Reminder CTA */}
-          {stats.pendingInvoices > 0 && (
-            <div className="mt-4 p-4 rounded-lg bg-warning/10 border border-warning/20 flex items-start gap-3">
-              <Send className="w-4 h-4 text-warning shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-medium">
-                  {stats.pendingInvoices} invoice{stats.pendingInvoices > 1 ? 's' : ''} awaiting payment
-                </p>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Send reminders to follow up on outstanding payments.
-                </p>
-              </div>
+              ))}
             </div>
           )}
         </div>

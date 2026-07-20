@@ -4,283 +4,138 @@ import { useEffect, useState } from 'react';
 import { useStore } from '@/lib/store/useStore';
 import { Product } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, MoreVertical, Pencil, Trash2, Package } from 'lucide-react';
+import { Plus, Package, Pencil, Trash2 } from 'lucide-react';
 import { generateId, formatCurrency } from '@/lib/helpers';
 
 export default function ProductsPage() {
   const { products, loadData, addProduct, updateProduct, deleteProduct } = useStore();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    price: '',
-    sku: '',
-  });
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editing, setEditing] = useState<Product | null>(null);
+  const [form, setForm] = useState({ name: '', description: '', price: '', sku: '' });
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
+  useEffect(() => { loadData(); }, [loadData]);
 
-  const resetForm = () => {
-    setFormData({
-      name: '',
-      description: '',
-      price: '',
-      sku: '',
-    });
-    setSelectedProduct(null);
-  };
+  const resetForm = () => { setForm({ name: '', description: '', price: '', sku: '' }); setEditing(null); };
 
-  const handleAdd = () => {
-    resetForm();
-    setIsDialogOpen(true);
-  };
-
-  const handleEdit = (product: Product) => {
-    setSelectedProduct(product);
-    setFormData({
-      name: product.name,
-      description: product.description || '',
-      price: product.price.toString(),
-      sku: product.sku || '',
-    });
-    setIsDialogOpen(true);
-  };
-
-  const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this product?')) {
-      deleteProduct(id);
-    }
+  const openAdd = () => { resetForm(); setDialogOpen(true); };
+  const openEdit = (p: Product) => {
+    setEditing(p);
+    setForm({ name: p.name, description: p.description || '', price: p.price.toString(), sku: p.sku || '' });
+    setDialogOpen(true);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const productData: Product = {
-      id: selectedProduct?.id || generateId(),
-      name: formData.name,
-      description: formData.description || undefined,
-      price: parseFloat(formData.price),
-      sku: formData.sku || undefined,
-      createdAt: selectedProduct?.createdAt || new Date().toISOString(),
+    const data: Product = {
+      id: editing?.id || generateId(),
+      name: form.name,
+      description: form.description || undefined,
+      price: parseFloat(form.price),
+      sku: form.sku || undefined,
+      createdAt: editing?.createdAt || new Date().toISOString(),
     };
-
-    if (selectedProduct) {
-      updateProduct(productData);
-    } else {
-      addProduct(productData);
-    }
-
-    setIsDialogOpen(false);
+    if (editing) { updateProduct(data); } else { addProduct(data); }
+    setDialogOpen(false);
     resetForm();
   };
 
+  const handleDelete = (id: string) => {
+    if (confirm('Delete this product?')) deleteProduct(id);
+  };
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-row items-center justify-between gap-2">
+    <div className="py-6 sm:py-10 space-y-6">
+      <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-lg sm:text-2xl font-bold text-foreground">Products & Services</h1>
-          <p className="text-muted-foreground mt-1 text-[10px] sm:text-sm">Manage your products and services for quick invoicing</p>
+          <h1 className="text-2xl font-bold tracking-tight">Products</h1>
+          <p className="text-sm text-muted-foreground mt-1">{products.length} items</p>
         </div>
-        <Button onClick={handleAdd} className="gap-1">
-          <Plus className="w-3 h-3" />
-          Add Product
+        <Button onClick={openAdd} className="gap-1.5">
+          <Plus className="w-4 h-4" /> Add Product
         </Button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Total Products</p>
-                <p className="text-3xl font-bold text-foreground mt-2">{products.length}</p>
-              </div>
-              <div className="p-3 bg-success/10 rounded-lg">
-                <Package className="w-6 h-6 text-success" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Average Price</p>
-                <p className="text-3xl font-bold text-foreground mt-2">
-                  {products.length > 0
-                    ? formatCurrency(
-                        products.reduce((sum, p) => sum + p.price, 0) / products.length
-                      )
-                    : formatCurrency(0)}
-                </p>
-              </div>
-              <div className="p-3 bg-info/10 rounded-lg">
-                <Package className="w-6 h-6 text-info" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="flex items-center gap-4 text-sm">
+        <div className="rounded-lg border border-border px-4 py-2">
+          <span className="text-muted-foreground">Total </span>
+          <span className="font-bold">{products.length}</span>
+        </div>
+        <div className="rounded-lg border border-border px-4 py-2">
+          <span className="text-muted-foreground">Avg price </span>
+          <span className="font-bold">
+            {products.length > 0
+              ? formatCurrency(products.reduce((s, p) => s + p.price, 0) / products.length)
+              : formatCurrency(0)}
+          </span>
+        </div>
       </div>
 
-      {/* Products Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>All Products & Services</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {products.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground mb-4">No products yet. Add your first product!</p>
-              <Button onClick={handleAdd} variant="outline" className="gap-2">
-                <Plus className="w-4 h-4" />
-                Add Product
-              </Button>
+      {products.length === 0 ? (
+        <div className="text-center py-20">
+          <Package className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
+          <p className="text-muted-foreground mb-4">No products yet.</p>
+          <Button onClick={openAdd} variant="outline"><Plus className="w-4 h-4 mr-1.5" /> Add your first product</Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {products.map((p) => (
+            <div key={p.id} className="rounded-xl border border-border bg-card p-4 hover:shadow-sm hover:border-primary/20 transition-all group">
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold truncate">{p.name}</p>
+                  {p.sku && (
+                    <p className="text-[11px] font-mono text-muted-foreground mt-0.5">{p.sku}</p>
+                  )}
+                </div>
+                <p className="text-lg font-bold tabular-nums shrink-0">{formatCurrency(p.price)}</p>
+              </div>
+              {p.description && (
+                <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{p.description}</p>
+              )}
+              <div className="flex items-center gap-1 mt-3 pt-3 border-t border-border opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onClick={() => openEdit(p)} className="p-1.5 rounded-md hover:bg-muted text-muted-foreground text-xs flex items-center gap-1">
+                  <Pencil className="w-3 h-3" /> Edit
+                </button>
+                <button onClick={() => handleDelete(p.id)} className="p-1.5 rounded-md hover:bg-destructive/10 hover:text-destructive text-muted-foreground text-xs flex items-center gap-1">
+                  <Trash2 className="w-3 h-3" /> Delete
+                </button>
+              </div>
             </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>SKU</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {products.map((product) => (
-                  <TableRow key={product.id}>
-                    <TableCell className="font-medium">{product.name}</TableCell>
-                    <TableCell className="text-muted-foreground max-w-xs truncate">
-                      {product.description || '-'}
-                    </TableCell>
-                    <TableCell>
-                      {product.sku ? (
-                        <span className="font-mono text-sm bg-muted px-2 py-1 rounded">
-                          {product.sku}
-                        </span>
-                      ) : (
-                        '-'
-                      )}
-                    </TableCell>
-                    <TableCell className="font-semibold">
-                      {formatCurrency(product.price)}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger>
-                          <Button variant="ghost" size="icon" aria-label="More options">
-                            <MoreVertical className="w-4 h-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleEdit(product)} aria-label="Edit product">
-                            <Pencil className="w-4 h-4 mr-2" />
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDelete(product.id)}
-                            className="text-destructive"
-                            aria-label="Delete product"
-                          >
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+          ))}
+        </div>
+      )}
 
-      {/* Add/Edit Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="sm:max-w-[480px]">
           <DialogHeader>
-            <DialogTitle>{selectedProduct ? 'Edit Product' : 'Add New Product'}</DialogTitle>
+            <DialogTitle>{editing ? 'Edit Product' : 'New Product'}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="name">Name *</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                required
-              />
+            <div className="space-y-1.5">
+              <Label htmlFor="p-name">Name *</Label>
+              <Input id="p-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
             </div>
-            <div>
-              <Label htmlFor="description">Description (Optional)</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                rows={3}
-              />
+            <div className="space-y-1.5">
+              <Label htmlFor="p-desc">Description</Label>
+              <Textarea id="p-desc" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={2} />
             </div>
-            <div>
-              <Label htmlFor="price">Price (RM) *</Label>
-              <Input
-                id="price"
-                type="number"
-                step="0.01"
-                min="0"
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                required
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="p-price">Price (RM) *</Label>
+                <Input id="p-price" type="number" step="0.01" min="0" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="p-sku">SKU</Label>
+                <Input id="p-sku" value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} placeholder="e.g. SRV-001" />
+              </div>
             </div>
-            <div>
-              <Label htmlFor="sku">SKU (Optional)</Label>
-              <Input
-                id="sku"
-                value={formData.sku}
-                onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                placeholder="e.g., PROD-001"
-              />
-            </div>
-            <div className="flex justify-end gap-3">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsDialogOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button type="submit">{selectedProduct ? 'Update' : 'Add'} Product</Button>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+              <Button type="submit">{editing ? 'Update' : 'Add'} Product</Button>
             </div>
           </form>
         </DialogContent>

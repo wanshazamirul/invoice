@@ -1,9 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import Sidebar from "@/components/layout/sidebar";
-import Header from "@/components/layout/header";
-import { BottomNav } from "@/components/layout/bottom-nav";
+import { NavBar } from "@/components/layout/nav-bar";
+import { MobileNav } from "@/components/layout/mobile-nav";
 import { AlertProvider } from "@/contexts/alert-context";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { AlertToaster } from "@/components/ui/alert-toaster";
@@ -22,12 +21,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Invoice — Professional Invoicing for Malaysian Businesses",
-  description: "Full-featured invoicing with client management, SST support, PDF generation, and payment tracking. Built for Malaysian SMEs and freelancers.",
-  icons: {
-    icon: '/icon.png',
-    shortcut: '/icon.png',
-    apple: '/icon.png',
-  },
+  description: "Full-featured invoicing with client management, SST support, PDF generation, and payment tracking.",
+  icons: { icon: '/icon.png', shortcut: '/icon.png', apple: '/icon.png' },
   manifest: '/manifest.json',
 };
 
@@ -39,26 +34,19 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${manrope.variable} ${jetbrainsMono.variable} antialiased`} suppressHydrationWarning>
-      <body className="min-h-screen bg-background">
+      <body className="min-h-screen bg-background text-foreground">
         <ThemeProvider>
           <AlertProvider>
-            <div className="flex h-screen overflow-hidden">
-              <Sidebar />
-              <div className="flex-1 flex flex-col overflow-hidden">
-                <Header />
-                <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pb-20 lg:pb-8">
-                  {children}
-                </main>
+            <NavBar />
+            <main className="pt-14 pb-20 lg:pb-8">
+              <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                {children}
               </div>
-            </div>
-            <BottomNav />
+            </main>
+            <MobileNav />
             <AlertToaster />
           </AlertProvider>
         </ThemeProvider>
