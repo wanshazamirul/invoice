@@ -6,6 +6,7 @@ import { MobileNav } from "@/components/layout/mobile-nav";
 import { AlertProvider } from "@/contexts/alert-context";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { AlertToaster } from "@/components/ui/alert-toaster";
+import { AnalyticsTracker } from "@/components/analytics-tracker";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </main>
             <MobileNav />
             <AlertToaster />
+            <AnalyticsTracker />
           </AlertProvider>
         </ThemeProvider>
       </body>
