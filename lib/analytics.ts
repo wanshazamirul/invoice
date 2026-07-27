@@ -21,9 +21,10 @@ export function trackPageView(path: string) {
   if (typeof window === "undefined") return;
   const { device_type, browser, os } = parseDevice(navigator.userAgent);
   const body = JSON.stringify({ app_id: APP_ID, path, user_agent: navigator.userAgent, referrer: document.referrer || null, device_type, browser, os });
+  const blob = new Blob([body], { type: "text/plain" });
   if (navigator.sendBeacon) {
-    navigator.sendBeacon(INGEST_URL, new Blob([body], { type: "application/json" }));
+    navigator.sendBeacon(INGEST_URL, blob);
   } else {
-    fetch(INGEST_URL, { method: "POST", body, headers: { "Content-Type": "application/json" }, keepalive: true }).catch(() => {});
+    fetch(INGEST_URL, { method: "POST", body: blob, keepalive: true }).catch(() => {});
   }
 }
